@@ -1,0 +1,77 @@
+services:
+  turtle_nest:
+    image: turtle_nest
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+    container_name: turtle_nest
+    stop_signal: SIGINT
+    network_mode: host
+    privileged: true
+    stdin_open: true
+    tty: true
+    user: user
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ${ROS2_WS}:/home/user/ros2_ws/src
+      - ../turtle_nest:/home/user/ros2_ws/src/turtle_nest
+      - /home/user/ros2_ws/src/turtle_nest/build/ # Exclude build from being mounted
+      - ../turtle_nest_tests:/home/user/ros2_ws/src/turtle_nest_tests
+      - /home/user/ros2_ws/src/turtle_nest_tests/build/  # Exclude build from being mounted
+      - ${HOME}/.config/TurtleNest:/home/user/.config/TurtleNest
+    environment:
+      - DISPLAY
+      - QT_X11_NO_MITSHM=1
+      - ROS_DOMAIN_ID=42
+    command: bash
+
+  test:
+    image: turtle_nest
+    container_name: turtle_nest_tests
+    profiles: ["test"]
+    volumes:
+      - ../turtle_nest:/home/user/ros2_ws/src/turtle_nest
+      - /home/user/ros2_ws/src/turtle_nest/build/ # Exclude build from being mounted
+      - ../turtle_nest_tests:/home/user/ros2_ws/src/turtle_nest_tests
+      - /home/user/ros2_ws/src/turtle_nest_tests/build/  # Exclude build from being mounted
+
+    command: bash -c "cd /home/user/ros2_ws/src/turtle_nest_tests/build/ && make && ./turtle_nest_tests"
+
+  test-jazzy:
+    image: turtle_nest_jazzy
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+      args:
+          BASE_IMAGE: ros:jazzy
+    container_name: turtle_nest_test_jazzy
+    profiles: ["test-distros"]
+    stdin_open: true
+    tty: true
+    command: /home/user/ros2_ws/src/turtle_nest_tests/build/turtle_nest_tests
+
+  test-iron:
+    image: turtle_nest_iron
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+      args:
+          BASE_IMAGE: ros:iron
+    container_name: turtle_nest_test_iron
+    profiles: ["test-iron"]
+    stdin_open: true
+    tty: true
+    command: /home/user/ros2_ws/src/turtle_nest_tests/build/turtle_nest_tests
+
+  test-rolling:
+    image: turtle_nest_rolling
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+      args:
+          BASE_IMAGE: ros:rolling
+    container_name: turtle_nest_test_rolling
+    profiles: ["test-rolling"]
+    stdin_open: true
+    tty: true
+    command: /home/user/ros2_ws/src/turtle_nest_tests/build/turtle_nest_tests

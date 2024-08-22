@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>img/turtle_nest_logo-500x500.png</file>
+        <file>img/info_icon_92px.png</file>
+    </qresource>
+    <qresource prefix="/stylesheets">
+        <file>custom_theme.qss</file>
+    </qresource>
+</RCC>

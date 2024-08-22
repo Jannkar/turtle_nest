@@ -1,0 +1,72 @@
+QMainWindow {
+    background-color: #fdfefb;  /* Hint of green */
+}
+
+/*-----QPushButton-----*/
+QPushButton
+{
+    background-color: #db832c;
+    color: #ffffff;
+    border-style: solid;
+    border-radius: 3px;
+    padding: 5px;
+
+}
+
+
+QPushButton::disabled
+{
+    background-color: #e0e0e0;
+    color: #808080;
+    border-color: #808080;
+    border-width: 1px;
+}
+
+
+QPushButton::hover
+{
+    background-color: #df9042;
+    color: #ffffff;
+}
+
+
+QPushButton::pressed
+{
+    background-color: #cb7623;
+}
+
+QPushButton#low_attention_button {
+    background-color: white;
+    color: #db832c;
+    border-color: #db832c;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 3px;
+    padding: 5px;
+}
+
+QPushButton#low_attention_button::hover
+{
+    background-color: #fcf5ee;
+}
+
+QPushButton#low_attention_button::disabled
+{
+    background-color: white;
+    color: #808080;
+    border-color: #808080;
+    border-width: 1px;
+}
+
+QPushButton#low_attention_button::pressed
+{
+    background-color: #f4dcc3;
+}
+
+
+QToolTip
+{
+    background-color: #f7fdfc;
+    padding: 5px;
+    border-style: none;
+}
