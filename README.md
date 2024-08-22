@@ -5,6 +5,7 @@ Just as a turtle nest is the birthplace for young turtles, ROS 2 Turtle Nest is 
 Turtle Nest provides an easy graphical user interface for creating new ROS packages, simplifying the package creation process.
 
 <h2>Why to use Turtle Nest over 'ros2 pkg create' CLI?</h2>
+
 - **Easy to use** - no need to dig through the ROS 2 documentation for the right commands or manually add things to CMakeLists.txt or setup.py.
 - **Create C++ and/or Python nodes** - which are ready for further development.
 - **Automatically adds necessary dependencies** - rclpy, rclcpp, and std_msgs.
