@@ -14,10 +14,11 @@ services:
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - ${ROS2_WS}:/home/user/ros2_ws/src
-      - ../turtle_nest:/home/user/ros2_ws/src/turtle_nest
-      - /home/user/ros2_ws/src/turtle_nest/build/ # Exclude build from being mounted
-      - ../turtle_nest_tests:/home/user/ros2_ws/src/turtle_nest_tests
-      - /home/user/ros2_ws/src/turtle_nest_tests/build/  # Exclude build from being mounted
+      # For development:
+      #- ../turtle_nest:/home/user/ros2_ws/src/turtle_nest
+      #- /home/user/ros2_ws/src/turtle_nest/build/ # Exclude build from being mounted
+      #- ../turtle_nest_tests:/home/user/ros2_ws/src/turtle_nest_tests
+      #- /home/user/ros2_ws/src/turtle_nest_tests/build/  # Exclude build from being mounted
       - ${HOME}/.config/TurtleNest:/home/user/.config/TurtleNest
     environment:
       - DISPLAY
@@ -29,11 +30,12 @@ services:
     image: turtle_nest
     container_name: turtle_nest_tests
     profiles: ["test"]
-    volumes:
-      - ../turtle_nest:/home/user/ros2_ws/src/turtle_nest
-      - /home/user/ros2_ws/src/turtle_nest/build/ # Exclude build from being mounted
-      - ../turtle_nest_tests:/home/user/ros2_ws/src/turtle_nest_tests
-      - /home/user/ros2_ws/src/turtle_nest_tests/build/  # Exclude build from being mounted
+    # For development:
+    #volumes:
+      #- ../turtle_nest:/home/user/ros2_ws/src/turtle_nest
+      #- /home/user/ros2_ws/src/turtle_nest/build/ # Exclude build from being mounted
+      #- ../turtle_nest_tests:/home/user/ros2_ws/src/turtle_nest_tests
+      #- /home/user/ros2_ws/src/turtle_nest_tests/build/  # Exclude build from being mounted
 
     command: bash -c "cd /home/user/ros2_ws/src/turtle_nest_tests/build/ && make && ./turtle_nest_tests"
 
