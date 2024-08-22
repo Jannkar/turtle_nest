@@ -41,7 +41,7 @@ colcon build
 source install/setup.bash
 ```
 
-If you have created a node or a launch file, you can run them with the following commands:
+If you created a node or a launch file, you can run them with the following commands:
 * To run a node:
     ```
     ros2 run <package_name> <node_name>
