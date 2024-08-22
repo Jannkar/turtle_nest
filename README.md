@@ -1,5 +1,7 @@
 # turtle_nest_devel
 
+![Turtle Nest](images/turtle_nest_logo_large.png)
+
 
 ´export ROS2_WS=<workspace_path>´
 For example 
