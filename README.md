@@ -18,7 +18,7 @@ Turtle Nest provides an easy graphical user interface for creating new ROS packa
 <h2>Prerequisites</h2>
 
 - Ubuntu 22 or 24
-- ROS 2
+- ROS 2 (any one of the following versions)
   - Humble
   - Iron
   - Jazzy
