@@ -15,7 +15,7 @@ Turtle Nest provides an easy graphical user interface for creating new ROS packa
 - **Remembers the important details** - workspace path, maintainer name, and maintainer email for the future packages.
 - **And more!**
 
-<h2>Supported platforms</h2>
+<h2>Prerequisites</h2>
 
 - Ubuntu 22 or 24
 - ROS 2
