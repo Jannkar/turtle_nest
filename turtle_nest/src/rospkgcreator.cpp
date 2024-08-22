@@ -30,7 +30,6 @@
 void RosPkgCreator::create_package() const{
     create_directory(workspace_path);
     QStringList command = create_command();
-    qInfo() << command;
     run_command(command);
 
     // Overwrite the simple hello world nodes with more advanced ones
