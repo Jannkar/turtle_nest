@@ -1,0 +1,17 @@
+name: Turtle Nest CI pipeline
+on: [pull_request]
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build the Docker image
+      run: docker compose -f docker/docker-compose.yaml build
+    - name: Test Humble
+      run: docker compose -f docker/docker-compose.yaml run test
+    - name: Test Iron
+      run: docker compose -f docker/docker-compose.yaml run test-iron
+    - name: Test Jazzy
+      run: docker compose -f docker/docker-compose.yaml run test-jazzy
+    - name: Test Rolling
+      run: docker compose -f docker/docker-compose.yaml run test-rolling

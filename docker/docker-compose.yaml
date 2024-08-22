@@ -13,7 +13,7 @@ services:
     user: user
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
-      - ${ROS2_WS}:/home/user/ros2_ws/src
+      - ${ROS2_WS:-${HOME}/ros2_ws/src}:/home/user/ros2_ws/src
       # For development:
       #- ../turtle_nest:/home/user/ros2_ws/src/turtle_nest
       #- /home/user/ros2_ws/src/turtle_nest/build/ # Exclude build from being mounted
@@ -47,7 +47,7 @@ services:
       args:
           BASE_IMAGE: ros:jazzy
     container_name: turtle_nest_test_jazzy
-    profiles: ["test-distros"]
+    profiles: ["test-jazzy"]
     stdin_open: true
     tty: true
     command: /home/user/ros2_ws/src/turtle_nest_tests/build/turtle_nest_tests
