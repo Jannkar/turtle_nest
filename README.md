@@ -31,11 +31,13 @@ source install/setup.bash
 
 <h2>Usage</h2>
 To run the application, simply execute:
+
 ```
 turtle-nest
 ```
 
 Fill in the necessary information in the GUI to create a new ROS 2 package. After the package has been created, build and source the new package:
+
 ```
 cd $HOME/ros2_ws/
 colcon build
