@@ -22,7 +22,10 @@
 #include <QString>
 
 
-void generate_launch_file(QString workspace_path, QString package_name, QString launch_file_name, QString node_name_cpp = "", QString node_name_python = "", BuildType build_type = CPP);
+void generate_launch_file(
+  QString workspace_path, QString package_name, QString launch_file_name,
+  QString node_name_cpp = "", QString node_name_python = "",
+  BuildType build_type = CPP);
 QString generate_launch_text(QString package_name, QString node_name_cpp, QString node_name_python);
 void append_launch_to_cmake(QString c_make_path);
 void save_launch_file(QString file_name, QString launch_text);

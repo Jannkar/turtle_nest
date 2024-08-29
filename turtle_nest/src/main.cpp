@@ -20,24 +20,25 @@
 #include <QFile>
 #include <QTextStream>
 
-int main(int argc, char *argv[])
+int main(int argc, char * argv[])
 {
-    // Fix the problem with application not scaling correctly on scaled displays
-    QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-    QGuiApplication::setHighDpiScaleFactorRoundingPolicy(Qt::HighDpiScaleFactorRoundingPolicy::PassThrough);
+  // Fix the problem with application not scaling correctly on scaled displays
+  QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+  QGuiApplication::setHighDpiScaleFactorRoundingPolicy(
+    Qt::HighDpiScaleFactorRoundingPolicy::PassThrough);
 
-    QApplication a(argc, argv);
+  QApplication a(argc, argv);
 
-    MainWindow w;
-    w.setWindowTitle("Create a New Package");
-    w.show();
+  MainWindow w;
+  w.setWindowTitle("Create a New Package");
+  w.show();
 
-    QFile file(":/stylesheets/custom_theme.qss");
+  QFile file(":/stylesheets/custom_theme.qss");
 
-    if (file.open(QFile::ReadOnly | QFile::Text)) {
-        QTextStream stream(&file);
-        a.setStyleSheet(stream.readAll());
-    }
+  if (file.open(QFile::ReadOnly | QFile::Text)) {
+    QTextStream stream(&file);
+    a.setStyleSheet(stream.readAll());
+  }
 
-    return a.exec();
+  return a.exec();
 }

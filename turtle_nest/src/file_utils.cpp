@@ -21,75 +21,81 @@
 #include <QDebug>
 
 
-void create_directory(QString path){
-    QDir dir(path);
-    if (dir.exists()) {
-        qInfo() << "Skipping creation of directory: " + path + " (already exists).";
-        return;
-    }
+void create_directory(QString path)
+{
+  QDir dir(path);
+  if (dir.exists()) {
+    qInfo() << "Skipping creation of directory: " + path + " (already exists).";
+    return;
+  }
 
-    if (!dir.mkpath(".")) {
-        QString error_msg = QString("Failed to create directory \"%1\". Do you have sufficient permissions?").arg(path);
-        qCritical() << error_msg;
-        throw std::runtime_error(error_msg.toStdString());
-    }
+  if (!dir.mkpath(".")) {
+    QString error_msg = QString(
+      "Failed to create directory \"%1\". Do you have sufficient permissions?").arg(path);
+    qCritical() << error_msg;
+    throw std::runtime_error(error_msg.toStdString());
+  }
 }
 
-void write_file(QString path, QString content){
-    QFile file(path);
-    if (!file.open(QFile::WriteOnly | QFile::Text | QFile::Truncate)) {
-        QString error_msg = QString("Cannot open file %1 for writing: " + file.errorString()).arg(path);
-        qCritical() << error_msg;
-        throw std::runtime_error(error_msg.toStdString());
-    }
-    QTextStream out(&file);
-    out << content;
-    file.close();
+void write_file(QString path, QString content)
+{
+  QFile file(path);
+  if (!file.open(QFile::WriteOnly | QFile::Text | QFile::Truncate)) {
+    QString error_msg = QString("Cannot open file %1 for writing: " + file.errorString()).arg(path);
+    qCritical() << error_msg;
+    throw std::runtime_error(error_msg.toStdString());
+  }
+  QTextStream out(&file);
+  out << content;
+  file.close();
 }
 
-QString read_file(QString path){
-    QFile file(path);
-    if (!file.open(QFile::ReadOnly | QFile::Text)) {
-        QString error_msg = QString("Cannot open file %1 for reading: " + file.errorString()).arg(path);
-        qCritical() << error_msg;
-        throw std::runtime_error(error_msg.toStdString());
-    }
-    QTextStream in(&file);
-    QString content = in.readAll();
-    file.close();
-    return content;
+QString read_file(QString path)
+{
+  QFile file(path);
+  if (!file.open(QFile::ReadOnly | QFile::Text)) {
+    QString error_msg = QString("Cannot open file %1 for reading: " + file.errorString()).arg(path);
+    qCritical() << error_msg;
+    throw std::runtime_error(error_msg.toStdString());
+  }
+  QTextStream in(&file);
+  QString content = in.readAll();
+  file.close();
+  return content;
 }
 
-void append_to_file_before(QString file_path, QString lines_to_append, QString append_before_text){
-    QString content = read_file(file_path);
+void append_to_file_before(QString file_path, QString lines_to_append, QString append_before_text)
+{
+  QString content = read_file(file_path);
 
-    // Find the position to insert the lines before 'append_before_text'
-    int index = content.indexOf(append_before_text);
-    if (index != -1) {
-        content.insert(index, lines_to_append);
-    } else {
-        QString error_msg = "Line " + append_before_text + " not found in the file " + file_path;
-        throw std::runtime_error(error_msg.toStdString());
-    }
+  // Find the position to insert the lines before 'append_before_text'
+  int index = content.indexOf(append_before_text);
+  if (index != -1) {
+    content.insert(index, lines_to_append);
+  } else {
+    QString error_msg = "Line " + append_before_text + " not found in the file " + file_path;
+    throw std::runtime_error(error_msg.toStdString());
+  }
 
-    write_file(file_path, content);
+  write_file(file_path, content);
 }
 
-void append_to_file(QString file_path, QString lines_to_append, QString append_after_text){
-    QString content = read_file(file_path);
+void append_to_file(QString file_path, QString lines_to_append, QString append_after_text)
+{
+  QString content = read_file(file_path);
 
-    // Find the position of the 'append_after_text'
-    int index = content.indexOf(append_after_text);
-    if (index != -1) {
-        // Move the index to the end of the found text
-        index += append_after_text.length();
+  // Find the position of the 'append_after_text'
+  int index = content.indexOf(append_after_text);
+  if (index != -1) {
+    // Move the index to the end of the found text
+    index += append_after_text.length();
 
-        // Insert the new lines after the found text
-        content.insert(index, lines_to_append);
-    } else {
-        QString error_msg = "Line " + append_after_text + " not found in the file " + file_path;
-        throw std::runtime_error(error_msg.toStdString());
-    }
+    // Insert the new lines after the found text
+    content.insert(index, lines_to_append);
+  } else {
+    QString error_msg = "Line " + append_after_text + " not found in the file " + file_path;
+    throw std::runtime_error(error_msg.toStdString());
+  }
 
-    write_file(file_path, content);
+  write_file(file_path, content);
 }
