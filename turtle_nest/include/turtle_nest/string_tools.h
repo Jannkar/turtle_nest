@@ -23,9 +23,9 @@
 
 QString escape_xml(QString input);
 bool is_valid_alphanumeric(QString string);
-QString autocorrect_line_edit(QString text, QLineEdit* line_edit);
+QString autocorrect_line_edit(QString text, QLineEdit * line_edit);
 QString autocorrect_string(QString string);
 bool is_valid_email(QString email);
-QString to_camel_case(const QString& snake_case);
+QString to_camel_case(const QString & snake_case);
 
 #endif // STRING_TOOLS_H

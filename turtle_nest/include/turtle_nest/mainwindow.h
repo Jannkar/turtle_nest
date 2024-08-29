@@ -25,66 +25,66 @@
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
-class MainWindow;
+  class MainWindow;
 }
 QT_END_NAMESPACE
 
 
-void show_tooltip(QToolButton *button);
+void show_tooltip(QToolButton * button);
 
-class MainWindow : public QMainWindow
+class MainWindow: public QMainWindow
 {
-    Q_OBJECT
+  Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+  MainWindow(QWidget * parent = nullptr);
+  ~MainWindow();
 
 private slots:
-    void on_nextButton_clicked();
+  void on_nextButton_clicked();
 
-    void on_backButton_clicked();
+  void on_backButton_clicked();
 
-    void on_browseButton_clicked();
+  void on_browseButton_clicked();
 
-    void on_createPackageButton_clicked();
+  void on_createPackageButton_clicked();
 
-    void on_packageNameEdit_textEdited(const QString &arg1);
+  void on_packageNameEdit_textEdited(const QString & arg1);
 
-    void on_packageNameEdit_editingFinished();
+  void on_packageNameEdit_editingFinished();
 
-    void on_checkboxCreateLaunch_toggled(bool checked);
+  void on_checkboxCreateLaunch_toggled(bool checked);
 
-    void change_package_type();
+  void change_package_type();
 
-    void on_checkboxCpp_clicked();
+  void on_checkboxCpp_clicked();
 
-    void on_checkboxPython_clicked();
+  void on_checkboxPython_clicked();
 
-    void on_lineEditNodeNameCpp_textEdited(const QString &arg1);
+  void on_lineEditNodeNameCpp_textEdited(const QString & arg1);
 
-    void on_lineEditNodeNamePython_textEdited(const QString &arg1);
+  void on_lineEditNodeNamePython_textEdited(const QString & arg1);
 
-    void on_lineEditLaunchName_textEdited(const QString &arg1);
+  void on_lineEditLaunchName_textEdited(const QString & arg1);
 
-    void on_lineEditLaunchName_editingFinished();
+  void on_lineEditLaunchName_editingFinished();
 
-    QString get_license();
+  QString get_license();
 
-    void on_emailEdit_textEdited(const QString &arg1);
+  void on_emailEdit_textEdited(const QString & arg1);
 
-    void on_emailEdit_editingFinished();
+  void on_emailEdit_editingFinished();
 
-    void on_pkgNameInfoButton_clicked();
+  void on_pkgNameInfoButton_clicked();
 
-    void on_cppNodeNameInfoButton_clicked();
+  void on_cppNodeNameInfoButton_clicked();
 
-    void on_pythonNodeNameInfoButton_clicked();
+  void on_pythonNodeNameInfoButton_clicked();
 
-    void on_launchNameInfoButton_clicked();
+  void on_launchNameInfoButton_clicked();
 
 private:
-    Ui::MainWindow *ui;
+  Ui::MainWindow * ui;
 };
 
 #endif // MAINWINDOW_H
