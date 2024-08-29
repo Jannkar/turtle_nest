@@ -15,3 +15,5 @@ jobs:
       run: docker compose -f docker/docker-compose.yaml run test-jazzy
     - name: Test Rolling
       run: docker compose -f docker/docker-compose.yaml run test-rolling
+    - name: Run Colcon Test
+      run: docker compose -f docker/docker-compose.yaml run colcon-test

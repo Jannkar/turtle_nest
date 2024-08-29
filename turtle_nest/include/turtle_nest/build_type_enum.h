@@ -19,10 +19,11 @@
 #define BUILD_TYPE_ENUM_H
 
 
-enum BuildType{
-    CPP,
-    PYTHON,
-    CPP_AND_PYTHON,
+enum BuildType
+{
+  CPP,
+  PYTHON,
+  CPP_AND_PYTHON,
 };
 
 #endif // BUILD_TYPE_ENUM_H
