@@ -2,8 +2,8 @@
 Changelog for package turtle_nest
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.1 (2024-08-30)
+------------------
 * applied uncrustify for consistent code formatting
 * Contributors: Janne Karttunen
 
