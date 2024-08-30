@@ -59,7 +59,8 @@ def main(args=None):
 
 if __name__ == '__main__':
     main()
-)").arg(node_name, to_camel_case(node_name));
+)")
+    .arg(node_name, to_camel_case(node_name));
 
   create_directory(node_dir);
   write_file(node_path, content);

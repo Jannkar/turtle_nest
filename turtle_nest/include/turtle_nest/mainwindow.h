@@ -40,7 +40,11 @@ public:
   MainWindow(QWidget * parent = nullptr);
   ~MainWindow();
 
-private slots:
+// Uncrustify wants to indent private slots after Jazzy distro, but not before Humble,
+// leading to a conflict. Skip.
+/* *INDENT-OFF* */
+  private slots:
+/* *INDENT-ON* */
   void on_nextButton_clicked();
 
   void on_backButton_clicked();
