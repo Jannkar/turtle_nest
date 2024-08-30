@@ -41,14 +41,6 @@ services:
 
     command: bash -c "cd /home/user/ros2_ws/src/turtle_nest_tests/build/ && make && ./turtle_nest_tests"
 
-  colcon-test:
-    image: turtle_nest
-    container_name: turtle_nest_colcon_test
-    profiles: ["colcon-test"]
-    stdin_open: true
-    tty: true
-    command: bash -c "cd /home/user/ros2_ws/ && colcon test && colcon test-result --all --verbose"
-
   test-jazzy:
     image: turtle_nest_jazzy
     build:
@@ -87,3 +79,11 @@ services:
     stdin_open: true
     tty: true
     command: /home/user/ros2_ws/src/turtle_nest_tests/build/turtle_nest_tests
+  
+  colcon-test:
+    image: turtle_nest_rolling
+    container_name: turtle_nest_colcon_test
+    profiles: ["colcon-test"]
+    stdin_open: true
+    tty: true
+    command: bash -c "cd /home/user/ros2_ws/ && colcon test && colcon test-result --all --verbose"
