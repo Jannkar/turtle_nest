@@ -42,6 +42,7 @@ public:
   QString node_name_cpp = "";
   QString node_name_python = "";
   QString launch_name = "";
+  QString params_file_name = "";
   QString license = "TODO: License declaration";
   QString package_path;
 

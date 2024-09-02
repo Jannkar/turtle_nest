@@ -15,18 +15,12 @@
  * ------------------------------------------------------------------
 */
 
-#ifndef GENERATE_LAUNCH_H
-#define GENERATE_LAUNCH_H
+#ifndef GENERATE_SETUP_PY_H
+#define GENERATE_SETUP_PY_H
 
 #include <QString>
+#include <QDir>
 
+void modify_setup_py(QString package_path, bool create_launch, bool create_config);
 
-void generate_launch_file(
-  QString workspace_path, QString package_name, QString launch_file_name, QString params_file_name,
-  QString node_name_cpp = "", QString node_name_python = "");
-QString generate_launch_text(QString package_name, QString node_name_cpp, QString node_name_python, QString params_file_name);
-void append_launch_to_cmake(QString c_make_path);
-void save_launch_file(QString file_name, QString launch_text);
-void append_launch_to_setup_py(QString setup_py_path, QString package_name);
-
-#endif // GENERATE_LAUNCH_H
+#endif // GENERATE_SETUP_PY_H

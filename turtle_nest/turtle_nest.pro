@@ -10,8 +10,11 @@ CONFIG += c++17
 
 SOURCES += \
     src/file_utils.cpp \
+    src/generate_cmake.cpp \
     src/generate_launch.cpp \
     src/generate_node.cpp \
+    src/generate_params.cpp \
+    src/generate_setup_py.cpp \
     src/main.cpp \
     src/mainwindow.cpp \
     src/rospkgcreator.cpp \
@@ -20,11 +23,14 @@ SOURCES += \
 HEADERS += \
     include/turtle_nest/build_type_enum.h \
     include/turtle_nest/file_utils.h \
+    include/turtle_nest/generate_cmake.h \
     include/turtle_nest/generate_launch.h \
     include/turtle_nest/generate_node.h \
+    include/turtle_nest/generate_setup_py.h \
     include/turtle_nest/mainwindow.h \
     include/turtle_nest/rospkgcreator.h \
-    include/turtle_nest/string_tools.h
+    include/turtle_nest/string_tools.h \
+    include/turtle_nest/generate_params.h
 
 FORMS += \
     src/mainwindow.ui

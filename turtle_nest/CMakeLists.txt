@@ -15,8 +15,11 @@ set(SOURCES
   src/main.cpp
   src/mainwindow.cpp
   src/file_utils.cpp
+  src/generate_cmake.cpp
   src/generate_launch.cpp
   src/generate_node.cpp
+  src/generate_params.cpp
+  src/generate_setup_py.cpp
   src/rospkgcreator.cpp
   src/string_tools.cpp
 )

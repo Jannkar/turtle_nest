@@ -34,7 +34,7 @@ TEST(generate_node, happy_flow)
     create_directory(package_path);
     write_file(mock_cmake_path, "ament_package()");
 
-    generate_python_node(temp_dir.path(), "package_1", "node_123");
+    generate_python_node(temp_dir.path(), "package_1", "node_123", false);
 
     QString node_path = QDir(temp_dir.path()).filePath("package_1/package_1/node_123.py");
     QString contents = read_file(node_path);
