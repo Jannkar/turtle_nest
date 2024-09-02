@@ -2,28 +2,36 @@ name: Turtle Nest CI pipeline
 on: [pull_request]
 
 jobs:
+  build-humble:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Docker Image
+        run: docker compose -f docker/docker-compose.yaml build
+
   test-humble:
     runs-on: ubuntu-latest
+    needs: build-humble
     steps:
       - uses: actions/checkout@v4
       - name: Test Humble
         run: docker compose -f docker/docker-compose.yaml run --build test
 
-  test-iron:
+  build-test-iron:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Test Iron
         run: docker compose -f docker/docker-compose.yaml run --build test-iron
 
-  test-jazzy:
+  build-test-jazzy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Test Jazzy
         run: docker compose -f docker/docker-compose.yaml run --build test-jazzy
 
-  test-rolling:
+  build-test-rolling:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -32,6 +40,7 @@ jobs:
 
   colcon-test-rolling:
     runs-on: ubuntu-latest
+    needs: build-test-rolling
     steps:
       - uses: actions/checkout@v4
       - name: Run Colcon Test Rolling
@@ -39,6 +48,7 @@ jobs:
 
   colcon-test-humble:
     runs-on: ubuntu-latest
+    needs: build-humble
     steps:
       - uses: actions/checkout@v4
       - name: Run Colcon Test Humble
