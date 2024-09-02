@@ -18,24 +18,27 @@
 #include "turtle_nest/generate_setup_py.h"
 #include "turtle_nest/file_utils.h"
 
-void modify_setup_py(QString package_path, bool create_launch, bool create_config){
-    QString setup_py_path = QDir(package_path).filePath("setup.py");
-    QString append_after = "('share/' + package_name, ['package.xml']),";
+void modify_setup_py(QString package_path, bool create_launch, bool create_config)
+{
+  QString setup_py_path = QDir(package_path).filePath("setup.py");
+  QString append_after = "('share/' + package_name, ['package.xml']),";
 
-    if (create_config){
-        QString config_content = "\n        (os.path.join('share', package_name, 'config'), glob('config/*.yaml')),";
-        append_to_file(setup_py_path, config_content, append_after);
-    }
+  if (create_config) {
+    QString config_content =
+      "\n        (os.path.join('share', package_name, 'config'), glob('config/*.yaml')),";
+    append_to_file(setup_py_path, config_content, append_after);
+  }
 
-    if (create_launch){
-        QString lines_to_append = "\n        (os.path.join('share', package_name, 'launch'), glob(os.path.join('launch', '*launch.[pxy][yma]*'))),";
-        append_to_file(setup_py_path, lines_to_append, append_after);
-    }
+  if (create_launch) {
+    QString lines_to_append =
+      "\n        (os.path.join('share', package_name, 'launch'), glob(os.path.join('launch', '*launch.[pxy][yma]*'))),";
+    append_to_file(setup_py_path, lines_to_append, append_after);
+  }
 
-    // Add imports if either launch or config was appended
-    if (create_launch || create_config){
-        QString imports("import os\n"
-                        "from glob import glob\n");
-        append_to_file_before(setup_py_path, imports, "from setuptools import");
-    }
+  // Add imports if either launch or config was appended
+  if (create_launch || create_config) {
+    QString imports("import os\n"
+      "from glob import glob\n");
+    append_to_file_before(setup_py_path, imports, "from setuptools import");
+  }
 }

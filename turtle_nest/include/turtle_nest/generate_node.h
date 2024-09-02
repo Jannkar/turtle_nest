@@ -20,7 +20,9 @@
 
 #include <QString>
 
-void generate_python_node(QString workspace_path, QString package_name, QString node_name, bool create_config);
+void generate_python_node(
+  QString workspace_path, QString package_name, QString node_name,
+  bool create_config);
 void create_init_file(QString node_dir);
 void add_exec_permissions(QString node_path);
 void generate_cpp_node(QString package_path, QString node_name, bool create_config);

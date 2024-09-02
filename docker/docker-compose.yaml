@@ -5,7 +5,7 @@ services:
       context: ../
       dockerfile: docker/Dockerfile
       args:
-          BASE_IMAGE: ros:humble
+          BASE_IMAGE: ros:jazzy
     container_name: turtle_nest
     stop_signal: SIGINT
     network_mode: host

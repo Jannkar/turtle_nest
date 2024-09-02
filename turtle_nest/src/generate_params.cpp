@@ -18,29 +18,33 @@
 #include "turtle_nest/generate_params.h"
 #include "turtle_nest/file_utils.h"
 
-void generate_params_file(QString package_path, QString params_file_name, QString node_name_cpp, QString node_name_python){
+void generate_params_file(
+  QString package_path, QString params_file_name, QString node_name_cpp,
+  QString node_name_python)
+{
   QString params_file_dir = QDir(package_path).filePath("config");
   QString params_file_path = QDir(params_file_dir).filePath(params_file_name);
   create_directory(params_file_dir);
   write_file(params_file_path, get_params_content(node_name_cpp, node_name_python));
 }
 
-QString get_params_content(QString node_name_cpp, QString node_name_python){
-    QString content = QString();
-    if (node_name_cpp != ""){
-        content = content + QString(R"(%1:
+QString get_params_content(QString node_name_cpp, QString node_name_python)
+{
+  QString content = QString();
+  if (node_name_cpp != "") {
+    content = content + QString(R"(%1:
   ros__parameters:
     example_param: "abc"
 
-)").arg(node_name_cpp);;
-    }
+)").arg(node_name_cpp);
+  }
 
-    if (node_name_python != ""){
-        content = content +  QString(R"(%1:
+  if (node_name_python != "") {
+    content = content + QString(R"(%1:
   ros__parameters:
     example_param: "abc"
 
 )").arg(node_name_python);
-    }
-    return content;
+  }
+  return content;
 }

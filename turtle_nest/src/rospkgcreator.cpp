@@ -41,7 +41,7 @@ void RosPkgCreator::create_package() const
 
   // Overwrite the simple hello world nodes with more advanced ones
   if (!node_name_python.isEmpty()) {
-      generate_python_node(workspace_path, package_name, node_name_python, create_config);
+    generate_python_node(workspace_path, package_name, node_name_python, create_config);
   }
   if (!node_name_cpp.isEmpty()) {
     generate_cpp_node(package_path, node_name_cpp, create_config);
@@ -61,15 +61,15 @@ void RosPkgCreator::create_package() const
   }
 
   // Generate parameters file
-  if (create_config){
-      generate_params_file(package_path, params_file_name + ".yaml", node_name_cpp, node_name_python);
+  if (create_config) {
+    generate_params_file(package_path, params_file_name + ".yaml", node_name_cpp, node_name_python);
   }
 
   // Modify setup.py or CMakeLists
   if (build_type == PYTHON) {
-      modify_setup_py(package_path, create_launch, create_config);
+    modify_setup_py(package_path, create_launch, create_config);
   } else {
-      modify_cmake_file(package_path, create_launch, create_config, node_name_python);
+    modify_cmake_file(package_path, create_launch, create_config, node_name_python);
   }
 
   // Add watermark

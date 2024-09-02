@@ -29,7 +29,9 @@ void generate_launch_file(
   QString workspace_path, QString package_name, QString launch_file_name, QString params_file_name,
   QString node_name_cpp, QString node_name_python)
 {
-  QString launch_text = generate_launch_text(package_name, node_name_cpp, node_name_python, params_file_name);
+  QString launch_text = generate_launch_text(
+    package_name, node_name_cpp, node_name_python,
+    params_file_name);
   QString launch_file_dir = QDir(workspace_path).filePath(package_name + "/launch/");
   QString launch_file_path = QDir(launch_file_dir).filePath(launch_file_name);
 
@@ -38,45 +40,57 @@ void generate_launch_file(
   qInfo() << "Created launch file " << launch_file_path;
 }
 
-QString generate_launch_text(QString package_name, QString node_name_cpp, QString node_name_python, QString params_file_name)
+QString generate_launch_text(
+  QString package_name, QString node_name_cpp, QString node_name_python,
+  QString params_file_name)
 {
-    QString config_import_block = params_file_name.isEmpty() ? "" : R"(import os
+  QString config_import_block =
+    params_file_name.isEmpty() ? "" :
+    R"(import os
 from ament_index_python.packages import get_package_share_directory
 )";
 
-    QString config_block = params_file_name.isEmpty() ? "" : QString(R"(
+  QString config_block = params_file_name.isEmpty() ? "" : QString(
+    R"(
     config = os.path.join(
         get_package_share_directory('%1'),
         'config',
         '%2',
     )
-)").arg(package_name, params_file_name);
+)")
+    .arg(package_name, params_file_name);
 
-    QString node_cpp_block = node_name_cpp.isEmpty() ? "" : QString(R"(
+  QString node_cpp_block = node_name_cpp.isEmpty() ? "" : QString(
+    R"(
         Node(
             package='%1',
             executable='%2',
             name='%2',
             output='screen',
             parameters=[%3],
-        ),)").arg(package_name, node_name_cpp, config_block.isEmpty() ? "" : "config");
+        ),)")
+    .arg(package_name, node_name_cpp, config_block.isEmpty() ? "" : "config");
 
-    QString node_python_block = node_name_python.isEmpty() ? "" : QString(R"(
+  QString node_python_block = node_name_python.isEmpty() ? "" : QString(
+    R"(
         Node(
             package='%1',
             executable='%2',
             name='%2',
             output='screen',
             parameters=[%3],
-        ),)").arg(package_name, node_name_python, config_block.isEmpty() ? "" : "config");
+        ),)")
+    .arg(package_name, node_name_python, config_block.isEmpty() ? "" : "config");
 
-    QString launch_content = QString(R"(%1
+  QString launch_content = QString(
+    R"(%1
 from launch import LaunchDescription
 from launch_ros.actions import Node
 
 def generate_launch_description():%2
     return LaunchDescription([%3%4
     ])
-)").arg(config_import_block, config_block, node_cpp_block, node_python_block);
-    return launch_content;
+)")
+    .arg(config_import_block, config_block, node_cpp_block, node_python_block);
+  return launch_content;
 }

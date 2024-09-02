@@ -18,33 +18,39 @@
 #include "turtle_nest/generate_cmake.h"
 #include "turtle_nest/file_utils.h"
 
-void modify_cmake_file(QString package_path, bool create_launch, bool create_config, QString python_node_name){
-    QString c_make_path = QDir(package_path).filePath("CMakeLists.txt");
-    QString append_before_text = "ament_package()";
-    if (create_launch){
-        QString launch_append = R"(# Install launch files
+void modify_cmake_file(
+  QString package_path, bool create_launch, bool create_config,
+  QString python_node_name)
+{
+  QString c_make_path = QDir(package_path).filePath("CMakeLists.txt");
+  QString append_before_text = "ament_package()";
+  if (create_launch) {
+    QString launch_append =
+      R"(# Install launch files
 install(DIRECTORY
   launch
   DESTINATION share/${PROJECT_NAME}/
 )
 
 )";
-        append_to_file_before(c_make_path, launch_append, append_before_text);
-    }
+    append_to_file_before(c_make_path, launch_append, append_before_text);
+  }
 
-    if (create_config){
-        QString config_append = R"(# Install config files
+  if (create_config) {
+    QString config_append =
+      R"(# Install config files
 install(DIRECTORY
   config
   DESTINATION share/${PROJECT_NAME}/
 )
 
 )";
-        append_to_file_before(c_make_path, config_append, append_before_text);
-    }
+    append_to_file_before(c_make_path, config_append, append_before_text);
+  }
 
-    if (!python_node_name.isEmpty()){
-        QString content(R"(# Install Python modules
+  if (!python_node_name.isEmpty()) {
+    QString content(
+      R"(# Install Python modules
 ament_python_install_package(${PROJECT_NAME})
 
 # Install Python executables
@@ -55,7 +61,7 @@ install(PROGRAMS
 )
 
 )");
-        content = content.arg(python_node_name);
-        append_to_file_before(c_make_path, content, append_before_text);
-    }
+    content = content.arg(python_node_name);
+    append_to_file_before(c_make_path, content, append_before_text);
+  }
 }

@@ -89,13 +89,13 @@ public:
 
   void on_checkboxCreateParams_toggled(bool checked);
 
-  void on_lineEditParamsName_textEdited(const QString &arg1);
+  void on_lineEditParamsName_textEdited(const QString & arg1);
 
   void on_paramsNameInfoButton_clicked();
 
   void on_lineEditParamsName_editingFinished();
 
-  private:
+private:
   Ui::MainWindow * ui;
 };
 

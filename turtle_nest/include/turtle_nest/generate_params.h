@@ -21,7 +21,9 @@
 #include <QString>
 #include <QDir>
 
-void generate_params_file(QString package_path, QString params_file_name, QString node_name_cpp, QString node_name_python);
+void generate_params_file(
+  QString package_path, QString params_file_name, QString node_name_cpp,
+  QString node_name_python);
 QString get_params_content(QString node_name_cpp, QString node_name_python);
 
 #endif // GENERATE_PARAMS_H
