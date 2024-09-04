@@ -23,91 +23,74 @@
 #include <QMessageBox>
 #include <QDir>
 #include <QDebug>
-#include <sstream>
 
 
 void generate_launch_file(
-  QString workspace_path, QString package_name, QString launch_file_name,
-  QString node_name_cpp, QString node_name_python, BuildType build_type)
+  QString workspace_path, QString package_name, QString launch_file_name, QString params_file_name,
+  QString node_name_cpp, QString node_name_python)
 {
-  QString launch_text = generate_launch_text(package_name, node_name_cpp, node_name_python);
+  QString launch_text = generate_launch_text(
+    package_name, node_name_cpp, node_name_python,
+    params_file_name);
   QString launch_file_dir = QDir(workspace_path).filePath(package_name + "/launch/");
   QString launch_file_path = QDir(launch_file_dir).filePath(launch_file_name);
 
   create_directory(launch_file_dir);
   write_file(launch_file_path, launch_text);
   qInfo() << "Created launch file " << launch_file_path;
-
-  if (build_type == PYTHON) {
-    QString setup_py_path = QDir(workspace_path).filePath(package_name + "/setup.py");
-    append_launch_to_setup_py(setup_py_path, package_name);
-  } else {
-    QString c_make_file_path = QDir(workspace_path).filePath(package_name + "/CMakeLists.txt");
-    append_launch_to_cmake(c_make_file_path);
-  }
 }
 
-QString generate_launch_text(QString package_name, QString node_name_cpp, QString node_name_python)
+QString generate_launch_text(
+  QString package_name, QString node_name_cpp, QString node_name_python,
+  QString params_file_name)
 {
-  std::ostringstream oss;
-  oss <<
-    R"(from launch import LaunchDescription
+  QString config_import_block =
+    params_file_name.isEmpty() ? "" :
+    R"(import os
+from ament_index_python.packages import get_package_share_directory
+)";
+
+  QString config_block = params_file_name.isEmpty() ? "" : QString(
+    R"(
+    config = os.path.join(
+        get_package_share_directory('%1'),
+        'config',
+        '%2.yaml',
+    )
+)")
+    .arg(package_name, params_file_name);
+
+  QString node_cpp_block = node_name_cpp.isEmpty() ? "" : QString(
+    R"(
+        Node(
+            package='%1',
+            executable='%2',
+            name='%2',
+            output='screen',
+            parameters=[%3],
+        ),)")
+    .arg(package_name, node_name_cpp, config_block.isEmpty() ? "" : "config");
+
+  QString node_python_block = node_name_python.isEmpty() ? "" : QString(
+    R"(
+        Node(
+            package='%1',
+            executable='%2',
+            name='%2',
+            output='screen',
+            parameters=[%3],
+        ),)")
+    .arg(package_name, node_name_python, config_block.isEmpty() ? "" : "config");
+
+  QString launch_content = QString(
+    R"(%1
+from launch import LaunchDescription
 from launch_ros.actions import Node
 
-def generate_launch_description():
-    return LaunchDescription([)";
-
-  if (!node_name_cpp.isEmpty()) {
-    oss << R"(
-        Node(
-            package=')" << package_name.toStdString() << R"(',
-            executable=')" << node_name_cpp.toStdString() << R"(',
-            name=')" << node_name_cpp.toStdString() <<
-      R"(',
-            output='screen',
-        ),)";
-  }
-
-  if (!node_name_python.isEmpty()) {
-    oss << R"(
-        Node(
-            package=')" << package_name.toStdString() << R"(',
-            executable=')" << node_name_python.toStdString() << R"(',
-            name=')" << node_name_python.toStdString() <<
-      R"(',
-            output='screen',
-        ),)";
-  }
-  oss << R"(
+def generate_launch_description():%2
+    return LaunchDescription([%3%4
     ])
-)";
-
-  return QString::fromStdString(oss.str());
-}
-
-void append_launch_to_cmake(QString c_make_path)
-{
-  QString lines_to_append =
-    R"(# Install launch files
-install(DIRECTORY
-  launch
-  DESTINATION share/${PROJECT_NAME}/
-)
-
-)";
-  append_to_file_before(c_make_path, lines_to_append, "ament_package()");
-}
-
-void append_launch_to_setup_py(QString setup_py_path, QString package_name)
-{
-  QString lines_to_append(
-    "(os.path.join('share', '%1', 'launch'), glob(os.path.join('launch', '*launch.[pxy][yma]*'))),\n        ");
-  lines_to_append = lines_to_append.arg(package_name);
-  append_to_file_before(
-    setup_py_path, lines_to_append,
-    "('share/ament_index/resource_index/packages'");
-
-  QString imports("import os\n"
-    "from glob import glob\n");
-  append_to_file_before(setup_py_path, imports, "from setuptools import");
+)")
+    .arg(config_import_block, config_block, node_cpp_block, node_python_block);
+  return launch_content;
 }

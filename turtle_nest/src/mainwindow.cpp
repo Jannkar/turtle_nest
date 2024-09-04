@@ -138,6 +138,10 @@ void MainWindow::on_createPackageButton_clicked()
     pkg_creator.launch_name = ui->lineEditLaunchName->text();
   }
 
+  if (ui->checkboxCreateParams->isChecked()) {
+    pkg_creator.params_file_name = ui->lineEditParamsName->text();
+  }
+
   // Row 0 is "No Licence", so it is not directly usable as the license.
   if (ui->licenseList->currentRow() != 0) {
     pkg_creator.license = get_license();
@@ -256,6 +260,7 @@ void MainWindow::on_checkboxCreateLaunch_toggled(bool checked)
   }
 }
 
+
 void MainWindow::on_lineEditLaunchName_textEdited(const QString & arg1)
 {
 
@@ -277,6 +282,34 @@ void MainWindow::on_lineEditLaunchName_editingFinished()
   }
 
 }
+
+
+void MainWindow::on_checkboxCreateParams_toggled(bool checked)
+{
+  if (checked) {
+    ui->lineEditParamsName->setText(ui->packageNameEdit->text() + "_params");
+    ui->lineEditParamsName->setEnabled(true);
+  } else {
+    ui->lineEditParamsName->setEnabled(false);
+    ui->lineEditParamsName->clear();
+  }
+}
+
+
+void MainWindow::on_lineEditParamsName_textEdited(const QString & arg1)
+{
+  QString autocorrected_text = autocorrect_line_edit(arg1, ui->lineEditParamsName);
+}
+
+
+void MainWindow::on_lineEditParamsName_editingFinished()
+{
+  // Use package name as the default params file name if the user tries to leave the field empty
+  if (ui->lineEditParamsName->text().length() < 1) {
+    ui->lineEditParamsName->setText(ui->packageNameEdit->text() + "_params");
+  }
+}
+
 
 QString MainWindow::get_license()
 {
@@ -329,6 +362,12 @@ void MainWindow::on_pythonNodeNameInfoButton_clicked()
 void MainWindow::on_launchNameInfoButton_clicked()
 {
   show_tooltip(ui->launchNameInfoButton);
+}
+
+
+void MainWindow::on_paramsNameInfoButton_clicked()
+{
+  show_tooltip(ui->paramsNameInfoButton);
 }
 
 void show_tooltip(QToolButton * button)

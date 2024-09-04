@@ -15,16 +15,13 @@
  * ------------------------------------------------------------------
 */
 
-#ifndef GENERATE_NODE_H
-#define GENERATE_NODE_H
+#ifndef GENERATE_CMAKE_H
+#define GENERATE_CMAKE_H
 
 #include <QString>
 
-void generate_python_node(
-  QString workspace_path, QString package_name, QString node_name,
-  bool create_config);
-void create_init_file(QString node_dir);
-void add_exec_permissions(QString node_path);
-void generate_cpp_node(QString package_path, QString node_name, bool create_config);
+void modify_cmake_file(
+  QString package_path, bool create_launch, bool create_config,
+  QString python_node_name);
 
-#endif // GENERATE_NODE_H
+#endif // GENERATE_CMAKE_H

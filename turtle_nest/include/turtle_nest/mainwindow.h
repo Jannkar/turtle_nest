@@ -87,6 +87,14 @@ public:
 
   void on_launchNameInfoButton_clicked();
 
+  void on_checkboxCreateParams_toggled(bool checked);
+
+  void on_lineEditParamsName_textEdited(const QString & arg1);
+
+  void on_paramsNameInfoButton_clicked();
+
+  void on_lineEditParamsName_editingFinished();
+
 private:
   Ui::MainWindow * ui;
 };

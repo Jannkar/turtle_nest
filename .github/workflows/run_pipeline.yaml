@@ -1,19 +1,37 @@
 name: Turtle Nest CI pipeline
 on: [pull_request]
+
 jobs:
-  build-test:
+  test-humble:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker compose -f docker/docker-compose.yaml build
-    - name: Test Humble
-      run: docker compose -f docker/docker-compose.yaml run test
-    - name: Test Iron
-      run: docker compose -f docker/docker-compose.yaml run test-iron
-    - name: Test Jazzy
-      run: docker compose -f docker/docker-compose.yaml run test-jazzy
-    - name: Test Rolling
-      run: docker compose -f docker/docker-compose.yaml run test-rolling
-    - name: Run Colcon Test
-      run: docker compose -f docker/docker-compose.yaml run colcon-test
+      - uses: actions/checkout@v4
+      - name: Build Humble Docker Image
+        run: docker compose -f docker/docker-compose.yaml build
+      - name: Test Humble
+        run: docker compose -f docker/docker-compose.yaml run --build test
+      - name: Run Colcon Test
+        run: docker compose -f docker/docker-compose.yaml run --build colcon-test-humble
+
+  test-iron:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test Iron
+        run: docker compose -f docker/docker-compose.yaml run --build test-iron
+
+  test-jazzy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test Jazzy
+        run: docker compose -f docker/docker-compose.yaml run --build test-jazzy
+
+  test-rolling:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test Rolling
+        run: docker compose -f docker/docker-compose.yaml run --build test-rolling
+      - name: Run Colcon Test
+        run: docker compose -f docker/docker-compose.yaml run --build colcon-test-rolling

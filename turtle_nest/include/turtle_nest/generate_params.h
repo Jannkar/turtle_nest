@@ -15,16 +15,14 @@
  * ------------------------------------------------------------------
 */
 
-#ifndef GENERATE_NODE_H
-#define GENERATE_NODE_H
+#ifndef GENERATE_PARAMS_H
+#define GENERATE_PARAMS_H
 
 #include <QString>
 
-void generate_python_node(
-  QString workspace_path, QString package_name, QString node_name,
-  bool create_config);
-void create_init_file(QString node_dir);
-void add_exec_permissions(QString node_path);
-void generate_cpp_node(QString package_path, QString node_name, bool create_config);
+void generate_params_file(
+  QString package_path, QString params_file_name, QString node_name_cpp,
+  QString node_name_python);
+QString get_params_content(QString node_name_cpp, QString node_name_python);
 
-#endif // GENERATE_NODE_H
+#endif // GENERATE_PARAMS_H

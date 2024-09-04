@@ -16,12 +16,12 @@ services:
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - ${ROS2_WS:-${HOME}/ros2_ws/src}:/home/user/ros2_ws/src
-      # For development:
-      #- ../turtle_nest:/home/user/ros2_ws/src/turtle_nest
-      #- /home/user/ros2_ws/src/turtle_nest/build/ # Exclude build from being mounted
-      #- ../turtle_nest_tests:/home/user/ros2_ws/src/turtle_nest_tests
-      #- /home/user/ros2_ws/src/turtle_nest_tests/build/  # Exclude build from being mounted
       - ${HOME}/.config/TurtleNest:/home/user/.config/TurtleNest
+      # For development:
+      - ../turtle_nest:/home/user/ros2_ws/src/turtle_nest
+      - /home/user/ros2_ws/src/turtle_nest/build/ # Exclude build from being mounted
+      - ../turtle_nest_tests:/home/user/ros2_ws/src/turtle_nest_tests
+      - /home/user/ros2_ws/src/turtle_nest_tests/build/  # Exclude build from being mounted
     environment:
       - DISPLAY
       - QT_X11_NO_MITSHM=1
@@ -79,11 +79,21 @@ services:
     stdin_open: true
     tty: true
     command: /home/user/ros2_ws/src/turtle_nest_tests/build/turtle_nest_tests
-  
-  colcon-test:
+
+  # For running uncrustify to validate formatting
+  colcon-test-rolling:
     image: turtle_nest_rolling
-    container_name: turtle_nest_colcon_test
-    profiles: ["colcon-test"]
+    container_name: turtle_nest_colcon_test_rolling
+    profiles: ["colcon-test-rolling"]
+    stdin_open: true
+    tty: true
+    command: bash -c "cd /home/user/ros2_ws/ && colcon test && colcon test-result --all --verbose"
+
+  # Uncrustify gives different results in rolling and Humble. Run also in humble
+  colcon-test-humble:
+    image: turtle_nest
+    container_name: turtle_nest_colcon_test_humble
+    profiles: ["colcon-test-humble"]
     stdin_open: true
     tty: true
     command: bash -c "cd /home/user/ros2_ws/ && colcon test && colcon test-result --all --verbose"

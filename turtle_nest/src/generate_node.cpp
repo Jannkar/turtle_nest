@@ -22,12 +22,22 @@
 #include <QDir>
 #include <QDebug>
 
-void generate_python_node(QString workspace_path, QString package_name, QString node_name)
+void generate_python_node(
+  QString workspace_path, QString package_name, QString node_name,
+  bool create_config)
 {
   QString package_path = QDir(workspace_path).filePath(package_name);
   QString node_dir = QDir(package_path).filePath(package_name);
   QString node_path = QDir(node_dir).filePath(node_name + ".py");
 
+  // Block to be added if parameter file was created
+  QString param_declare_block =
+    !create_config ? "" :
+    R"(
+        example_param = self.declare_parameter("example_param", "default_value").value
+        self.get_logger().info(f"Declared parameter 'example_param'. Value: {example_param}"))";
+
+  // Main content
   QString content = QString(
     R"(#!/usr/bin/env python3
 import rclpy
@@ -39,7 +49,7 @@ from std_msgs.msg import String
 class %2(Node):
 
     def __init__(self):
-        super().__init__("%1")
+        super().__init__("%1")%3
         self.get_logger().info("Hello world from the Python node %1")
 
 
@@ -60,7 +70,7 @@ def main(args=None):
 if __name__ == '__main__':
     main()
 )")
-    .arg(node_name, to_camel_case(node_name));
+    .arg(node_name, to_camel_case(node_name), param_declare_block);
 
   create_directory(node_dir);
   write_file(node_path, content);
@@ -93,23 +103,16 @@ void add_exec_permissions(QString node_path)
   }
 }
 
-void add_py_node_to_cmake(QString c_make_file_path, QString package_name, QString node_name)
-{
-  QString content("# Install Python modules\n"
-    "ament_python_install_package(${PROJECT_NAME})\n\n"
-    "# Install Python executables\n"
-    "install(PROGRAMS\n"
-    "    %1/%2.py\n"
-    "DESTINATION lib/${PROJECT_NAME}\n"
-    "RENAME %2"
-    ")\n\n");
-  content = content.arg(package_name, node_name);
-  append_to_file_before(c_make_file_path, content, "ament_package()");
-}
 
-
-void generate_cpp_node(QString package_path, QString node_name)
+void generate_cpp_node(QString package_path, QString node_name, bool create_config)
 {
+  QString params_block =
+    !create_config ? "" :
+    R"(
+      this->declare_parameter<std::string>("example_param", "default_value");
+      std::string example_param = this->get_parameter("example_param").as_string();
+      RCLCPP_INFO(this->get_logger(), "Declared parameter 'example_param'. Value: %s", example_param.c_str());
+)";
   // Uncrustify considers this as a single line. Skip.
   /* *INDENT-OFF* */
     QString content = QString(R"(#include "rclcpp/rclcpp.hpp"
@@ -120,7 +123,7 @@ class %2 : public rclcpp::Node
   public:
     %2()
     : Node("%1")
-    {
+    {%3
       RCLCPP_INFO(this->get_logger(), "Hello world from the C++ node %s", "%1");
     }
 };
@@ -131,7 +134,7 @@ int main(int argc, char * argv[])
   rclcpp::spin(std::make_shared<%2>());
   rclcpp::shutdown();
   return 0;
-})").arg(node_name, to_camel_case(node_name));
+})").arg(node_name, to_camel_case(node_name), params_block);
   /* *INDENT-ON* */
   write_file(QDir(package_path).filePath("src/" + node_name + ".cpp"), content);
 }

@@ -17,8 +17,11 @@
 
 #include "turtle_nest/rospkgcreator.h"
 #include "turtle_nest/file_utils.h"
+#include "turtle_nest/generate_cmake.h"
 #include "turtle_nest/generate_launch.h"
 #include "turtle_nest/generate_node.h"
+#include "turtle_nest/generate_params.h"
+#include "turtle_nest/generate_setup_py.h"
 #include "turtle_nest/string_tools.h"
 
 #include <QDir>
@@ -33,29 +36,40 @@ void RosPkgCreator::create_package() const
   QStringList command = create_command();
   run_command(command);
 
+  bool create_launch = (launch_name != "");
+  bool create_config = (params_file_name != "");
+
   // Overwrite the simple hello world nodes with more advanced ones
   if (!node_name_python.isEmpty()) {
-    generate_python_node(workspace_path, package_name, node_name_python);
+    generate_python_node(workspace_path, package_name, node_name_python, create_config);
   }
   if (!node_name_cpp.isEmpty()) {
-    generate_cpp_node(package_path, node_name_cpp);
+    generate_cpp_node(package_path, node_name_cpp, create_config);
   }
 
-  // Setup Python stuff if using both Cpp and Python
+  // Create Python init file if creating CPP and Python package
   if (build_type == CPP_AND_PYTHON) {
     QString node_dir = QDir(package_path).filePath(package_name);
     create_init_file(node_dir);
-    if (!node_name_python.isEmpty()) {
-      QString c_make_file_path = QDir(package_path).filePath("CMakeLists.txt");
-      add_py_node_to_cmake(c_make_file_path, package_name, node_name_python);
-      qInfo() << "Python Node added to CMakeLists.txt";
-    }
   }
 
-  if (launch_name != "") {
+  // Generate launch file
+  if (create_launch) {
     generate_launch_file(
-      workspace_path, package_name, launch_name + ".py", node_name_cpp,
-      node_name_python, build_type);
+      workspace_path, package_name, launch_name + ".py", params_file_name, node_name_cpp,
+      node_name_python);
+  }
+
+  // Generate parameters file
+  if (create_config) {
+    generate_params_file(package_path, params_file_name + ".yaml", node_name_cpp, node_name_python);
+  }
+
+  // Modify setup.py or CMakeLists
+  if (build_type == PYTHON) {
+    modify_setup_py(package_path, create_launch, create_config);
+  } else {
+    modify_cmake_file(package_path, create_launch, create_config, node_name_python);
   }
 
   // Add watermark

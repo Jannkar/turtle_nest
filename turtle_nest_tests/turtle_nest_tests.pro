@@ -15,7 +15,10 @@ SOURCES += \
         ../turtle_nest/src/file_utils.cpp \
         ../turtle_nest/src/generate_node.cpp \
         ../turtle_nest/src/rospkgcreator.cpp \
+        ../turtle_nest/src/generate_cmake.cpp \
         ../turtle_nest/src/generate_launch.cpp \
+        ../turtle_nest/src/generate_params.cpp \
+        ../turtle_nest/src/generate_setup_py.cpp \
         ../turtle_nest/src/string_tools.cpp
 
 INCLUDEPATH += ../turtle_nest/include/

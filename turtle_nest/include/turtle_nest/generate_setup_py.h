@@ -15,16 +15,11 @@
  * ------------------------------------------------------------------
 */
 
-#ifndef GENERATE_NODE_H
-#define GENERATE_NODE_H
+#ifndef GENERATE_SETUP_PY_H
+#define GENERATE_SETUP_PY_H
 
 #include <QString>
 
-void generate_python_node(
-  QString workspace_path, QString package_name, QString node_name,
-  bool create_config);
-void create_init_file(QString node_dir);
-void add_exec_permissions(QString node_path);
-void generate_cpp_node(QString package_path, QString node_name, bool create_config);
+void modify_setup_py(QString package_path, bool create_launch, bool create_config);
 
-#endif // GENERATE_NODE_H
+#endif // GENERATE_SETUP_PY_H

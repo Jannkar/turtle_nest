@@ -22,15 +22,13 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Make default shell in Dockerfile bash instead of sh
 SHELL ["/bin/bash", "-c"]
 
-# Setup cyclone DDS
-ENV RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
-
 # Install dependencies
 # ROS already comes with gtest, but not with libgmock. Install it
 RUN sudo apt-get update && \
     sudo apt-get install -y --no-install-recommends \
     libgmock-dev \
-    ros-${ROS_DISTRO}-rmw-cyclonedds-cpp \
+    nano \
+    htop \
     && sudo apt-get clean && \
     sudo rm -rf /var/lib/apt/lists/*
 
