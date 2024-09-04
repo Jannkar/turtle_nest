@@ -19,7 +19,6 @@
 #define GENERATE_CMAKE_H
 
 #include <QString>
-#include <QDir>
 
 void modify_cmake_file(
   QString package_path, bool create_launch, bool create_config,

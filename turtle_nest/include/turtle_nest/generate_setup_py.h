@@ -19,7 +19,6 @@
 #define GENERATE_SETUP_PY_H
 
 #include <QString>
-#include <QDir>
 
 void modify_setup_py(QString package_path, bool create_launch, bool create_config);
 

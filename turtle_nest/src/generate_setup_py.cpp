@@ -17,6 +17,7 @@
 
 #include "turtle_nest/generate_setup_py.h"
 #include "turtle_nest/file_utils.h"
+#include <QDir>
 
 void modify_setup_py(QString package_path, bool create_launch, bool create_config)
 {

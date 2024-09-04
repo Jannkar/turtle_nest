@@ -25,8 +25,6 @@
 #include <QRegularExpression>
 #include <QProcess>
 #include <QTimer>
-#include <QCoreApplication>
-#include <QObject>
 #include <QDateTime>
 #include <QStringList>
 #include <QElapsedTimer>

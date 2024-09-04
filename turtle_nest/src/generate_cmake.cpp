@@ -17,6 +17,7 @@
 
 #include "turtle_nest/generate_cmake.h"
 #include "turtle_nest/file_utils.h"
+#include <QDir>
 
 void modify_cmake_file(
   QString package_path, bool create_launch, bool create_config,

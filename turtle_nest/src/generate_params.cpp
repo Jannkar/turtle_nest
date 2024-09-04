@@ -17,6 +17,7 @@
 
 #include "turtle_nest/generate_params.h"
 #include "turtle_nest/file_utils.h"
+#include <QDir>
 
 void generate_params_file(
   QString package_path, QString params_file_name, QString node_name_cpp,
