@@ -55,7 +55,7 @@ from ament_index_python.packages import get_package_share_directory
     config = os.path.join(
         get_package_share_directory('%1'),
         'config',
-        '%2',
+        '%2.yaml',
     )
 )")
     .arg(package_name, params_file_name);

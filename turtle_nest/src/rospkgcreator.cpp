@@ -56,7 +56,7 @@ void RosPkgCreator::create_package() const
   // Generate launch file
   if (create_launch) {
     generate_launch_file(
-      workspace_path, package_name, launch_name + ".py", params_file_name + ".yaml", node_name_cpp,
+      workspace_path, package_name, launch_name + ".py", params_file_name, node_name_cpp,
       node_name_python);
   }
 
