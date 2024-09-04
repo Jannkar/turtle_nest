@@ -30,12 +30,11 @@ void generate_python_node(
   QString node_dir = QDir(package_path).filePath(package_name);
   QString node_path = QDir(node_dir).filePath(node_name + ".py");
 
-  // Blocks to be added if parameter file was created
-  QString param_import_block = !create_config ? "" : "from rclpy import Parameter\n";
+  // Block to be added if parameter file was created
   QString param_declare_block =
     !create_config ? "" :
     R"(
-        example_param = self.declare_parameter("example_param", Parameter.Type.STRING).value
+        example_param = self.declare_parameter("example_param", "default_value").value
         self.get_logger().info(f"Declared parameter 'example_param'. Value: {example_param}"))";
 
   // Main content
@@ -43,7 +42,7 @@ void generate_python_node(
     R"(#!/usr/bin/env python3
 import rclpy
 from rclpy.node import Node
-%4
+
 from std_msgs.msg import String
 
 
@@ -71,7 +70,7 @@ def main(args=None):
 if __name__ == '__main__':
     main()
 )")
-    .arg(node_name, to_camel_case(node_name), param_declare_block, param_import_block);
+    .arg(node_name, to_camel_case(node_name), param_declare_block);
 
   create_directory(node_dir);
   write_file(node_path, content);
@@ -110,7 +109,7 @@ void generate_cpp_node(QString package_path, QString node_name, bool create_conf
   QString params_block =
     !create_config ? "" :
     R"(
-      this->declare_parameter<std::string>("example_param");
+      this->declare_parameter<std::string>("example_param", "default_value");
       std::string example_param = this->get_parameter("example_param").as_string();
       RCLCPP_INFO(this->get_logger(), "Declared parameter 'example_param'. Value: %s", example_param.c_str());
 )";
