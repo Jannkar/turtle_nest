@@ -1,10 +1,14 @@
 ![Turtle Nest](images/turtle_nest_logo_large.png)
 
-Just as a turtle nest is the birthplace for young turtles, ROS 2 Turtle Nest is where new ROS packages are born and brought to life.
+![Turtle Nest CI Pipeline](https://github.com/jannkar/turtle_nest/actions/workflows/run_pipeline.yaml/badge.svg)
+
+# Turtle Nest
+
+Just as the natural turtle nests are the birthplace for young turtles, ROS 2 Turtle Nest is where new ROS packages are born and brought to life.
 
 Turtle Nest provides an easy graphical user interface for creating new ROS packages, simplifying the package creation process.
 
-<h2>Why to use Turtle Nest?</h2>
+## Why to use Turtle Nest?
 
 - **Easy to use** - no need to dig through the ROS 2 documentation for the right commands or manually add things to CMakeLists.txt or setup.py.
 - **Creates C++ and/or Python nodes** - which are ready for immediate development.
@@ -16,7 +20,7 @@ Turtle Nest provides an easy graphical user interface for creating new ROS packa
 - **Remembers the important details** - workspace path, maintainer name, and maintainer email for your future packages.
 - **And more!**
 
-<h2>Prerequisites</h2>
+## Prerequisites
 
 - Ubuntu 22 or 24
 - ROS 2 (any one of the following versions)
@@ -25,7 +29,7 @@ Turtle Nest provides an easy graphical user interface for creating new ROS packa
   - Jazzy
   - Rolling
 
-<h2>Installation</h2>
+## Installation
 
 Create a new ROS 2 workspace if you don't yet have one. Then clone the repository, install dependencies and build the application.
 ```
@@ -39,7 +43,7 @@ colcon build
 source install/setup.bash
 ```
 
-<h2>Usage</h2>
+## Usage
 To run the application, simply execute:
 
 ```
@@ -64,7 +68,16 @@ If you created a node or a launch file, you can run them with the following comm
     ros2 launch <package_name> <launch_file_name>
     ```
 
-<h2>Screenshots</h2>
+## Build Status
+
+| Distro | Status | 
+| :---:  | :---:  |
+| Humble | [![Build Status](https://build.ros2.org/buildStatus/icon?job=Hbin_uJ64__turtle_nest__ubuntu_jammy_amd64__binary)](https://build.ros2.org/job/Hbin_uJ64__turtle_nest__ubuntu_jammy_amd64__binary/)|
+| Iron | [![Build Status](https://build.ros2.org/buildStatus/icon?job=Ibin_uJ64__turtle_nest__ubuntu_jammy_amd64__binary)](https://build.ros2.org/job/Ibin_uJ64__turtle_nest__ubuntu_jammy_amd64__binary/)  |
+| Jazzy | [![Build Status](https://build.ros2.org/buildStatus/icon?job=Jbin_uN64__turtle_nest__ubuntu_noble_amd64__binary)](https://build.ros2.org/job/Jbin_uN64__turtle_nest__ubuntu_noble_amd64__binary/)  |
+| Rolling | [![Build Status](https://build.ros2.org/buildStatus/icon?job=Rbin_uN64__turtle_nest__ubuntu_noble_amd64__binary)](https://build.ros2.org/job/Rbin_uN64__turtle_nest__ubuntu_noble_amd64__binary/)  |
+
+## Screenshots
 
 ![Screenshot 1](images/screenshot_p1.png)
 ![Screenshot 2](images/screenshot_p2.png)
