@@ -70,6 +70,10 @@ If you created a node or a launch file, you can run them with the following comm
 ![Screenshot 2](images/screenshot_p2.png)
 ![Screenshot 3](images/screenshot_p3.png)
 
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=Jannkar/turtle_nest&type=Date)](https://star-history.com/#Jannkar/turtle_nest&Date)
+
 ## Maintainers
 
 - [Janne Karttunen](https://www.linkedin.com/in/janne-karttunen-a22375209/)
