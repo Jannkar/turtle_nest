@@ -37,7 +37,9 @@ sudo apt update
 sudo apt install ros-${ROS_DISTRO}-turtle-nest
 ```
 
-If your `${ROS_DISTRO}` env variable is not set, replace it with your ROS 2 distribution, such as `humble` or `jazzy`.
+* If your `${ROS_DISTRO}` env variable is not set, replace it with your ROS 2 distribution, such as `humble` or `jazzy`.
+* If you are using `rolling` distribution, you still need to build the package from the source.
+
 
 ## Usage
 To run the application, simply execute:
