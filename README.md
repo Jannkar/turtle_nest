@@ -31,17 +31,13 @@ Turtle Nest provides an easy graphical user interface for creating new ROS packa
 
 ## Installation
 
-Create a new ROS 2 workspace if you don't yet have one. Then clone the repository, install dependencies and build the application.
+Install the package by running:
 ```
-mkdir -p $HOME/ros2_ws/src/
-cd $HOME/ros2_ws/src/
-git clone https://github.com/Jannkar/turtle_nest.git
-cd ..
-sudo apt-get update
-rosdep install --from-paths src --ignore-src -r -y --rosdistro ${ROS_DISTRO}
-colcon build
-source install/setup.bash
+sudo apt update
+sudo apt install ros-${ROS_DISTRO}-turtle-nest
 ```
+
+If your `${ROS_DISTRO}` env variable is not set, replace it with your ROS 2 distribution, such as `humble` or `jazzy`.
 
 ## Usage
 To run the application, simply execute:
@@ -50,23 +46,38 @@ To run the application, simply execute:
 turtle-nest
 ```
 
-Fill in the necessary information in the GUI to create a new ROS 2 package. After the package has been created, build and source the new package:
+Fill in the necessary information in the GUI to create a new ROS 2 package. 
+
+After the package has been created, build and source the new package as normal:
 
 ```
-cd $HOME/ros2_ws/
-colcon build
+cd <ros2_ws_location>
+colcon build --symlink-install
 source install/setup.bash
 ```
+<br>
+<details>
+  <summary><i>Optional step:</i> Add your workspace to bashrc for automatic sourcing in new terminals (only once per workspace)</summary>
 
-If you created a node or a launch file, you can run them with the following commands:
-* To run a node:
-    ```
-    ros2 run <package_name> <node_name>
-    ```
-* To launch the launch file
+    echo "source <ros2_ws_location>/install/setup.bash" >> ~/.bashrc
+</details>
+<br>
+
+If you created a Node or a launch file, you can run them with one the following commands:
+
+* Run your Nodes using the launch file:
     ```
     ros2 launch <package_name> <launch_file_name>
     ```
+* Run a single Node (without parameters):
+    ```
+    ros2 run <package_name> <node_name>
+    ```
+* Run a single Node with a parameter file:
+  ```
+  ros2 run <package_name> <node_name> --ros-args --params-file <params_file_path>
+  ```
+    
 
 ## Build Status
 
