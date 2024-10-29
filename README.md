@@ -102,4 +102,10 @@ If you created a Node or a launch file, you can run them with one the following 
 
 ## Maintainers
 
-- [Janne Karttunen](https://www.linkedin.com/in/janne-karttunen-a22375209/)
+- [Janne Karttunen](https://www.linkedin.com/in/janne-karttunen-a22375209/) (Henki Robotics)
+
+<br>
+
+**Looking for professional ROS 2 development services?** Check us out at [Henki Robotics](https://henkirobotics.com)
+
+[<img src="https://github.com/user-attachments/assets/150b7ce6-f73a-4039-a8ff-d93c7769e33b" alt="Henki Robotics Logo" width="200"/>](https://henkirobotics.com)
