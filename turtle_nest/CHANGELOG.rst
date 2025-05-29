@@ -2,8 +2,8 @@
 Changelog for package turtle_nest
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.3 (2025-05-29)
+------------------
 * Replace ament_target_dependencies with target_link_libraries (`#16 <https://github.com/Jannkar/turtle_nest/issues/16>`_)
 * Contributors: Alejandro Hernández Cordero
 
