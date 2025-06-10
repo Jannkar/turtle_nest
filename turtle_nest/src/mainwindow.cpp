@@ -108,7 +108,6 @@ void MainWindow::on_browseButton_clicked()
     return;
   }
   ui->workspacePathEdit->setText(workspace_path);
-  qDebug() << "Workspace set: " << workspace_path;
 }
 
 
@@ -303,7 +302,7 @@ void MainWindow::on_checkboxCreateParams_toggled(bool checked)
 
 void MainWindow::on_lineEditParamsName_textEdited(const QString & arg1)
 {
-  QString autocorrected_text = autocorrect_line_edit(arg1, ui->lineEditParamsName);
+  autocorrect_line_edit(arg1, ui->lineEditParamsName);
 }
 
 

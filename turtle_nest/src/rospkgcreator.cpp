@@ -23,7 +23,6 @@
 #include "turtle_nest/generate_params.h"
 #include "turtle_nest/generate_setup_py.h"
 #include "turtle_nest/string_tools.h"
-#include "turtle_nest/node_type_enum.h"
 
 #include <QDir>
 #include <QFile>
@@ -85,7 +84,6 @@ void RosPkgCreator::create_package() const
   } else {
     qDebug() << "Failed to open the package.xml for appending watermark.";
   }
-
 }
 
 QStringList RosPkgCreator::create_command() const

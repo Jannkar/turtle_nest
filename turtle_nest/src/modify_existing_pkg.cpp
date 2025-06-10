@@ -20,7 +20,6 @@
 #include "turtle_nest/node_type_enum.h"
 #include "turtle_nest/packageinfo.h"
 #include "turtle_nest/file_utils.h"
-#include <iostream>
 #include <QDebug>
 #include <QDirIterator>
 #include <QDesktopServices>
@@ -49,7 +48,6 @@ std::map<QString, PackageInfo> list_packages(QString workspace_path){
         PackageInfo pkg_info;
         pkg_info.workspace_path = workspace_path;
         pkg_info.package_name = read_xml_tag(package_xml_path, "name");
-        qDebug() << "Found package:" << pkg_info.package_name;
         pkg_info.package_path = package_dir.path();
 
         pkg_info.package_type = get_package_build_type(pkg_info.package_path, pkg_info.package_name);
@@ -143,7 +141,7 @@ bool is_cpp_package(QString package_path){
     return QFile::exists(QDir(package_path).filePath("CMakeLists.txt"));
 }
 
-bool is_mixed_package(QString package_path, QString package_name){
+bool is_mixed_package(QString package_path){
     QString cmakelists_path = QDir(package_path).filePath("CMakeLists.txt");
     if (!QFile::exists(cmakelists_path)){
         return false;
@@ -172,7 +170,7 @@ BuildType get_package_build_type(QString package_path, QString package_name){
     else if (is_python_package(package_path)){
         return PYTHON;
     }
-    else if (is_mixed_package(package_path, package_name)){
+    else if (is_mixed_package(package_path)){
         return CPP_AND_PYTHON;
     }
     else if (is_cpp_package(package_path)){
@@ -189,7 +187,8 @@ QString clean_description(const QString &input) {
     // line as the <description> tag. This leads to extra whitespaces. Remove
     // the extra whitespaces, while maintaining the paragraph structure.
     QStringList paragraphs;
-    for (const QString &block : input.split(QRegularExpression("\\n\\s*\\n"))) {
+    static const QRegularExpression paragraphSeparator("\\n\\s*\\n");
+    for (const QString &block : input.split(paragraphSeparator)) {
         QString line = block.simplified();
         paragraphs << line;
     }

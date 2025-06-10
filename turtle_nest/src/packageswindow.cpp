@@ -18,7 +18,6 @@
 #include "turtle_nest/packageswindow.h"
 #include "turtle_nest/file_utils.h"
 #include "turtle_nest/modify_existing_pkg.h"
-#include "turtle_nest/rospkgcreator.h"
 #include "ui_packageswindow.h"
 
 #include <QScrollBar>
@@ -80,7 +79,7 @@ void PackagesWindow::refresh_package_list(QString select_package){
     ui->centralwidget->setEnabled(false);
 
     // Run the package listing in a separate thread, as it might take a while.
-    QtConcurrent::run([this, select_package]() {
+    (void)QtConcurrent::run([this, select_package]() {
         packages = list_packages(workspace_path);
 
         QMetaObject::invokeMethod(this, [this, select_package]() {
@@ -151,7 +150,7 @@ void PackagesWindow::refresh_package_list(QString select_package){
     });
 }
 
-void PackagesWindow::on_packagesListWidget_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous)
+void PackagesWindow::on_packagesListWidget_currentItemChanged(QListWidgetItem *, QListWidgetItem *)
 {
     // Make sure the package info-form is shown.
     ui->stackedPackageInfoWidget->setCurrentIndex(0);
@@ -181,7 +180,6 @@ void PackagesWindow::on_createNewPackageButton_clicked()
     MainWindow mainWindow(this, get_workspace_path_with_src(workspace_path));
     if (mainWindow.exec() == QDialog::Accepted) {  // Check if accepted
         QString pkg_name = mainWindow.get_created_package_name();
-        qInfo() << "Created:" << pkg_name;
         refresh_package_list(pkg_name);
     }
 }

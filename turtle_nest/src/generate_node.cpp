@@ -31,11 +31,7 @@
 #include <QDebug>
 #include <QRegularExpression>
 
-
-#include "tinyxml2.h"
-
 #include <turtle_nest/package_xml_tools.h>
-using namespace tinyxml2;
 
 namespace py = pybind11;
 
@@ -249,11 +245,9 @@ void add_rclpy_dependency_to_package_xml(QString package_path){
 
     // If rclpy is already exec_depend or depend, don't add.
     if (xml_editor.has_dependency("rclpy", DependencyType::DEPEND)){
-        qDebug() << "Already has dependency rclpy!";
         return;
     }
     if (xml_editor.has_dependency("rclpy", DependencyType::EXEC_DEPEND)){
-        qDebug() << "Already has exec_dependency rclpy!";
         return;
     }
 
@@ -272,16 +266,12 @@ void add_rclcpp_dependency_to_package_xml(QString package_path){
     bool has_build_depend = xml_editor.has_dependency("rclcpp", DependencyType::BUILD_DEPEND);
 
     if (has_exec_depend && has_build_depend) {
-        qDebug() << "Already has exec_depend and build_depend rclcpp!";
         return;
     } else if (has_exec_depend && !has_build_depend) {
-        qDebug() << "Adding build_depend rclcpp!";
         xml_editor.add_dependency("rclcpp", DependencyType::BUILD_DEPEND);
     } else if (!has_exec_depend && has_build_depend) {
-        qDebug() << "Adding exec_depend rclcpp!";
         xml_editor.add_dependency("rclcpp", DependencyType::EXEC_DEPEND);
     } else {
-        qDebug() << "Adding depend rclcpp!";
         xml_editor.add_dependency("rclcpp", DependencyType::DEPEND);
     }
 }
@@ -329,7 +319,6 @@ QString generate_new_setup_py(PackageInfo pkg_info, QString node_name){
     py::module sys = py::module::import("sys");
     sys.attr("path").cast<py::list>().append(script_path.toStdString());
 
-    qDebug() << "Running Python module:" << module_name << ", function:" << function_name;
     py::module module = py::module::import(module_name.toStdString().c_str());
     py::object func = module.attr(function_name.toStdString().c_str());
 

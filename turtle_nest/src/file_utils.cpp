@@ -28,7 +28,6 @@ void create_directory(QString path)
 {
   QDir dir(path);
   if (dir.exists()) {
-    qDebug() << "Skipping creation of directory: " + path + " (already exists).";
     return;
   }
 
