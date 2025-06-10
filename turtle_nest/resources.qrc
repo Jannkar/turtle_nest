@@ -1,9 +1,38 @@
 <RCC>
     <qresource prefix="/images">
         <file>img/turtle_nest_logo-500x500.png</file>
-        <file>img/info_icon_92px.png</file>
+        <file>img/python-logo-generic.svg</file>
+        <file>img/cpp_logo.svg</file>
+        <file>img/edit-pen-icon.svg</file>
+        <file>img/plus-line-icon.svg</file>
+        <file>img/empty-box-icon.svg</file>
+        <file>img/computer-folder-open-icon.svg</file>
+        <file>img/close-line-icon.svg</file>
+        <file>img/msgs.svg</file>
+        <file>img/update-icon.svg</file>
+        <file>img/Spin@1x-1.0s-80px-80px.gif</file>
+        <file>img/turtle_nest_app_icon.png</file>
+        <file>img/more-info-icon.svg</file>
     </qresource>
     <qresource prefix="/stylesheets">
         <file>custom_theme.qss</file>
+    </qresource>
+    <qresource prefix="/fonts">
+        <file>fonts/Ubuntu_Sans/static/UbuntuSans-Light.ttf</file>
+        <file>fonts/Ubuntu_Sans/static/UbuntuSans-Bold.ttf</file>
+        <file>fonts/Ubuntu_Sans/static/UbuntuSans-ExtraBoldItalic.ttf</file>
+        <file>fonts/Ubuntu_Sans/static/UbuntuSans-Regular.ttf</file>
+        <file>fonts/Ubuntu_Sans/static/UbuntuSans-LightItalic.ttf</file>
+        <file>fonts/Ubuntu_Sans/static/UbuntuSans-ExtraLight.ttf</file>
+        <file>fonts/Ubuntu_Sans/static/UbuntuSans-BoldItalic.ttf</file>
+        <file>fonts/Ubuntu_Sans/static/UbuntuSans-SemiBold.ttf</file>
+        <file>fonts/Ubuntu_Sans/static/UbuntuSans-Medium.ttf</file>
+        <file>fonts/Ubuntu_Sans/static/UbuntuSans-MediumItalic.ttf</file>
+        <file>fonts/Ubuntu_Sans/static/UbuntuSans-Thin.ttf</file>
+        <file>fonts/Ubuntu_Sans/static/UbuntuSans-ExtraBold.ttf</file>
+        <file>fonts/Ubuntu_Sans/static/UbuntuSans-ThinItalic.ttf</file>
+        <file>fonts/Ubuntu_Sans/static/UbuntuSans-ExtraLightItalic.ttf</file>
+        <file>fonts/Ubuntu_Sans/static/UbuntuSans-SemiBoldItalic.ttf</file>
+        <file>fonts/Ubuntu_Sans/static/UbuntuSans-Italic.ttf</file>
     </qresource>
 </RCC>

@@ -1,18 +1,27 @@
 QMainWindow {
-    background-color: #fdfefb;  /* Hint of green */
+    background-color: #fdfefb;
+}
+
+QDialog {
+    background-color: #fdfefb;
 }
 
 /*-----QPushButton-----*/
 QPushButton
 {
-    background-color: #db832c;
-    color: #ffffff;
+    background-color: white;
+    color: black;
+    border-color: #e3e3e3;
     border-style: solid;
-    border-radius: 3px;
+    border-width: 2px;
+    border-radius: 8px;
     padding: 5px;
-
 }
 
+QPushButton::hover
+{
+    background-color: #ececec;
+}
 
 QPushButton::disabled
 {
@@ -22,51 +31,282 @@ QPushButton::disabled
     border-width: 1px;
 }
 
-
-QPushButton::hover
-{
-    background-color: #df9042;
-    color: #ffffff;
-}
-
-
 QPushButton::pressed
 {
-    background-color: #cb7623;
+    background-color: #e3e3e3;
 }
 
-QPushButton#low_attention_button {
-    background-color: white;
-    color: #db832c;
-    border-color: #db832c;
-    border-style: solid;
-    border-width: 1px;
-    border-radius: 3px;
-    padding: 5px;
-}
-
-QPushButton#low_attention_button::hover
+QPushButton[role="primary"]
 {
-    background-color: #fcf5ee;
+    background-color: #db832c;
+    border: none;
+    color: #ffffff;
+    font-weight: 500;
 }
 
-QPushButton#low_attention_button::disabled
+QPushButton[role="primary"]::disabled
 {
-    background-color: white;
+    background-color: #e0e0e0;
     color: #808080;
     border-color: #808080;
     border-width: 1px;
 }
 
-QPushButton#low_attention_button::pressed
+QPushButton[role="primary"]::hover
+{
+    background-color: #df9042;
+    color: #ffffff;
+}
+
+QPushButton[role="primary"]::pressed
+{
+    background-color: #cb7623;
+}
+
+QPushButton[role="primary"]::disabled
+{
+    background-color: #e0e0e0;
+    color: #808080;
+    border-color: #808080;
+    border-width: 1px;
+}
+
+QPushButton[role="secondary"] {
+    color: #db832c;
+    border-color: #db832c;
+    font-weight: 500;
+}
+
+QPushButton[role="secondary"]::hover
+{
+    background-color: #fcf5ee;
+}
+
+
+QPushButton[role="secondary"]::pressed
 {
     background-color: #f4dcc3;
 }
 
-
-QToolTip
+QPushButton[role="secondary"]::disabled
 {
-    background-color: #f7fdfc;
-    padding: 5px;
-    border-style: none;
+    background-color: #e0e0e0;
+    color: #808080;
+    border-color: #808080;
+    border-width: 1px;
+}
+
+
+QPlainTextEdit {
+    background: white;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    padding: 8px;
+    color: #333;
+}
+
+QLineEdit[modernStyle="true"]
+{
+    background: white;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    padding: 8px;
+    min-height: 24px;
+    color: #333;
+}
+
+QLineEdit[modernStyle="true"]:hover {
+    border: 2px solid #aaa; /* Darker border on hover */
+}
+
+QLineEdit[modernStyle="true"]:focus {
+    border: 2px solid #0078d7; /* Modern blue border */
+    outline: none;
+}
+
+QLineEdit[modernStyle="true"]:read-only {
+    background: #f0f0f0; /* Light gray background */
+    border: 2px solid #d0d0d0; /* Softer border */
+    color: #777; /* Dimmed text color */
+}
+
+QLineEdit[modernStyle="true"]:disabled {
+    background: #f0f0f0; /* Light gray background */
+    border: 2px solid #ccc; /* Soft gray border */
+    color: #888; /* Dimmed text color */
+}
+
+QLineEdit#mainWorkspacePathEdit{
+    background-color: white;
+    color: #333;
+    padding: 2px;
+    border: 1px solid #ccc; /* Soft border */
+    border-radius: 4px;
+}
+
+#mainWorkspacePathEdit:hover {
+    border: 1px solid #aaa;
+}
+
+#mainWorkspacePathEdit:focus {
+    border: 2px solid #0078d7;
+    outline: none;
+}
+
+#mainWorkspacePathEdit:read-only {
+    background: #f0f0f0;
+    border: 1px solid #ccc;
+    color: black;
+}
+
+QToolTip {
+    color: white;
+    background-color: #2e2e2e;
+    border: 1px solid #555;
+    padding: 4px;
+    font-size: 12px;
+}
+
+/*
+ListWidget
+*/
+
+
+QListWidget {
+    background: #ffffff;
+    border-radius: 8px;
+    border: 1px solid lightGray;
+    color: #000000;
+    outline: none;
+}
+
+QListWidget::item {
+    background: #ffffff;
+    padding: 8px;
+    border-radius: 8px;
+    margin: 4px;
+}
+
+QListWidget::item:hover {
+    background: #ececec;
+}
+
+
+QListWidget::item:selected {
+    background: #e3e3e3;
+    color: #000000;
+}
+
+
+QListWidget::item:selected#licenseList {
+    background: #6A8CAF;
+    color: white;
+}
+
+
+/* Scrollbars */
+QScrollBar:vertical {
+   border: none;
+   background: transparent;
+   border-radius: 5px;
+   width: 10px;
+   margin: 2px 0 2px 0;
+}
+
+QScrollBar::handle:vertical {
+   background: #e3e3e3;
+   min-height: 20px;
+   border-radius: 5px;
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+   border: none;
+   background: none;
+}
+
+QScrollBar:horizontal {
+   border: none;
+   background: transparent;
+   border-radius: 5px;
+   height: 10px;
+   margin: 0 2px 0 2px;
+}
+
+QScrollBar::handle:horizontal {
+   background: #e3e3e3;
+   min-width: 20px;
+   border-radius: 5px;
+}
+
+QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {
+   border: none;
+   background: none;
+}
+
+QAbstractScrollArea::corner {
+    width: 0px;
+    height: 0px;
+    background: transparent;
+}
+
+QLabel#header {
+    color: #000000;
+    font-size: 28px;
+    font-weight: 600;
+}
+
+QLabel#header2 {
+    color: #000000;
+    font-size: 22px;
+    font-weight: 500;
+}
+
+QLabel#packageDescription {
+    font-size: 14px;
+    color: #c0c0c0;
+    font-style: italic;
+    margin-left: 5px;
+}
+
+
+QWidget#textbox {
+    background: #ffffff;
+    border-radius: 20px;
+    margin: 5px
+}
+
+QWidget#scrollAreaWidgetContents {
+    background: #ffffff;
+}
+
+QWidget#welcomePage {
+    background: #ffffff;
+    border: 1px solid lightGray;
+}
+
+QLabel#package_details_title_label {
+    color: black;
+}
+
+QLabel#package_details_value {
+    color: black;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+QLabel#mainTitleLabel {
+    color: black;
+    font-family: sans-serif;
+    font-size: 36px;
+}
+
+QLabel#turtleNestIntroLabel {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+QLabel#tagLineLabel {
+    color: black;
+    font-family: sans-serif;
+    font-size: 24px;
 }

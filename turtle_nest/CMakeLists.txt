@@ -7,11 +7,15 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-find_package(Qt5 REQUIRED COMPONENTS Core Gui Widgets)
-
+find_package(Qt5 REQUIRED COMPONENTS Core Gui Widgets Svg Concurrent)
+find_package(Python3 REQUIRED COMPONENTS Development)
+find_package(pybind11 REQUIRED)
+find_package(tinyxml2_vendor REQUIRED)
+find_package(TinyXML2 REQUIRED)
 
 # Set sources
 set(SOURCES
+  src/addnodedialog.cpp
   src/main.cpp
   src/mainwindow.cpp
   src/file_utils.cpp
@@ -20,6 +24,10 @@ set(SOURCES
   src/generate_node.cpp
   src/generate_params.cpp
   src/generate_setup_py.cpp
+  src/modify_existing_pkg.cpp
+  src/package_xml_tools.cpp
+  src/packageinfoform.cpp
+  src/packageswindow.cpp
   src/rospkgcreator.cpp
   src/string_tools.cpp
 )
@@ -27,6 +35,9 @@ set(SOURCES
 # Set UI files
 set(UI_FILES
   src/mainwindow.ui
+  src/packageswindow.ui
+  src/packageinfoform.ui
+  src/addnodedialog.ui
 )
 
 # Use Qt5's tools to process the .ui file
@@ -34,7 +45,10 @@ qt5_wrap_ui(UI_HEADERS ${UI_FILES})
 
 # Add MOC processing for header files
 set(MOC_HEADERS
+  include/turtle_nest/addnodedialog.h
   include/turtle_nest/mainwindow.h
+  include/turtle_nest/packageswindow.h
+  include/turtle_nest/packageinfoform.h
 )
 
 qt5_wrap_cpp(MOC_SOURCES ${MOC_HEADERS})
@@ -54,7 +68,9 @@ add_executable(turtle_nest ${SOURCES} ${UI_HEADERS} ${MOC_SOURCES} ${QRC_SOURCES
 target_include_directories(turtle_nest PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>  # Include directory for generated ui_mainwindow.h
-  $<INSTALL_INTERFACE:include>)
+  $<INSTALL_INTERFACE:include>
+  ${Python3_INCLUDE_DIRS}  # Add Python headers
+)
 
 # List of distribution files
 set(DISTFILES
@@ -83,11 +99,20 @@ install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/turtle_nest
   DESTINATION bin
   RENAME turtle-nest)
 
+# Install the Python script
+install(FILES src/python_file_utils.py DESTINATION lib/${PROJECT_NAME})
+
 target_link_libraries(${PROJECT_NAME}
   Qt5::Widgets
   Qt5::Core
   Qt5::Gui
+  Qt5::Svg
+  Qt5::Concurrent
+  ${Python3_LIBRARIES}  # Link to Python libraries
+  pybind11::embed
+  tinyxml2::tinyxml2
 )
+
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)

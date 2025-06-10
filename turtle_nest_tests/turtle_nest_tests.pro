@@ -1,6 +1,6 @@
 include(gtest_dependency.pri)
 
-QT       += core gui printsupport
+QT       += core gui printsupport concurrent
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TEMPLATE = app
@@ -9,8 +9,10 @@ CONFIG += thread
 
 SOURCES += \
         main.cpp \
+        test_utils.cpp \
         tst_file_utils.cpp \
-        tst_generate_node.cpp \
+        tst_modify_existing_pkg.cpp \
+        tst_package_xml_tools.cpp \
         tst_ros_pkg_creator.cpp \
         ../turtle_nest/src/file_utils.cpp \
         ../turtle_nest/src/generate_node.cpp \
@@ -19,6 +21,30 @@ SOURCES += \
         ../turtle_nest/src/generate_launch.cpp \
         ../turtle_nest/src/generate_params.cpp \
         ../turtle_nest/src/generate_setup_py.cpp \
+        ../turtle_nest/src/modify_existing_pkg.cpp \
+        ../turtle_nest/src/package_xml_tools.cpp \
         ../turtle_nest/src/string_tools.cpp
 
+
+LIBS += -ltinyxml2
+
+# Define path for the fixtures
+FIXTURES_DIR = $$PWD/../turtle_nest_tests/fixtures
+DEFINES += FIXTURES_PATH=\\\"$$FIXTURES_DIR\\\"
+
+# Add Python3 to support script running with pybind11
+PYVERSION = $$system(python3 -c \"import sys;v=sys.version_info;print(str(v[0])+\'.\'+str(v[1]))\")
+message("Python version detected: $$PYVERSION")
+INCLUDEPATH += /usr/include/python$$PYVERSION
+LIBS += -lpython$$PYVERSION
+
+# Custom post-build step to copy a python script
+PYTHON_SCRIPT = $$PWD/../turtle_nest/src/python_file_utils.py
+SCRIPT_DEST_DIR = $$OUT_PWD/lib/$$TARGET
+QMAKE_POST_LINK += mkdir -p $$SCRIPT_DEST_DIR$$escape_expand(\\n\\t)
+QMAKE_POST_LINK += cp $$PYTHON_SCRIPT $$SCRIPT_DEST_DIR/
+
 INCLUDEPATH += ../turtle_nest/include/
+
+HEADERS += \
+    test_utils.h

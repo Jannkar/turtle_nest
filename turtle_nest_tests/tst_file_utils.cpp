@@ -68,3 +68,10 @@ TEST_F(FileUtilsTest, directory_creation_failed){
     }, std::runtime_error);
 }
 
+TEST_F(FileUtilsTest, write_file_directory_does_not_exist){
+    QDir dir(test_dir_path);
+    QString full_file_path = dir.filePath("test_file.txt");
+    write_file(full_file_path, "test_string");
+    QString contents = read_file(full_file_path);
+    ASSERT_EQ(contents, "test_string");
+}

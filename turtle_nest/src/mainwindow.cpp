@@ -27,22 +27,29 @@
 #include <QLineEdit>
 #include <QToolTip>
 #include <QDebug>
+#include <QDialog>
 
 
-MainWindow::MainWindow(QWidget * parent)
-: QMainWindow(parent)
-  , ui(new Ui::MainWindow)
+MainWindow::MainWindow(QWidget * parent, const QString &package_dest)
+: QDialog(parent)
+    , ui(new Ui::MainWindow), package_destination(package_dest)
 {
+
   ui->setupUi(this);
-  ui->backButton->setObjectName("low_attention_button");
-  ui->browseButton->setObjectName("low_attention_button");
+  setWindowTitle("Create a New Package");
+
+  // Start always from the page 1
+  ui->stackedWidget->setCurrentIndex(0);
 
   // Page 1
   ui->createPackageButton->setVisible(false);
   ui->backButton->setVisible(false);
-  QSettings settings("TurtleNest", "TurtleNest");
-  auto default_workspace_path = QDir::homePath() + "/ros2_ws/src/";
-  ui->workspacePathEdit->setText(settings.value("workspace", default_workspace_path).toString());
+
+  if (package_destination.isEmpty()){
+      package_destination = QDir::homePath() + "/ros2_ws/src/";
+  }
+  ui->workspacePathEdit->setText(package_destination);
+
   ui->packageNameShortWarn->setVisible(false);
   ui->packageNameEdit->setFocus();
 
@@ -54,6 +61,7 @@ MainWindow::MainWindow(QWidget * parent)
 
   // Page 3
   ui->invalidEmailLabel->setVisible(false);
+  QSettings settings("TurtleNest", "TurtleNest");
   ui->maintainerEdit->setText(settings.value("maintainer_name", "").toString());
   ui->emailEdit->setText(settings.value("maintainer_email", "").toString());
 }
@@ -96,12 +104,11 @@ void MainWindow::on_browseButton_clicked()
 {
   auto workspace_path = QFileDialog::getExistingDirectory(this, "Select Folder", "");
 
-  // If a folder was selected, save it to the variable
   if (workspace_path.isEmpty()) {
     return;
   }
   ui->workspacePathEdit->setText(workspace_path);
-  qInfo() << "Workspace set: " << workspace_path;
+  qDebug() << "Workspace set: " << workspace_path;
 }
 
 
@@ -124,7 +131,6 @@ void MainWindow::on_createPackageButton_clicked()
   );
 
   QSettings settings("TurtleNest", "TurtleNest");
-  settings.setValue("workspace", ui->workspacePathEdit->text());
   settings.setValue("maintainer_name", ui->maintainerEdit->text());
   settings.setValue("maintainer_email", ui->emailEdit->text());
 
@@ -164,8 +170,7 @@ void MainWindow::on_createPackageButton_clicked()
     "' has been successfully created. You can now build the package.";
 
   QMessageBox::information(this, "Package Creation Successful", success_msg);
-
-  QApplication::quit();
+  accept();  // Close and set result as Accepted
 }
 
 
@@ -368,6 +373,10 @@ void MainWindow::on_launchNameInfoButton_clicked()
 void MainWindow::on_paramsNameInfoButton_clicked()
 {
   show_tooltip(ui->paramsNameInfoButton);
+}
+
+QString MainWindow::get_created_package_name(){
+    return ui->packageNameEdit->text();
 }
 
 void show_tooltip(QToolButton * button)

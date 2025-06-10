@@ -12,7 +12,7 @@ Turtle Nest provides an easy graphical user interface for creating new ROS packa
 
 - **Easy to use** - no need to dig through the ROS 2 documentation for the right commands or manually add things to CMakeLists.txt or setup.py.
 - **Creates C++ and/or Python nodes** - which are ready for immediate development.
-- **Automatically adds necessary dependencies** - rclpy, rclcpp, and std_msgs.
+- **Automatically adds necessary dependencies** - rclpy and rclcpp.
 - **Option to create a launch file** - to run your nodes with a single command.
 - **Option to create a parameter file** - with parameter examples for the created nodes.
 - **Create C++ and Python nodes within the same package** - combine languages that typically require separate packages.

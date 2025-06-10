@@ -24,6 +24,8 @@ enum BuildType
   CPP,
   PYTHON,
   CPP_AND_PYTHON,
+  MSGS,
+  UNKNOWN,
 };
 
 #endif // BUILD_TYPE_ENUM_H
