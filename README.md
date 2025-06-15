@@ -10,6 +10,16 @@ Turtle Nest provides an easy graphical user interface for creating new ROS packa
 
 ## Why to use Turtle Nest?
 
+Turtle Nest offers the following key features:
+- **Create new ROS 2 packages** quickly with a guided interface
+- **Browse and explore existing packages** in your workspace
+- **Add new nodes to existing packages** with support for both Python and C++
+
+### Create new ROS 2 packages
+
+Creating new ROS 2 packages with Turtle Nest is fast, intuitive, and eliminates the usual setup hassles.
+It offers the following benefits:
+
 - **Easy to use** - no need to dig through the ROS 2 documentation for the right commands or manually add things to CMakeLists.txt or setup.py.
 - **Creates C++ and/or Python nodes** - which are ready for immediate development.
 - **Automatically adds necessary dependencies** - rclpy and rclcpp.
@@ -18,11 +28,29 @@ Turtle Nest provides an easy graphical user interface for creating new ROS packa
 - **Create C++ and Python nodes within the same package** - combine languages that typically require separate packages.
 - **Naming conventions enforced** - no more failing builds due to incorrect package or node names.
 - **Remembers the important details** - workspace path, maintainer name, and maintainer email for your future packages.
-- **And more!**
+
+### Browse and explore existing packages
+
+Get a clear overview of the ROS 2 packages in your workspace, without digging through folders or files.
+Turtle Nest makes it easy to explore package contents and structure, offering the following benefits:
+
+- **See key package information** - such as package type (Python, C++, or message-only), description, license, and more.
+- **List all executables** - identify the nodes provided by the package.
+- **List launch files and parameter files**
+
+### Add new nodes to existing packages
+
+Quickly expand your existing packages without worrying about boilerplate or setup details.
+Turtle Nest can add new nodes to your packages with just a press of a button!
+
+Just click the "*Add New Node*" button for your existing package and enter a name for the node.
+The new node is automatically created with the correct file structure, includes example content to get you started, and updates all necessary configuration files like CMakeLists.txt or setup.py, so you can jump straight into development.
+
 
 ## Prerequisites
 
 - Ubuntu 22 or 24
+- Python 3.9+
 - ROS 2 (any one of the following versions)
   - Humble
   - Iron
@@ -38,8 +66,6 @@ sudo apt install ros-${ROS_DISTRO}-turtle-nest
 ```
 
 * If your `${ROS_DISTRO}` env variable is not set, replace it with your ROS 2 distribution, such as `humble` or `jazzy`.
-* If you are using `rolling` distribution, you still need to build the package from the source.
-
 
 ## Usage
 To run the application, simply execute:
@@ -48,7 +74,9 @@ To run the application, simply execute:
 turtle-nest
 ```
 
-Fill in the necessary information in the GUI to create a new ROS 2 package. 
+### New package creation
+Set a new or existing workspace for your ROS 2 packages in the UI. 
+Select "Create New Package" and fill in the necessary information to create a new ROS 2 package. 
 
 After the package has been created, build and source the new package as normal:
 
@@ -92,9 +120,11 @@ If you created a Node or a launch file, you can run them with one the following 
 
 ## Screenshots
 
-![Screenshot 1](images/screenshot_p1.png)
-![Screenshot 2](images/screenshot_p2.png)
-![Screenshot 3](images/screenshot_p3.png)
+<img src="images/screenshot_main.png" alt="Turtle Nest Main Screenshot" width="800"/>
+<img src="images/screenshot_p1.png" alt="Turtle Nest Create Package Screenshot Page 1" width="800"/>
+<img src="images/screenshot_p2.png" alt="Turtle Nest Create Package Screenshot Page 2" width="800"/>
+<img src="images/screenshot_p3.png" alt="Turtle Nest Create Package Screenshot Page 3" width="800"/>
+<img src="images/screenshot_demo_pkg.png" alt="Turtle Nest Demo Package View" width="800"/>
 
 ## Star History
 
