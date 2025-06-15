@@ -34,9 +34,9 @@ void execute_node_and_assert_success(PackageInfo pkg_info, QString node_name, No
   QString expected_output = QString("[%1]: Hello world from the %2 node %1").arg(node_name,
     node_type_str);
   QString output = run_command(
-        QString("ros2 run %1 %2").arg(pkg_info.package_name, node_name),
+    QString("ros2 run %1 %2").arg(pkg_info.package_name, node_name),
     {expected_output},
-        pkg_info.workspace_path
+    pkg_info.workspace_path
   );
 
   ASSERT_TRUE(output.contains(expected_output));
@@ -223,7 +223,7 @@ TEST(modify_existing_pkg, add_python_node_invalid_setup_py) {
     write_file(setup_py_path, faulty_content, true);
     EXPECT_THROW(add_node("node_1", PYTHON_NODE, pkg_info), std::runtime_error);
 
-        // Double-check that there were no changes to the file
+    // Double-check that there were no changes to the file
     QString current_content = read_file(setup_py_path);
     ASSERT_EQ(faulty_content, current_content);
   }
@@ -250,15 +250,15 @@ TEST(modify_existing_pkg, add_node_xml_tests) {
   };
 
   QList<TestCase> test_cases = {
-  {PYTHON, PYTHON_NODE, "rclpy_depend.package.xml", "rclpy_depend.package.xml"},     // Expect no changes
-  {PYTHON, PYTHON_NODE, "rclpy_exec_depend.package.xml", "rclpy_exec_depend.package.xml"},     // Expect no changes
-  {PYTHON, PYTHON_NODE, "rclpy_empty_depend.package.xml", "rclpy_exec_depend.package.xml"},     // <exec_depend> added
-  {CPP, CPP_NODE, "rclcpp_empty_depend.package.xml", "rclcpp_depend.package.xml"},     // <depend> added
-  {CPP, CPP_NODE, "rclcpp_build_depend.package.xml", "rclcpp_build_and_exec_depend.package.xml"},     // <exec_depend> added
-  {CPP, CPP_NODE, "rclcpp_exec_depend.package.xml", "rclcpp_build_and_exec_depend.package.xml"},     // <build_depend> added
-  {CPP, CPP_NODE, "rclcpp_build_and_exec_depend.package.xml",
-    "rclcpp_build_and_exec_depend.package.xml"},                                                               // Expect no changes
-  {CPP, CPP_NODE, "rclcpp_depend.package.xml", "rclcpp_depend.package.xml"},     // Expect no changes
+    {PYTHON, PYTHON_NODE, "rclpy_depend.package.xml", "rclpy_depend.package.xml"},     // Expect no changes
+    {PYTHON, PYTHON_NODE, "rclpy_exec_depend.package.xml", "rclpy_exec_depend.package.xml"},     // Expect no changes
+    {PYTHON, PYTHON_NODE, "rclpy_empty_depend.package.xml", "rclpy_exec_depend.package.xml"},     // <exec_depend> added
+    {CPP, CPP_NODE, "rclcpp_empty_depend.package.xml", "rclcpp_depend.package.xml"},     // <depend> added
+    {CPP, CPP_NODE, "rclcpp_build_depend.package.xml", "rclcpp_build_and_exec_depend.package.xml"},     // <exec_depend> added
+    {CPP, CPP_NODE, "rclcpp_exec_depend.package.xml", "rclcpp_build_and_exec_depend.package.xml"},     // <build_depend> added
+    {CPP, CPP_NODE, "rclcpp_build_and_exec_depend.package.xml",
+      "rclcpp_build_and_exec_depend.package.xml"},                                                               // Expect no changes
+    {CPP, CPP_NODE, "rclcpp_depend.package.xml", "rclcpp_depend.package.xml"},     // Expect no changes
   };
 
   for (const auto & test_case : test_cases) {
@@ -413,9 +413,9 @@ TEST(modify_existing_pkg, DISABLED_manual_integration_test_add_new_node) {
       QString expected_output = QString("[%1]: Hello world from the %2 node %1").arg(node_name,
         print_string);
       QString output = run_command(
-                QString("ros2 run %1 %2").arg(pkg_info.package_name, node_name),
+        QString("ros2 run %1 %2").arg(pkg_info.package_name, node_name),
         {expected_output},
-                "/home/user/ros2_ws/src"
+        "/home/user/ros2_ws/src"
       );
 
       ASSERT_TRUE(output.contains(expected_output));
