@@ -73,7 +73,7 @@ bool dir_is_empty(const QString & dirPath)
     qDebug() << "The directory does not exist.";
     throw std::runtime_error("Directory does not exist");
   }
-    // Filter out "." and ".." which are always present in directories
+  // Filter out "." and ".." which are always present in directories
   QStringList files = dir.entryList(QDir::NoDotAndDotDot | QDir::AllEntries);
   qInfo() << files;
   return files.isEmpty();
@@ -92,15 +92,15 @@ QString run_command(QString command, QStringList outputs_to_wait, QString worksp
   QProcess *process = new QProcess();
   process->setProcessChannelMode(QProcess::MergedChannels);
 
-    // Source the workspace if given
+  // Source the workspace if given
   if (!workspace_path.isEmpty()) {
     QDir dir(workspace_path);
-    dir.cdUp();     // Get the path without /src extension
+    dir.cdUp();  // Get the path without /src extension
 
-        // We need to use setsid to set a process group for the command.
-        // Otherwise SIGINT won't kill all the subprocesses that were started.
-        // Without setting a process group, ros2 launch works when killing just
-        // the main process, but ros2 run will leave a Node running on background.
+    // We need to use setsid to set a process group for the command.
+    // Otherwise SIGINT won't kill all the subprocesses that were started.
+    // Without setting a process group, ros2 launch works when killing just
+    // the main process, but ros2 run will leave a Node running on background.
     command = QString("setsid bash -c 'source %1/install/setup.bash && %2'")
       .arg(dir.path(), command);
   }
@@ -108,7 +108,7 @@ QString run_command(QString command, QStringList outputs_to_wait, QString worksp
   qDebug().noquote() << formatted_time << "Running:" << "bash -c" << command;
   process->start("bash", QStringList() << "-c" << command);
 
-    // Wait for the command to execute until all "outputs_to_wait" strings are found from the output
+  // Wait for the command to execute until all "outputs_to_wait" strings are found from the output
   QElapsedTimer timer;
   timer.start();
 
@@ -121,7 +121,7 @@ QString run_command(QString command, QStringList outputs_to_wait, QString worksp
     output += new_output;
     qDebug().noquote() << new_output;
 
-        // Check if any expected output is found in the output
+    // Check if any expected output is found in the output
     for (int i = 0; i < outputs_to_wait.size(); ) {
       if (output.contains(outputs_to_wait[i])) {
         outputs_to_wait.removeAt(i);
@@ -136,13 +136,13 @@ QString run_command(QString command, QStringList outputs_to_wait, QString worksp
   } else {
     qDebug() << "Timed out while waiting for the expected lines";
   }
-    // Sending SIGINT very soon after the launch was started will make the process hang. Wait for a second before doing that.
+  // Sending SIGINT very soon after the launch was started will make the process hang. Wait for a second before doing that.
   QThread::sleep(1);
   qDebug() << "Sending SIGINT";
   kill(-process->processId(), SIGINT);    // '-' before the process kills the whole process group
 
   if (!process->waitForFinished(10000)) {
-        // If it still didn't finish, terminate
+    // If it still didn't finish, terminate
     qCritical() <<
       "Process didn't finish with SIGINT. Terminating. This might leave active background processes";
     process->terminate();

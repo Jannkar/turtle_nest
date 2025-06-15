@@ -40,24 +40,24 @@ protected:
 
 
 TEST_F(PackageXMLTest, happy_flow) {
-    QString package_dir = copy_fixture("package_xml_files/rclpy_depend.package.xml");
-    PackageXMLEditor editor(package_dir);
-    ASSERT_TRUE(editor.has_dependency("rclpy", DependencyType::DEPEND));
+  QString package_dir = copy_fixture("package_xml_files/rclpy_depend.package.xml");
+  PackageXMLEditor editor(package_dir);
+  ASSERT_TRUE(editor.has_dependency("rclpy", DependencyType::DEPEND));
 }
 
 TEST_F(PackageXMLTest, try_open_empty_xml) {
-    QString package_dir = copy_fixture("package_xml_files/general_empty_file.package.xml");
-    ASSERT_THROW({
+  QString package_dir = copy_fixture("package_xml_files/general_empty_file.package.xml");
+  ASSERT_THROW({
     PackageXMLEditor editor(package_dir);
-    }, std::runtime_error);
+  }, std::runtime_error);
 }
 
 TEST_F(PackageXMLTest, try_open_non_existing_xml) {
-    QTemporaryDir temp_dir;
-    QString temp_file_path = temp_dir.filePath("empty.xml");
-    ASSERT_THROW({
+  QTemporaryDir temp_dir;
+  QString temp_file_path = temp_dir.filePath("empty.xml");
+  ASSERT_THROW({
     PackageXMLEditor editor(temp_file_path);
-    }, std::runtime_error);
+  }, std::runtime_error);
 }
 
 // Rest of the functions are tested as part of integration tests
