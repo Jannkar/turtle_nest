@@ -26,24 +26,26 @@ namespace fs = std::filesystem;
 
 class FileUtilsTest : public ::testing::Test {
 protected:
-    void SetUp() override {
-        test_dir_path = QDir::tempPath() + "/turtle_nest_test_dir/";
-    }
+  void SetUp() override
+  {
+    test_dir_path = QDir::tempPath() + "/turtle_nest_test_dir/";
+  }
 
-    void TearDown() override {
-        QDir dir(test_dir_path);
-        if (dir.exists()) {
-            dir.removeRecursively();
-        }
+  void TearDown() override
+  {
+    QDir dir(test_dir_path);
+    if (dir.exists()) {
+      dir.removeRecursively();
     }
+  }
 
-    QString test_dir_path;
+  QString test_dir_path;
 };
 
 using namespace testing;
 
 
-TEST_F(FileUtilsTest, create_directory_happy_flow){
+TEST_F(FileUtilsTest, create_directory_happy_flow) {
     QDir dir(test_dir_path);
     ASSERT_FALSE(dir.exists());
     create_directory(test_dir_path);
@@ -62,13 +64,13 @@ TEST_F(FileUtilsTest, create_dir_already_exists)
 }
 
 
-TEST_F(FileUtilsTest, directory_creation_failed){
+TEST_F(FileUtilsTest, directory_creation_failed) {
     EXPECT_THROW({
-        create_directory("/restricted_directory/test_dir");
+    create_directory("/restricted_directory/test_dir");
     }, std::runtime_error);
 }
 
-TEST_F(FileUtilsTest, write_file_directory_does_not_exist){
+TEST_F(FileUtilsTest, write_file_directory_does_not_exist) {
     QDir dir(test_dir_path);
     QString full_file_path = dir.filePath("test_file.txt");
     write_file(full_file_path, "test_string");

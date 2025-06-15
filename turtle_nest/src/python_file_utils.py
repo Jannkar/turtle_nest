@@ -22,14 +22,15 @@ limitations under the License.
 """
 
 
-from black import format_str, Mode
-import sys
 import ast
+import sys
+
+from black import format_str, Mode
 
 # ast.parse requires Python 3.9+
 if sys.version_info < (3, 9):
     sys.stderr.write(
-        f"ERROR: Python >= 3.9 is required, but you have {sys.version.split()[0]}\n"
+        f'ERROR: Python >= 3.9 is required, but you have {sys.version.split()[0]}\n'
     )
     sys.exit(1)
 

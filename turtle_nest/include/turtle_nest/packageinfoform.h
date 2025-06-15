@@ -41,7 +41,11 @@ public:
   QSvgWidget * createScaledSvg(QString path, int targetHeight);
   void updateNodesLaunchParams(PackageInfo pkg_info);
 
-private slots:
+// Uncrustify wants to indent private slots after Jazzy distro, but not before Humble,
+// leading to a conflict. Skip.
+/* *INDENT-OFF* */
+  private slots:
+/* *INDENT-ON* */
   void on_addNodeButton_clicked();
 
 private:

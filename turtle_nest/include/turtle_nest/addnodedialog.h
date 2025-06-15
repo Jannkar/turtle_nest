@@ -37,7 +37,11 @@ public:
   QString get_node_name();
   NodeType get_node_type();
 
-private slots:
+// Uncrustify wants to indent private slots after Jazzy distro, but not before Humble,
+// leading to a conflict. Skip.
+/* *INDENT-OFF* */
+  private slots:
+/* *INDENT-ON* */
   void on_nodeNameEdit_textEdited(const QString & arg1);
 
 private:

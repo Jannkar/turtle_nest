@@ -25,16 +25,17 @@
 
 class PackageXMLTest : public ::testing::Test {
 protected:
-    QTemporaryDir temp_dir;
+  QTemporaryDir temp_dir;
 
-    QString copy_fixture(QString fixture_name) {
-        QString fixture_path = QDir(FIXTURES_PATH).filePath(fixture_name);
-        QString temp_file = temp_dir.filePath("package.xml");
-        if (!QFile::copy(fixture_path, temp_file)) {
-            throw std::runtime_error("Failed to copy file");
-        }
-        return temp_dir.path(); // Return the folder
+  QString copy_fixture(QString fixture_name)
+  {
+    QString fixture_path = QDir(FIXTURES_PATH).filePath(fixture_name);
+    QString temp_file = temp_dir.filePath("package.xml");
+    if (!QFile::copy(fixture_path, temp_file)) {
+      throw std::runtime_error("Failed to copy file");
     }
+    return temp_dir.path();     // Return the folder
+  }
 };
 
 
@@ -44,18 +45,18 @@ TEST_F(PackageXMLTest, happy_flow) {
     ASSERT_TRUE(editor.has_dependency("rclpy", DependencyType::DEPEND));
 }
 
-TEST_F(PackageXMLTest, try_open_empty_xml){
+TEST_F(PackageXMLTest, try_open_empty_xml) {
     QString package_dir = copy_fixture("package_xml_files/general_empty_file.package.xml");
     ASSERT_THROW({
-        PackageXMLEditor editor(package_dir);
+    PackageXMLEditor editor(package_dir);
     }, std::runtime_error);
 }
 
-TEST_F(PackageXMLTest, try_open_non_existing_xml){
+TEST_F(PackageXMLTest, try_open_non_existing_xml) {
     QTemporaryDir temp_dir;
     QString temp_file_path = temp_dir.filePath("empty.xml");
     ASSERT_THROW({
-        PackageXMLEditor editor(temp_file_path);
+    PackageXMLEditor editor(temp_file_path);
     }, std::runtime_error);
 }
 

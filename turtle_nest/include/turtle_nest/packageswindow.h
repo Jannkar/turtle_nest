@@ -44,7 +44,11 @@ private:
   const QString default_workspace_path = QDir::homePath() + "/ros2_ws/";
   QSettings settings;
 
-private slots:
+// Uncrustify wants to indent private slots after Jazzy distro, but not before Humble,
+// leading to a conflict. Skip.
+/* *INDENT-OFF* */
+  private slots:
+/* *INDENT-ON* */
   void on_packagesListWidget_currentItemChanged(
     QListWidgetItem * current,
     QListWidgetItem * previous);
