@@ -87,9 +87,6 @@ endforeach()
 
 
 target_compile_features(turtle_nest PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
-ament_target_dependencies(
-  turtle_nest
-)
 
 install(TARGETS turtle_nest
   DESTINATION lib/${PROJECT_NAME})

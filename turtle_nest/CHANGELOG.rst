@@ -2,6 +2,11 @@
 Changelog for package turtle_nest
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.0.3 (2025-05-29)
+------------------
+* Replace ament_target_dependencies with target_link_libraries (`#16 <https://github.com/Jannkar/turtle_nest/issues/16>`_)
+* Contributors: Alejandro Hernández Cordero
+
 1.0.2 (2024-09-05)
 ------------------
 * Add option to create a parameter file (`#12 <https://github.com/Jannkar/turtle_nest/issues/12>`_)
