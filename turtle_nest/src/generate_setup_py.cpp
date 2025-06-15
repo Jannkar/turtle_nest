@@ -24,16 +24,16 @@ void modify_setup_py(QString package_path, bool create_launch, bool create_confi
   QString setup_py_path = QDir(package_path).filePath("setup.py");
   QString append_after = "('share/' + package_name, ['package.xml']),";
 
-  if (create_config) {
-    QString config_content =
-      "\n        (os.path.join('share', package_name, 'config'), glob('config/*.yaml')),";
-    append_to_file(setup_py_path, config_content, append_after);
-  }
-
   if (create_launch) {
     QString lines_to_append =
       "\n        (os.path.join('share', package_name, 'launch'), glob(os.path.join('launch', '*launch.[pxy][yma]*'))),";
     append_to_file(setup_py_path, lines_to_append, append_after);
+  }
+
+  if (create_config) {
+    QString config_content =
+      "\n        (os.path.join('share', package_name, 'config'), glob('config/*.yaml')),";
+    append_to_file(setup_py_path, config_content, append_after);
   }
 
   // Add imports if either launch or config was appended

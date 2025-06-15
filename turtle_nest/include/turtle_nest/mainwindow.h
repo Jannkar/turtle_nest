@@ -21,6 +21,7 @@
 #include <QMainWindow>
 #include <QString>
 #include <QToolButton>
+#include <QDialog>
 
 
 QT_BEGIN_NAMESPACE
@@ -32,13 +33,14 @@ QT_END_NAMESPACE
 
 void show_tooltip(QToolButton * button);
 
-class MainWindow: public QMainWindow
+class MainWindow: public QDialog
 {
   Q_OBJECT
 
 public:
-  MainWindow(QWidget * parent = nullptr);
+  MainWindow(QWidget * parent = nullptr, const QString & package_dest = "");
   ~MainWindow();
+  QString get_created_package_name();
 
 // Uncrustify wants to indent private slots after Jazzy distro, but not before Humble,
 // leading to a conflict. Skip.
@@ -97,6 +99,7 @@ public:
 
 private:
   Ui::MainWindow * ui;
+  QString package_destination;
 };
 
 #endif // MAINWINDOW_H

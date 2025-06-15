@@ -19,6 +19,8 @@
 #define ROSPKGCREATOR_H
 
 #include "turtle_nest/build_type_enum.h"
+#include "turtle_nest/node_type_enum.h"
+#include "turtle_nest/packageinfo.h"
 #include <QString>
 #include <QDir>
 
@@ -47,7 +49,7 @@ public:
   QString package_path;
 
   RosPkgCreator(QString workspace_path, QString package_name, BuildType build_type) {
-    this->workspace_path = workspace_path;
+    this->workspace_path = workspace_path;  // This is actually pkg_destination, not necessarily the workspace
     this->package_name = package_name;
     this->build_type = build_type;
     this->package_path = QDir(workspace_path).filePath(package_name);
@@ -55,6 +57,10 @@ public:
 
   void create_package() const;
   void build_package() const;
+  QString get_package_name();
 };
+
+void colcon_build(QString workspace_path, QStringList packages = QStringList());
+void add_node(QString node_name, NodeType node_type, PackageInfo pkg_info);
 
 #endif // ROSPKGCREATOR_H

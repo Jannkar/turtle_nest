@@ -15,30 +15,55 @@
  * ------------------------------------------------------------------
 */
 
-#include "turtle_nest/mainwindow.h"
+#include "turtle_nest/packageswindow.h"
 #include <QApplication>
 #include <QFile>
 #include <QTextStream>
+#include <QDebug>
+#include <QFontDatabase>
+
+void set_fonts();
 
 int main(int argc, char * argv[])
 {
   // Fix the problem with application not scaling correctly on scaled displays
   QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+  QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
   QGuiApplication::setHighDpiScaleFactorRoundingPolicy(
     Qt::HighDpiScaleFactorRoundingPolicy::PassThrough);
 
   QApplication a(argc, argv);
+  set_fonts();
 
-  MainWindow w;
-  w.setWindowTitle("Create a New Package");
+  // This doesn't work for some reason.
+  //QIcon appIcon(":/images/img/turtle_nest_app_icon.png");
+  //a.setWindowIcon(appIcon);
+
+  PackagesWindow w;
+  w.setWindowTitle("Turtle Nest");
   w.show();
 
   QFile file(":/stylesheets/custom_theme.qss");
-
   if (file.open(QFile::ReadOnly | QFile::Text)) {
     QTextStream stream(&file);
     a.setStyleSheet(stream.readAll());
   }
 
   return a.exec();
+}
+
+
+void set_fonts()
+{
+  // iterate over every .ttf in the ":/fonts" resource directory
+  QDir fontDir(":/fonts/fonts/Ubuntu_Sans/static");
+  QStringList fontFiles = fontDir.entryList(QStringList{"*.ttf"}, QDir::Files);
+
+  for (const QString & fileName : fontFiles) {
+    const QString path = fontDir.absoluteFilePath(fileName);
+    QFontDatabase::addApplicationFont(path);
+  }
+  QFont font = QFont("Ubuntu Sans");
+  font.setPointSize(11);
+  QApplication::setFont(font);
 }

@@ -21,7 +21,6 @@
 #include <QString>
 
 void modify_cmake_file(
-  QString package_path, bool create_launch, bool create_config,
-  QString python_node_name);
+  QString package_path, bool create_launch, bool create_config);
 
 #endif // GENERATE_CMAKE_H

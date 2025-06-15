@@ -20,8 +20,7 @@
 #include <QDir>
 
 void modify_cmake_file(
-  QString package_path, bool create_launch, bool create_config,
-  QString python_node_name)
+  QString package_path, bool create_launch, bool create_config)
 {
   QString c_make_path = QDir(package_path).filePath("CMakeLists.txt");
   QString append_before_text = "ament_package()";
@@ -47,22 +46,5 @@ install(DIRECTORY
 
 )";
     append_to_file_before(c_make_path, config_append, append_before_text);
-  }
-
-  if (!python_node_name.isEmpty()) {
-    QString content(
-      R"(# Install Python modules
-ament_python_install_package(${PROJECT_NAME})
-
-# Install Python executables
-install(PROGRAMS
-  ${PROJECT_NAME}/%1.py
-  DESTINATION lib/${PROJECT_NAME}
-  RENAME %1
-)
-
-)");
-    content = content.arg(python_node_name);
-    append_to_file_before(c_make_path, content, append_before_text);
   }
 }

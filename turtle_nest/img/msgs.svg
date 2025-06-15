@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="8.77 5.5 82.46 31.5">
+  <defs>
+    <!-- Gradient for text fill -->
+    <linearGradient id="coolGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#9B5DE5"/>
+      <stop offset="50%" stop-color="#5A72FF"/>
+      <stop offset="100%" stop-color="#00BBF9"/>
+    </linearGradient>
+
+    <!-- Drop shadow filter -->
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+  
+  <!-- Segoe UI, Helvetica, Arial, sans-serif -->
+  <text x="50" y="31" text-anchor="middle"
+        font-family="Ubuntu Sans"
+        font-size="28" font-weight="900"
+        fill="url(#coolGradient)"
+        filter="url(#shadow)">
+    MSGS
+  </text>
+</svg>
+

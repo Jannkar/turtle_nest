@@ -26,45 +26,54 @@ namespace fs = std::filesystem;
 
 class FileUtilsTest : public ::testing::Test {
 protected:
-    void SetUp() override {
-        test_dir_path = QDir::tempPath() + "/turtle_nest_test_dir/";
-    }
+  void SetUp() override
+  {
+    test_dir_path = QDir::tempPath() + "/turtle_nest_test_dir/";
+  }
 
-    void TearDown() override {
-        QDir dir(test_dir_path);
-        if (dir.exists()) {
-            dir.removeRecursively();
-        }
+  void TearDown() override
+  {
+    QDir dir(test_dir_path);
+    if (dir.exists()) {
+      dir.removeRecursively();
     }
+  }
 
-    QString test_dir_path;
+  QString test_dir_path;
 };
 
 using namespace testing;
 
 
-TEST_F(FileUtilsTest, create_directory_happy_flow){
-    QDir dir(test_dir_path);
-    ASSERT_FALSE(dir.exists());
-    create_directory(test_dir_path);
-    ASSERT_TRUE(dir.exists());
+TEST_F(FileUtilsTest, create_directory_happy_flow) {
+  QDir dir(test_dir_path);
+  ASSERT_FALSE(dir.exists());
+  create_directory(test_dir_path);
+  ASSERT_TRUE(dir.exists());
 }
 
 TEST_F(FileUtilsTest, create_dir_already_exists)
 {
-    // Try to create directory that already exists
-    QTemporaryDir temp_dir;
-    ASSERT_TRUE(temp_dir.isValid());
-    create_directory(temp_dir.path());
+  // Try to create directory that already exists
+  QTemporaryDir temp_dir;
+  ASSERT_TRUE(temp_dir.isValid());
+  create_directory(temp_dir.path());
 
-    // Check that the directory still exists
-    ASSERT_TRUE(fs::is_directory(temp_dir.path().toStdString()));
+  // Check that the directory still exists
+  ASSERT_TRUE(fs::is_directory(temp_dir.path().toStdString()));
 }
 
 
-TEST_F(FileUtilsTest, directory_creation_failed){
-    EXPECT_THROW({
-        create_directory("/restricted_directory/test_dir");
-    }, std::runtime_error);
+TEST_F(FileUtilsTest, directory_creation_failed) {
+  EXPECT_THROW({
+      create_directory("/restricted_directory/test_dir");
+  }, std::runtime_error);
 }
 
+TEST_F(FileUtilsTest, write_file_directory_does_not_exist) {
+  QDir dir(test_dir_path);
+  QString full_file_path = dir.filePath("test_file.txt");
+  write_file(full_file_path, "test_string");
+  QString contents = read_file(full_file_path);
+  ASSERT_EQ(contents, "test_string");
+}
