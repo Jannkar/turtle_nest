@@ -46,6 +46,7 @@ Turtle Nest can add new nodes to your packages with just a press of a button!
 Just click the "*Add New Node*" button for your existing package and enter a name for the node.
 The new node is automatically created with the correct file structure, includes example content to get you started, and updates all necessary configuration files like CMakeLists.txt or setup.py, so you can jump straight into development.
 
+This works for any standard ROS 2 package that follows typical conventions (i.e., no heavily customized or non-standard CMakeLists.txt or setup.py files).
 
 ## Prerequisites
 
