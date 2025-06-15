@@ -51,8 +51,8 @@ void RosPkgCreator::create_package() const
   if (build_type == CPP_AND_PYTHON) {
     create_init_file(package_path, package_name);
     install_python_modules_in_cmakelists(package_path);
-    if (!node_name_python.isEmpty()){
-        add_python_node_to_cmakelists(package_path, node_name_python);
+    if (!node_name_python.isEmpty()) {
+      add_python_node_to_cmakelists(package_path, node_name_python);
     }
   }
 
@@ -151,9 +151,9 @@ void RosPkgCreator::run_command(QStringList command) const
 
 void RosPkgCreator::build_package() const
 {
-    QDir dir(workspace_path);
-    dir.cdUp();    // Get the path without /src extension to build in that location
-    colcon_build(dir.path(), {package_name});
+  QDir dir(workspace_path);
+  dir.cdUp();      // Get the path without /src extension to build in that location
+  colcon_build(dir.path(), {package_name});
 }
 
 void colcon_build(QString workspace_path, QStringList packages)
@@ -166,7 +166,7 @@ void colcon_build(QString workspace_path, QStringList packages)
   QStringList command_list;
   if (packages.isEmpty()) {
     command_list << "build";
-  }else{
+  } else {
     command_list << "build" << "--packages-select";
     command_list.append(packages);
   }

@@ -26,15 +26,16 @@
 class PackageInfo
 {
 public:
-    PackageInfo(){};
-    QString package_name = "";
-    QString package_path = "";
-    QString workspace_path = "";
-    QString maintainer = "";
-    QString description = "";
-    QString version = "";
-    QString license = "";
-    BuildType package_type;
+  PackageInfo() {
+  };
+  QString package_name = "";
+  QString package_path = "";
+  QString workspace_path = "";
+  QString maintainer = "";
+  QString description = "";
+  QString version = "";
+  QString license = "";
+  BuildType package_type;
 
 };
 

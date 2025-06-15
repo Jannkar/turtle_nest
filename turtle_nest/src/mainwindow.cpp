@@ -30,9 +30,9 @@
 #include <QDialog>
 
 
-MainWindow::MainWindow(QWidget * parent, const QString &package_dest)
+MainWindow::MainWindow(QWidget * parent, const QString & package_dest)
 : QDialog(parent)
-    , ui(new Ui::MainWindow), package_destination(package_dest)
+  , ui(new Ui::MainWindow), package_destination(package_dest)
 {
 
   ui->setupUi(this);
@@ -45,8 +45,8 @@ MainWindow::MainWindow(QWidget * parent, const QString &package_dest)
   ui->createPackageButton->setVisible(false);
   ui->backButton->setVisible(false);
 
-  if (package_destination.isEmpty()){
-      package_destination = QDir::homePath() + "/ros2_ws/src/";
+  if (package_destination.isEmpty()) {
+    package_destination = QDir::homePath() + "/ros2_ws/src/";
   }
   ui->workspacePathEdit->setText(package_destination);
 
@@ -374,8 +374,9 @@ void MainWindow::on_paramsNameInfoButton_clicked()
   show_tooltip(ui->paramsNameInfoButton);
 }
 
-QString MainWindow::get_created_package_name(){
-    return ui->packageNameEdit->text();
+QString MainWindow::get_created_package_name()
+{
+  return ui->packageNameEdit->text();
 }
 
 void show_tooltip(QToolButton * button)

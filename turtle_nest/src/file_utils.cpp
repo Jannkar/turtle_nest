@@ -47,9 +47,9 @@ void write_file(QString path, QString content, bool overwrite)
 
   // Raise an exception if file exists and overwrite is false
   if (file.exists() && !overwrite) {
-      QString error_msg = QString("File %1 already exists!").arg(path);
-      qCritical() << error_msg;
-      throw std::runtime_error(error_msg.toStdString());
+    QString error_msg = QString("File %1 already exists!").arg(path);
+    qCritical() << error_msg;
+    throw std::runtime_error(error_msg.toStdString());
   }
 
   if (!file.open(QFile::WriteOnly | QFile::Text | QFile::Truncate)) {
@@ -113,85 +113,88 @@ void append_to_file(QString file_path, QString lines_to_append, QString append_a
 }
 
 
-QString read_xml_tag(const QString &filePath, const QString &tagName, const QString &attributeName) {
-    QFile file(filePath);
+QString read_xml_tag(
+  const QString & filePath, const QString & tagName,
+  const QString & attributeName)
+{
+  QFile file(filePath);
 
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qWarning() << "Error opening file:" << file.errorString();
-        return QString();
-    }
+  if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+    qWarning() << "Error opening file:" << file.errorString();
+    return QString();
+  }
 
-    QXmlStreamReader xmlReader(&file);
-    QString result = "";
+  QXmlStreamReader xmlReader(&file);
+  QString result = "";
 
-    // Parse the XML file
-    while (!xmlReader.atEnd() && !xmlReader.hasError()) {
-        QXmlStreamReader::TokenType token = xmlReader.readNext();
+  // Parse the XML file
+  while (!xmlReader.atEnd() && !xmlReader.hasError()) {
+    QXmlStreamReader::TokenType token = xmlReader.readNext();
 
-        // If token is a StartElement and the tag name matches
-        if (token == QXmlStreamReader::StartElement) {
-            if (xmlReader.name() == tagName) {
-                if (!attributeName.isEmpty() && xmlReader.attributes().hasAttribute(attributeName)) {
-                    // If attribute is specified and exists, return the attribute value
-                    result = xmlReader.attributes().value(attributeName).toString();
-                } else {
-                    // Otherwise, return the tag's text content
-                    result = xmlReader.readElementText();
-                }
-                break; // Stop after finding the first matching tag or attribute
-            }
+    // If token is a StartElement and the tag name matches
+    if (token == QXmlStreamReader::StartElement) {
+      if (xmlReader.name() == tagName) {
+        if (!attributeName.isEmpty() && xmlReader.attributes().hasAttribute(attributeName)) {
+          // If attribute is specified and exists, return the attribute value
+          result = xmlReader.attributes().value(attributeName).toString();
+        } else {
+          // Otherwise, return the tag's text content
+          result = xmlReader.readElementText();
         }
+        break;         // Stop after finding the first matching tag or attribute
+      }
     }
+  }
 
-    if (xmlReader.hasError()) {
-        qWarning() << "Error reading XML file:" << xmlReader.errorString();
-    }
+  if (xmlReader.hasError()) {
+    qWarning() << "Error reading XML file:" << xmlReader.errorString();
+  }
 
-    file.close();
-    return result;
+  file.close();
+  return result;
 }
 
 /**
  * @brief Returns the path of the current executable
 **/
-QString get_executable_dir() {
-    char result[PATH_MAX];
-    ssize_t count = readlink("/proc/self/exe", result, PATH_MAX);
-    if (count == -1) return "";
-    QString path = QString::fromUtf8(result, count);
-    return QFileInfo(path).absolutePath();
+QString get_executable_dir()
+{
+  char result[PATH_MAX];
+  ssize_t count = readlink("/proc/self/exe", result, PATH_MAX);
+  if (count == -1) {return "";}
+  QString path = QString::fromUtf8(result, count);
+  return QFileInfo(path).absolutePath();
 }
 
 
-QString get_workspace_path_with_src(QString path){
-    if (path.isEmpty()){
-        return "";
-    }
-    if (!path.endsWith('/')) {
-        path += '/';
-    }
+QString get_workspace_path_with_src(QString path)
+{
+  if (path.isEmpty()) {
+    return "";
+  }
+  if (!path.endsWith('/')) {
+    path += '/';
+  }
 
-    if (path.endsWith("src/")) {
-        return path;
-    } else {
-        return path + "src/";
-    }
+  if (path.endsWith("src/")) {
+    return path;
+  } else {
+    return path + "src/";
+  }
 }
 
-QString get_workspace_path_without_src(QString path){
-    if (path.isEmpty()){
-        return "";
-    }
-    if (!path.endsWith('/')) {
-        path += '/';
-    }
+QString get_workspace_path_without_src(QString path)
+{
+  if (path.isEmpty()) {
+    return "";
+  }
+  if (!path.endsWith('/')) {
+    path += '/';
+  }
 
-    if (path.endsWith("src/")) {
-        return path.chopped(QString("src/").length());
-    } else {
-        return path;
-    }
+  if (path.endsWith("src/")) {
+    return path.chopped(QString("src/").length());
+  } else {
+    return path;
+  }
 }
-
-
-

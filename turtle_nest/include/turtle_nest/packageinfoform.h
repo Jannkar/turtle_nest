@@ -27,30 +27,31 @@
 #include <QListWidget>
 
 namespace Ui {
-class PackageInfoForm;
+  class PackageInfoForm;
 }
 
-class PackageInfoForm : public QWidget
+class PackageInfoForm: public QWidget
 {
-    Q_OBJECT
+  Q_OBJECT
 
 public:
-    explicit PackageInfoForm(QWidget *parent = nullptr);
-    ~PackageInfoForm();
-    void updatePackageInfo(PackageInfo pkg_info);
-    QSvgWidget *createScaledSvg(QString path, int targetHeight);
-    void updateNodesLaunchParams(PackageInfo pkg_info);
+  explicit PackageInfoForm(QWidget * parent = nullptr);
+  ~PackageInfoForm();
+  void updatePackageInfo(PackageInfo pkg_info);
+  QSvgWidget * createScaledSvg(QString path, int targetHeight);
+  void updateNodesLaunchParams(PackageInfo pkg_info);
+
 private slots:
-    void on_addNodeButton_clicked();
+  void on_addNodeButton_clicked();
 
 private:
-    Ui::PackageInfoForm *ui;
-    QSvgWidget *cpp_svg;
-    QSvgWidget *python_svg;
-    QSvgWidget *msgs_svg;
-    PackageInfo current_package_info;
+  Ui::PackageInfoForm * ui;
+  QSvgWidget * cpp_svg;
+  QSvgWidget * python_svg;
+  QSvgWidget * msgs_svg;
+  PackageInfo current_package_info;
 };
 
-void adjustListWidgetHeight(QListWidget *listWidget);
+void adjustListWidgetHeight(QListWidget * listWidget);
 
 #endif // PACKAGEINFOFORM_H

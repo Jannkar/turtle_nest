@@ -1,19 +1,24 @@
 """
- ------------------------------------------------------------------
- Copyright 2025 Janne Karttunen
+Utilities for modifying `setup.py` files by injecting new ROS 2 console_scripts.
 
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
+This module helps update the 'entry_points' section of a setup.py file by inserting
+a new console_scripts entry, using AST-based transformations and black formatting.
 
-     http://www.apache.org/licenses/LICENSE-2.0
+------------------------------------------------------------------
+Copyright 2025 Janne Karttunen
 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
- ------------------------------------------------------------------
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+------------------------------------------------------------------
 """
 
 
@@ -21,7 +26,7 @@ from black import format_str, Mode
 import sys
 import ast
 
-#ast.parse requires Python 3.9+
+# ast.parse requires Python 3.9+
 if sys.version_info < (3, 9):
     sys.stderr.write(
         f"ERROR: Python >= 3.9 is required, but you have {sys.version.split()[0]}\n"
@@ -47,21 +52,28 @@ def _append_to_entry_points(file_path, new_console_script):
     unformatted_code = ast.unparse(tree)
 
     if entry_points_updater.updates_made:
-        # Go with the ROS 2 practices of not normalizing single quotes, and max line length 100
-        return format_str(unformatted_code, mode=Mode(string_normalization=False, line_length=100))
+        # Go with the ROS 2 practices of not normalizing single quotes, and max
+        # line length 100
+        return format_str(
+            unformatted_code,
+            mode=Mode(
+                string_normalization=False,
+                line_length=100))
     else:
-        raise RuntimeError("Couldn't find entry_points or console_scripts in the setup.py!")
+        raise RuntimeError(
+            "Couldn't find entry_points or console_scripts in the setup.py!")
 
 
 class _EntryPointsUpdater(ast.NodeTransformer):
-    """Adds a new 'console_scripts' field in the entrypoint, for setup.py"""
+    """Adds a new 'console_scripts' field in the entrypoint, for setup.py."""
+
     def __init__(self, new_console_script):
         super().__init__()
         self.new_console_script = new_console_script
         self.updates_made = False
-    
+
     def visit_Call(self, node):
-        """Traverse the AST to find the 'entry_points' argument """
+        """Traverse the AST to find the 'entry_points' argument."""
         # Look for the `setup()` call
         if not (isinstance(node.func, ast.Name) and node.func.id == 'setup'):
             return node
@@ -76,9 +88,9 @@ class _EntryPointsUpdater(ast.NodeTransformer):
                             key.value == 'console_scripts'):
                         # Append the new entry
                         if isinstance(value, ast.List):
-                            value.elts.append(ast.Constant(value=self.new_console_script))
+                            value.elts.append(ast.Constant(
+                                value=self.new_console_script))
                             self.updates_made = True
                         return node
-                        
-        return self.generic_visit(node)
 
+        return self.generic_visit(node)

@@ -38,7 +38,7 @@ class MainWindow: public QDialog
   Q_OBJECT
 
 public:
-  MainWindow(QWidget * parent = nullptr, const QString &package_dest = "");
+  MainWindow(QWidget * parent = nullptr, const QString & package_dest = "");
   ~MainWindow();
   QString get_created_package_name();
 

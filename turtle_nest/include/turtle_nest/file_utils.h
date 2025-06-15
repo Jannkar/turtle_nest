@@ -25,7 +25,9 @@ QString read_file(QString path);
 void write_file(QString path, QString content, bool overwrite = false);
 void append_to_file_before(QString file_path, QString lines_to_append, QString append_before_text);
 void append_to_file(QString file_path, QString lines_to_append, QString append_after_text);
-QString read_xml_tag(const QString &filePath, const QString &tagName, const QString &attributeName = QString());
+QString read_xml_tag(
+  const QString & filePath, const QString & tagName,
+  const QString & attributeName = QString());
 QString get_executable_dir();
 QString get_workspace_path_with_src(QString path);
 QString get_workspace_path_without_src(QString path);

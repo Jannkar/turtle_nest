@@ -23,26 +23,26 @@
 #include <QDialog>
 
 namespace Ui {
-class AddNodeDialog;
+  class AddNodeDialog;
 }
 
-class AddNodeDialog : public QDialog
+class AddNodeDialog: public QDialog
 {
-    Q_OBJECT
+  Q_OBJECT
 
 public:
-    explicit AddNodeDialog(QWidget *parent, const PackageInfo &package_info);
-    ~AddNodeDialog();
+  explicit AddNodeDialog(QWidget * parent, const PackageInfo & package_info);
+  ~AddNodeDialog();
 
-    QString get_node_name();
-    NodeType get_node_type();
+  QString get_node_name();
+  NodeType get_node_type();
 
 private slots:
-    void on_nodeNameEdit_textEdited(const QString &arg1);
+  void on_nodeNameEdit_textEdited(const QString & arg1);
 
 private:
-    Ui::AddNodeDialog *ui;
-    PackageInfo pkg_info;
+  Ui::AddNodeDialog * ui;
+  PackageInfo pkg_info;
 };
 
 #endif // ADDNODEDIALOG_H

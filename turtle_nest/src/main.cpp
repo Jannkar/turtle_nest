@@ -53,17 +53,17 @@ int main(int argc, char * argv[])
 }
 
 
-void set_fonts(){
-    // iterate over every .ttf in the ":/fonts" resource directory
-    QDir fontDir(":/fonts/fonts/Ubuntu_Sans/static");
-    QStringList fontFiles = fontDir.entryList(QStringList{"*.ttf"}, QDir::Files);
+void set_fonts()
+{
+  // iterate over every .ttf in the ":/fonts" resource directory
+  QDir fontDir(":/fonts/fonts/Ubuntu_Sans/static");
+  QStringList fontFiles = fontDir.entryList(QStringList{"*.ttf"}, QDir::Files);
 
-    for (const QString &fileName : fontFiles) {
-        const QString path = fontDir.absoluteFilePath(fileName);
-        QFontDatabase::addApplicationFont(path);
-    }
-    QFont font = QFont("Ubuntu Sans");
-    font.setPointSize(11);
-    QApplication::setFont(font);
+  for (const QString & fileName : fontFiles) {
+    const QString path = fontDir.absoluteFilePath(fileName);
+    QFontDatabase::addApplicationFont(path);
+  }
+  QFont font = QFont("Ubuntu Sans");
+  font.setPointSize(11);
+  QApplication::setFont(font);
 }
-

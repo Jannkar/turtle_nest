@@ -96,7 +96,7 @@ void create_init_file(QString package_path, QString package_name)
   QString node_dir = QDir(package_path).filePath(package_name);
   QString init_path = QDir(node_dir).filePath("__init__.py");
   if (QFile::exists(init_path)) {
-      return;
+    return;
   }
 
   create_directory(node_dir);
@@ -122,7 +122,9 @@ void add_exec_permissions(QString node_path)
 }
 
 
-void generate_cpp_node(QString package_path, QString node_name, bool create_config, bool overwrite_existing)
+void generate_cpp_node(
+  QString package_path, QString node_name, bool create_config,
+  bool overwrite_existing)
 {
   QString params_block =
     !create_config ? "" :
@@ -161,12 +163,13 @@ int main(int argc, char * argv[])
 
 void add_node_to_cmakelists(PackageInfo pkg_info, QString node_name)
 {
-    QString cmakelists_path = QDir(pkg_info.package_path).filePath("CMakeLists.txt");
-    QString append_before_text = "ament_package()";
+  QString cmakelists_path = QDir(pkg_info.package_path).filePath("CMakeLists.txt");
+  QString append_before_text = "ament_package()";
 
-    add_dependency_to_cmakelists("rclcpp", cmakelists_path);
+  add_dependency_to_cmakelists("rclcpp", cmakelists_path);
 
-    QString content(R"(# Add node %1
+  QString content(
+    R"(# Add node %1
 add_executable(%1 src/%1.cpp)
 
 target_include_directories(%1 PUBLIC
@@ -182,53 +185,55 @@ install(TARGETS %1
   DESTINATION lib/${PROJECT_NAME})
 
 )");
-    content = content.arg(node_name);
-    append_to_file_before(cmakelists_path, content, append_before_text);
+  content = content.arg(node_name);
+  append_to_file_before(cmakelists_path, content, append_before_text);
 }
 
-void add_dependency_to_cmakelists(QString dependency, QString cmakelists_path){
-    // TODO: Test that this works correctly when target_string already exists
-    QString target_string = QString("find_package(%1 REQUIRED)").arg(dependency);
-    QString cmakelists_contents = read_file(cmakelists_path);
+void add_dependency_to_cmakelists(QString dependency, QString cmakelists_path)
+{
+  QString target_string = QString("find_package(%1 REQUIRED)").arg(dependency);
+  QString cmakelists_contents = read_file(cmakelists_path);
 
-    // Return if dependency already exists
-    if (cmakelists_contents.contains(target_string)) {
-        return;
-    }
+  // Return if dependency already exists
+  if (cmakelists_contents.contains(target_string)) {
+    return;
+  }
 
-    QString append_before_text = "ament_package()";
-    append_to_file_before(cmakelists_path, target_string + "\n\n", append_before_text);
+  QString append_before_text = "ament_package()";
+  append_to_file_before(cmakelists_path, target_string + "\n\n", append_before_text);
 }
 
-void install_python_modules_in_cmakelists(QString package_path){
-    QString cmakelists_path = QDir(package_path).filePath("CMakeLists.txt");
-    QString cmakelists_contents = read_file(cmakelists_path);
-    QString target_string = QString("ament_python_install_package(${PROJECT_NAME})");
+void install_python_modules_in_cmakelists(QString package_path)
+{
+  QString cmakelists_path = QDir(package_path).filePath("CMakeLists.txt");
+  QString cmakelists_contents = read_file(cmakelists_path);
+  QString target_string = QString("ament_python_install_package(${PROJECT_NAME})");
 
-    // Return if ament_python_install_package already exists
-    if (cmakelists_contents.contains(target_string)) {
-        return;
-    }
+  // Return if ament_python_install_package already exists
+  if (cmakelists_contents.contains(target_string)) {
+    return;
+  }
 
-    QString content(
-        R"(# Install Python modules
+  QString content(
+    R"(# Install Python modules
 ament_python_install_package(${PROJECT_NAME})
 
 )");
 
-    QString append_before_text = "ament_package()";
-    append_to_file_before(cmakelists_path, content, append_before_text);
+  QString append_before_text = "ament_package()";
+  append_to_file_before(cmakelists_path, content, append_before_text);
 }
 
-void add_python_node_to_cmakelists(QString package_path, QString node_name){
-    QString cmakelists_path = QDir(package_path).filePath("CMakeLists.txt");
-    QString append_before_text = "ament_package()";
+void add_python_node_to_cmakelists(QString package_path, QString node_name)
+{
+  QString cmakelists_path = QDir(package_path).filePath("CMakeLists.txt");
+  QString append_before_text = "ament_package()";
 
-    add_dependency_to_cmakelists("rclpy", cmakelists_path);
-    install_python_modules_in_cmakelists(package_path);
+  add_dependency_to_cmakelists("rclpy", cmakelists_path);
+  install_python_modules_in_cmakelists(package_path);
 
-    QString content(
-        R"(# Add Python node %1
+  QString content(
+    R"(# Add Python node %1
 install(PROGRAMS
   ${PROJECT_NAME}/%1.py
   DESTINATION lib/${PROJECT_NAME}
@@ -236,44 +241,46 @@ install(PROGRAMS
 )
 
 )");
-    content = content.arg(node_name);
-    append_to_file_before(cmakelists_path, content, append_before_text);
+  content = content.arg(node_name);
+  append_to_file_before(cmakelists_path, content, append_before_text);
 }
 
-void add_rclpy_dependency_to_package_xml(QString package_path){
-    PackageXMLEditor xml_editor = PackageXMLEditor(package_path);
+void add_rclpy_dependency_to_package_xml(QString package_path)
+{
+  PackageXMLEditor xml_editor = PackageXMLEditor(package_path);
 
-    // If rclpy is already exec_depend or depend, don't add.
-    if (xml_editor.has_dependency("rclpy", DependencyType::DEPEND)){
-        return;
-    }
-    if (xml_editor.has_dependency("rclpy", DependencyType::EXEC_DEPEND)){
-        return;
-    }
+  // If rclpy is already exec_depend or depend, don't add.
+  if (xml_editor.has_dependency("rclpy", DependencyType::DEPEND)) {
+    return;
+  }
+  if (xml_editor.has_dependency("rclpy", DependencyType::EXEC_DEPEND)) {
+    return;
+  }
 
-    xml_editor.add_dependency("rclpy", DependencyType::EXEC_DEPEND);
+  xml_editor.add_dependency("rclpy", DependencyType::EXEC_DEPEND);
 }
 
-void add_rclcpp_dependency_to_package_xml(QString package_path){
-    PackageXMLEditor xml_editor = PackageXMLEditor(package_path);
-    bool has_depend = xml_editor.has_dependency("rclcpp", DependencyType::DEPEND);
-    if (has_depend){
-        qDebug() << "Already has dependency rclcpp!";
-        return;
-    }
+void add_rclcpp_dependency_to_package_xml(QString package_path)
+{
+  PackageXMLEditor xml_editor = PackageXMLEditor(package_path);
+  bool has_depend = xml_editor.has_dependency("rclcpp", DependencyType::DEPEND);
+  if (has_depend) {
+    qDebug() << "Already has dependency rclcpp!";
+    return;
+  }
 
-    bool has_exec_depend = xml_editor.has_dependency("rclcpp", DependencyType::EXEC_DEPEND);
-    bool has_build_depend = xml_editor.has_dependency("rclcpp", DependencyType::BUILD_DEPEND);
+  bool has_exec_depend = xml_editor.has_dependency("rclcpp", DependencyType::EXEC_DEPEND);
+  bool has_build_depend = xml_editor.has_dependency("rclcpp", DependencyType::BUILD_DEPEND);
 
-    if (has_exec_depend && has_build_depend) {
-        return;
-    } else if (has_exec_depend && !has_build_depend) {
-        xml_editor.add_dependency("rclcpp", DependencyType::BUILD_DEPEND);
-    } else if (!has_exec_depend && has_build_depend) {
-        xml_editor.add_dependency("rclcpp", DependencyType::EXEC_DEPEND);
-    } else {
-        xml_editor.add_dependency("rclcpp", DependencyType::DEPEND);
-    }
+  if (has_exec_depend && has_build_depend) {
+    return;
+  } else if (has_exec_depend && !has_build_depend) {
+    xml_editor.add_dependency("rclcpp", DependencyType::BUILD_DEPEND);
+  } else if (!has_exec_depend && has_build_depend) {
+    xml_editor.add_dependency("rclcpp", DependencyType::EXEC_DEPEND);
+  } else {
+    xml_editor.add_dependency("rclcpp", DependencyType::DEPEND);
+  }
 }
 
 
@@ -281,10 +288,11 @@ void add_rclcpp_dependency_to_package_xml(QString package_path){
 /**
  * @brief Modifies setup.py file by adding a Node into it as an entrypoint
  */
-void add_node_to_setup_py(PackageInfo pkg_info, QString node_name) {
-    QString setup_path = QDir(pkg_info.package_path).filePath("setup.py");
-    QString new_code = generate_new_setup_py(pkg_info, node_name);
-    write_file(setup_path, new_code, true);
+void add_node_to_setup_py(PackageInfo pkg_info, QString node_name)
+{
+  QString setup_path = QDir(pkg_info.package_path).filePath("setup.py");
+  QString new_code = generate_new_setup_py(pkg_info, node_name);
+  write_file(setup_path, new_code, true);
 }
 
 /**
@@ -292,49 +300,50 @@ void add_node_to_setup_py(PackageInfo pkg_info, QString node_name) {
  * parses the abstract syntrax tree of the file, to append to the console_scripts
  * correctly, no matter what the code structure is.
  */
-QString generate_new_setup_py(PackageInfo pkg_info, QString node_name){
-    QString module_name = "python_file_utils";
-    QString function_name = "generate_new_setup_py";
-    static py::scoped_interpreter guard{};
+QString generate_new_setup_py(PackageInfo pkg_info, QString node_name)
+{
+  QString module_name = "python_file_utils";
+  QString function_name = "generate_new_setup_py";
+  static py::scoped_interpreter guard{};
 
-    QDir dir(get_executable_dir());
+  QDir dir(get_executable_dir());
 
-    // A dirty way of getting the Python executable path. Our app
-    // location will be "bin" when running with turtle-nest, "lib"
-    // with ros2 run turtle_nest turtle_nest. With Qt editor build,
-    // we don't have "bin" or "lib" folders.
-    if (dir.dirName() == "bin" || dir.dirName() == "lib") {
-        dir.cdUp();  // Move up from install/bin to install/
-    }
-    QString script_path =  dir.filePath("lib/turtle_nest/");
+  // A dirty way of getting the Python executable path. Our app
+  // location will be "bin" when running with turtle-nest, "lib"
+  // with ros2 run turtle_nest turtle_nest. With Qt editor build,
+  // we don't have "bin" or "lib" folders.
+  if (dir.dirName() == "bin" || dir.dirName() == "lib") {
+    dir.cdUp();      // Move up from install/bin to install/
+  }
+  QString script_path = dir.filePath("lib/turtle_nest/");
 
-    // Another dirty way of getting the Python file in tests.
-    // Should be reworked to have the tests under the ROS 2 package,
-    // to make this easier.
-    QDir checkDir(script_path);
-    if (!checkDir.exists()) {
-        script_path = dir.filePath("lib/turtle_nest_tests/");
-    }
+  // Another dirty way of getting the Python file in tests.
+  // Should be reworked to have the tests under the ROS 2 package,
+  // to make this easier.
+  QDir checkDir(script_path);
+  if (!checkDir.exists()) {
+    script_path = dir.filePath("lib/turtle_nest_tests/");
+  }
 
-    py::module sys = py::module::import("sys");
-    sys.attr("path").cast<py::list>().append(script_path.toStdString());
+  py::module sys = py::module::import("sys");
+  sys.attr("path").cast<py::list>().append(script_path.toStdString());
 
-    py::module module = py::module::import(module_name.toStdString().c_str());
-    py::object func = module.attr(function_name.toStdString().c_str());
+  py::module module = py::module::import(module_name.toStdString().c_str());
+  py::object func = module.attr(function_name.toStdString().c_str());
 
-    try {
-        py::object result = func(
-            py::str(pkg_info.package_path.toStdString()),
-            py::str(pkg_info.package_name.toStdString()),
-            py::str(node_name.toStdString())
-            );
+  try {
+    py::object result = func(
+      py::str(pkg_info.package_path.toStdString()),
+      py::str(pkg_info.package_name.toStdString()),
+      py::str(node_name.toStdString())
+    );
 
-        return QString().fromStdString(result.cast<std::string>());
-    }
-    catch (const py::error_already_set &e) {
-        throw std::runtime_error(
-            QString("Failed to parse the package setup.py! Is it valid and does it have "
-                    "entry_points and console_scripts?").toStdString()
-            );
-    }
+    return QString().fromStdString(result.cast<std::string>());
+  } catch (const py::error_already_set & e) {
+    throw std::runtime_error(
+            QString(
+              "Failed to parse the package setup.py! Is it valid and does it have "
+              "entry_points and console_scripts?").toStdString()
+    );
+  }
 }
