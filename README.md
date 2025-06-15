@@ -68,6 +68,27 @@ sudo apt install ros-${ROS_DISTRO}-turtle-nest
 
 * If your `${ROS_DISTRO}` env variable is not set, replace it with your ROS 2 distribution, such as `humble` or `jazzy`.
 
+### Alternative Installation - Build from Source
+
+The previous installation method is usually sufficient for most users. 
+However, if you want the latest features or want to customize the Turtle Nest, you can build it from source:
+
+<details>
+  <summary>Click to open instructions for building from source</summary>
+
+  ```
+  mkdir -p $HOME/ros2_ws/src/
+  cd $HOME/ros2_ws/src/
+  git clone https://github.com/Jannkar/turtle_nest.git
+  cd ..
+  sudo apt-get update
+  rosdep install --from-paths src --ignore-src -r -y --rosdistro ${ROS_DISTRO}
+  colcon build
+  source install/setup.bash
+  ```
+
+</details>
+
 ## Usage
 To run the application, simply execute:
 
