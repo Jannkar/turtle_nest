@@ -30,6 +30,12 @@ void modify_setup_py(QString package_path, bool create_launch, bool create_confi
     append_to_file(setup_py_path, lines_to_append, append_after);
   }
 
+  if (create_config) {
+      QString config_content =
+          "\n        (os.path.join('share', package_name, 'config'), glob('config/*.yaml')),";
+      append_to_file(setup_py_path, config_content, append_after);
+  }
+
   // Add imports if either launch or config was appended
   if (create_launch || create_config) {
     QString imports("import os\n"

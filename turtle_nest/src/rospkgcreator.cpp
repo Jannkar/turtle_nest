@@ -65,7 +65,7 @@ void RosPkgCreator::create_package() const
 
   // Generate parameters file
   if (create_config) {
-    generate_params_file(package_path, params_file_name + ".yaml", node_name_cpp, node_name_python, build_type);
+    generate_params_file(package_path, params_file_name + ".yaml", node_name_cpp, node_name_python);
   }
 
   // Modify setup.py or CMakeLists

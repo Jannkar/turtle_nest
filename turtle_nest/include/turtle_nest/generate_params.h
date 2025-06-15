@@ -19,12 +19,10 @@
 #define GENERATE_PARAMS_H
 
 #include <QString>
-#include "turtle_nest/build_type_enum.h"
 
 void generate_params_file(
   QString package_path, QString params_file_name, QString node_name_cpp,
-  QString node_name_python, BuildType build_type);
+  QString node_name_python);
 QString get_params_content(QString node_name_cpp, QString node_name_python);
-void add_params_to_setup_py(QString package_path);
 
 #endif // GENERATE_PARAMS_H
