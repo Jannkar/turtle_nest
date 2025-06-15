@@ -10,6 +10,8 @@
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <depend>tinyxml2_vendor</depend>
+  <depend>python3-dev</depend>
+  <depend>pybind11-dev</depend>
 
   <build_depend>libqt5-core</build_depend>
   <build_depend>libqt5-widgets</build_depend>
