@@ -13,6 +13,7 @@ SOURCES += \
     src/file_utils.cpp \
     src/generate_cmake.cpp \
     src/generate_launch.cpp \
+    src/generate_msgs_pkg.cpp \
     src/generate_node.cpp \
     src/generate_params.cpp \
     src/generate_setup_py.cpp \
@@ -30,6 +31,7 @@ HEADERS += \
     include/turtle_nest/file_utils.h \
     include/turtle_nest/generate_cmake.h \
     include/turtle_nest/generate_launch.h \
+    include/turtle_nest/generate_msgs_pkg.h \
     include/turtle_nest/generate_node.h \
     include/turtle_nest/generate_setup_py.h \
     include/turtle_nest/mainwindow.h \

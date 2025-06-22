@@ -28,6 +28,7 @@
 #include <QToolTip>
 #include <QDebug>
 #include <QDialog>
+#include <QButtonGroup>
 
 
 MainWindow::MainWindow(QWidget * parent, const QString & package_dest)
@@ -54,10 +55,18 @@ MainWindow::MainWindow(QWidget * parent, const QString & package_dest)
   ui->packageNameEdit->setFocus();
 
   // Page 2
-  ui->pythonNodeNameLabel->setVisible(false);
-  ui->lineEditNodeNamePython->setVisible(false);
-  ui->pythonNodeNameInfoButton->setVisible(false);
+  // Create a button group for the package type and connect to a signal
+  // that connects to a callback that fires if any button is selected
+  package_type_group = new QButtonGroup(this);
+  package_type_group->addButton(ui->typeCPPButton, 0);
+  package_type_group->addButton(ui->typePythonButton, 1);
+  package_type_group->addButton(ui->typeMixedButton, 2);
+  package_type_group->addButton(ui->typeMsgsButton, 3);
+  connect(package_type_group, &QButtonGroup::idToggled,
+          this, &MainWindow::handle_package_type_changed);
+
   ui->launchSuffixWarnLabel->setVisible(false);
+  update_package_type_page_ui(get_selected_package_type());
 
   // Page 3
   ui->invalidEmailLabel->setVisible(false);
@@ -113,15 +122,7 @@ void MainWindow::on_browseButton_clicked()
 
 void MainWindow::on_createPackageButton_clicked()
 {
-  BuildType build_type;
-
-  if (ui->checkboxCpp->isChecked() && ui->checkboxPython->isChecked()) {
-    build_type = CPP_AND_PYTHON;
-  } else if (ui->checkboxPython->isChecked()) {
-    build_type = PYTHON;
-  } else {
-    build_type = CPP;
-  }
+  BuildType build_type = get_selected_package_type();
 
   RosPkgCreator pkg_creator(
     ui->workspacePathEdit->text(),
@@ -191,51 +192,52 @@ void MainWindow::on_packageNameEdit_editingFinished()
   }
 }
 
+void MainWindow::handle_package_type_changed(int /*id*/, bool checked){
+  if (!checked){
+    return;
+  }
+  BuildType package_type = get_selected_package_type();
+  update_package_type_page_ui(package_type);
+}
 
-void MainWindow::change_package_type()
-{
-  bool cpp_checked = ui->checkboxCpp->isChecked();
-  bool python_checked = ui->checkboxPython->isChecked();
-
-  if (cpp_checked && !python_checked) {
-    // Only CPP checked
-    ui->checkboxCpp->setEnabled(false);
-    ui->pythonNodeNameLabel->setVisible(false);
-    ui->lineEditNodeNamePython->setVisible(false);
-    ui->lineEditNodeNamePython->clear();
-    ui->pythonNodeNameInfoButton->setVisible(false);
-    ui->cppNodeNameInfoButton->setVisible(true);
-  } else if (!cpp_checked && python_checked) {
-    // Only Python checked
-    ui->checkboxPython->setEnabled(false);
-    ui->cppNodeNameLabel->setVisible(false);
-    ui->lineEditNodeNameCpp->setVisible(false);
-    ui->lineEditNodeNameCpp->clear();
-    ui->pythonNodeNameInfoButton->setVisible(true);
-    ui->cppNodeNameInfoButton->setVisible(false);
-  } else {
-    // Both checked
-    ui->checkboxCpp->setEnabled(true);
-    ui->checkboxPython->setEnabled(true);
-    ui->cppNodeNameLabel->setVisible(true);
-    ui->lineEditNodeNameCpp->setVisible(true);
-    ui->pythonNodeNameLabel->setVisible(true);
-    ui->lineEditNodeNamePython->setVisible(true);
-    ui->pythonNodeNameInfoButton->setVisible(true);
-    ui->cppNodeNameInfoButton->setVisible(true);
+BuildType MainWindow::get_selected_package_type(){
+  switch(package_type_group->checkedId()){
+    case 0:
+      return BuildType::CPP;
+    case 1:
+      return BuildType::PYTHON;
+    case 2:
+      return BuildType::CPP_AND_PYTHON;
+    case 3:
+      return BuildType::MSGS;
+    default:
+      throw std::runtime_error("Unknown package type");
   }
 }
 
+void MainWindow::update_package_type_page_ui(BuildType package_type){
+  ui->cppNodewidget->setVisible(false);
+  ui->pythonNodeWidget->setVisible(false);
+  ui->paramLaunchWidget->setVisible(true);
+  ui->lineEditNodeNameCpp->clear();
+  ui->lineEditNodeNamePython->clear();
 
-void MainWindow::on_checkboxCpp_clicked()
-{
-  change_package_type();
-}
-
-
-void MainWindow::on_checkboxPython_clicked()
-{
-  change_package_type();
+  if (package_type == BuildType::CPP){
+    ui->cppNodewidget->setVisible(true);
+  } else if (package_type == BuildType::PYTHON){
+    ui->pythonNodeWidget->setVisible(true);
+  } else if (package_type == BuildType::CPP_AND_PYTHON){
+    ui->cppNodewidget->setVisible(true);
+    ui->pythonNodeWidget->setVisible(true);
+  } else if (package_type == BuildType::MSGS){
+    ui->lineEditLaunchName->clear();
+    ui->lineEditParamsName->clear();
+    ui->checkboxCreateLaunch->setChecked(false);
+    ui->checkboxCreateParams->setChecked(false);
+    ui->paramLaunchWidget->setVisible(false);
+  } else {
+    throw std::runtime_error("Unknown package type");
+  }
 }
 
 

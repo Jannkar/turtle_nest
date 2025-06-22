@@ -28,8 +28,10 @@ enum class DependencyType
 {
   DEPEND,
   BUILD_DEPEND,
-  EXEC_DEPEND
-  // TEST_DEPEND and BUILD_EXPORT_DEPEND not needed
+  EXEC_DEPEND,
+  BUILDTOOL_DEPEND,
+  MEMBER_OF_GROUP,
+  // TEST_DEPEND and BUILD_EXPORT_DEPEND not currently needed
 };
 
 std::string depend_type_to_string(DependencyType depend_type);
