@@ -129,9 +129,10 @@ void generate_cpp_node(
   QString params_block =
     !create_config ? "" :
     R"(
-      this->declare_parameter<std::string>("example_param", "default_value");
-      std::string example_param = this->get_parameter("example_param").as_string();
-      RCLCPP_INFO(this->get_logger(), "Declared parameter 'example_param'. Value: %s", example_param.c_str());
+    this->declare_parameter<std::string>("example_param", "default_value");
+    std::string example_param = this->get_parameter("example_param").as_string();
+    RCLCPP_INFO(
+      this->get_logger(), "Declared parameter 'example_param'. Value: %s", example_param.c_str());
 )";
   // Uncrustify considers this as a single line. Skip.
   /* *INDENT-OFF* */
@@ -140,12 +141,12 @@ void generate_cpp_node(
 
 class %2 : public rclcpp::Node
 {
-  public:
-    %2()
-    : Node("%1")
-    {%3
-      RCLCPP_INFO(this->get_logger(), "Hello world from the C++ node %s", "%1");
-    }
+public:
+  %2()
+  : Node("%1")
+  {%3
+    RCLCPP_INFO(this->get_logger(), "Hello world from the C++ node %s", "%1");
+  }
 };
 
 int main(int argc, char * argv[])
@@ -154,7 +155,8 @@ int main(int argc, char * argv[])
   rclcpp::spin(std::make_shared<%2>());
   rclcpp::shutdown();
   return 0;
-})").arg(node_name, to_camel_case(node_name), params_block);
+}
+)").arg(node_name, to_camel_case(node_name), params_block);
   /* *INDENT-ON* */
   write_file(QDir(package_path).filePath("src/" + node_name + ".cpp"), content, overwrite_existing);
   add_rclcpp_dependency_to_package_xml(package_path);
