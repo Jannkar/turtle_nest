@@ -74,7 +74,7 @@ void RosPkgCreator::create_package() const
     modify_setup_py(package_path, create_launch, create_config);
   } else if (build_type == CPP || build_type == CPP_AND_PYTHON) {
     modify_cmake_file(package_path, create_launch, create_config);
-  } else if (build_type == MSGS){
+  } else if (build_type == MSGS) {
     create_msgs_files(package_path);
     add_msgs_to_cmakelists(package_path);
   } else {
@@ -96,7 +96,7 @@ QStringList RosPkgCreator::create_command() const
 {
   QStringList command_list;
   QString type;
-  switch (build_type){
+  switch (build_type) {
     case CPP:
       type = "ament_cmake";
       break;

@@ -62,8 +62,9 @@ MainWindow::MainWindow(QWidget * parent, const QString & package_dest)
   package_type_group->addButton(ui->typePythonButton, 1);
   package_type_group->addButton(ui->typeMixedButton, 2);
   package_type_group->addButton(ui->typeMsgsButton, 3);
-  connect(package_type_group, &QButtonGroup::idToggled,
-          this, &MainWindow::handle_package_type_changed);
+  connect(
+    package_type_group, &QButtonGroup::idToggled,
+    this, &MainWindow::handle_package_type_changed);
 
   ui->launchSuffixWarnLabel->setVisible(false);
   update_package_type_page_ui(get_selected_package_type());
@@ -192,16 +193,18 @@ void MainWindow::on_packageNameEdit_editingFinished()
   }
 }
 
-void MainWindow::handle_package_type_changed(int /*id*/, bool checked){
-  if (!checked){
+void MainWindow::handle_package_type_changed(int /*id*/, bool checked)
+{
+  if (!checked) {
     return;
   }
   BuildType package_type = get_selected_package_type();
   update_package_type_page_ui(package_type);
 }
 
-BuildType MainWindow::get_selected_package_type(){
-  switch(package_type_group->checkedId()){
+BuildType MainWindow::get_selected_package_type()
+{
+  switch (package_type_group->checkedId()) {
     case 0:
       return BuildType::CPP;
     case 1:
@@ -215,21 +218,22 @@ BuildType MainWindow::get_selected_package_type(){
   }
 }
 
-void MainWindow::update_package_type_page_ui(BuildType package_type){
+void MainWindow::update_package_type_page_ui(BuildType package_type)
+{
   ui->cppNodewidget->setVisible(false);
   ui->pythonNodeWidget->setVisible(false);
   ui->paramLaunchWidget->setVisible(true);
   ui->lineEditNodeNameCpp->clear();
   ui->lineEditNodeNamePython->clear();
 
-  if (package_type == BuildType::CPP){
+  if (package_type == BuildType::CPP) {
     ui->cppNodewidget->setVisible(true);
-  } else if (package_type == BuildType::PYTHON){
+  } else if (package_type == BuildType::PYTHON) {
     ui->pythonNodeWidget->setVisible(true);
-  } else if (package_type == BuildType::CPP_AND_PYTHON){
+  } else if (package_type == BuildType::CPP_AND_PYTHON) {
     ui->cppNodewidget->setVisible(true);
     ui->pythonNodeWidget->setVisible(true);
-  } else if (package_type == BuildType::MSGS){
+  } else if (package_type == BuildType::MSGS) {
     ui->lineEditLaunchName->clear();
     ui->lineEditParamsName->clear();
     ui->checkboxCreateLaunch->setChecked(false);

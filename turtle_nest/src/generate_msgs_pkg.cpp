@@ -21,13 +21,15 @@
 #include <QDebug>
 #include <QDir>
 
-void add_msgs_to_cmakelists(QString package_path){
+void add_msgs_to_cmakelists(QString package_path)
+{
   QString c_make_path = QDir(package_path).filePath("CMakeLists.txt");
   QString append_before_text = "ament_package()";
   append_to_file_before(c_make_path, get_msgs_cmake_addition(), append_before_text);
 }
 
-void create_msgs_files(QString package_path){
+void create_msgs_files(QString package_path)
+{
   QString msgs_file_path = "msg/Example.msg";
   QString full_path = QDir(package_path).filePath(msgs_file_path);
   write_file(full_path, get_example_msg_contents());
@@ -37,9 +39,10 @@ void create_msgs_files(QString package_path){
   xml_editor.add_dependency("rosidl_interface_packages", DependencyType::MEMBER_OF_GROUP);
 }
 
-QString get_msgs_cmake_addition(){
+QString get_msgs_cmake_addition()
+{
   return QString(
-      R"(# Custom ROS 2 messages
+    R"(# Custom ROS 2 messages
 find_package(rosidl_default_generators REQUIRED)
 
 # Add here your custom message (.msg), service (.srv), and action (.action) files
@@ -50,9 +53,10 @@ rosidl_generate_interfaces(${PROJECT_NAME}
 )");
 }
 
-QString get_example_msg_contents(){
+QString get_example_msg_contents()
+{
   return QString(
-      R"(# This is a custom ROS 2 message definition.
+    R"(# This is a custom ROS 2 message definition.
 # Each line defines one field, consisting of a type and a name.
 
 string example_data

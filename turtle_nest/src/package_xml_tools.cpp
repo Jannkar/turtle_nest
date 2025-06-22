@@ -103,7 +103,8 @@ void PackageXMLEditor::save_xml()
 XMLElement * PackageXMLEditor::find_dep_insert_point(std::string depend_str)
 {
   // The insertion order of tags in the XML:
-  QStringList tag_order = {"license", "buildtool_depend", "depend", "build_depend", "exec_depend", "member_of_group"};
+  QStringList tag_order =
+  {"license", "buildtool_depend", "depend", "build_depend", "exec_depend", "member_of_group"};
 
   int idx = tag_order.indexOf(QString::fromStdString(depend_str));
   if (idx == -1) {
