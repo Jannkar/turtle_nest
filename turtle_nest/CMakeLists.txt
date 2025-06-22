@@ -21,6 +21,7 @@ set(SOURCES
   src/file_utils.cpp
   src/generate_cmake.cpp
   src/generate_launch.cpp
+  src/generate_msgs_pkg.cpp
   src/generate_node.cpp
   src/generate_params.cpp
   src/generate_setup_py.cpp

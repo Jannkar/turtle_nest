@@ -20,12 +20,12 @@ Turtle Nest offers the following key features:
 Creating new ROS 2 packages with Turtle Nest is fast, intuitive, and eliminates the usual setup hassles.
 It offers the following benefits:
 
+- **Supports multiple package types**: C++, Python, Mixed (C++ & Python), and Custom Msg Interfaces
 - **Easy to use** - no need to dig through the ROS 2 documentation for the right commands or manually add things to CMakeLists.txt or setup.py.
 - **Creates C++ and/or Python nodes** - which are ready for immediate development.
-- **Automatically adds necessary dependencies** - rclpy and rclcpp.
+- **Automatically adds necessary dependencies** - rclpy, rclcpp, rosidl_default_generators, ...
 - **Option to create a launch file** - to run your nodes with a single command.
 - **Option to create a parameter file** - with parameter examples for the created nodes.
-- **Create C++ and Python nodes within the same package** - combine languages that typically require separate packages.
 - **Naming conventions enforced** - no more failing builds due to incorrect package or node names.
 - **Remembers the important details** - workspace path, maintainer name, and maintainer email for your future packages.
 

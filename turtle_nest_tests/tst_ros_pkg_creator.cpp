@@ -205,8 +205,32 @@ TEST(ros_pkg_creator, cpp_python_with_both_nodes) {
   QString output = run_command(QString("ros2 launch package_name test_launch.py"),
   outputs_to_wait, pkg_creator.workspace_path);
   for (const QString & expected : outputs_to_wait) {
-  ASSERT_TRUE(output.contains(expected));
+    ASSERT_TRUE(output.contains(expected));
   }
+}
+
+// Create MSGS package
+TEST(ros_pkg_creator, msgs_package){
+  QString tmp_path = get_tmp_workspace_path();
+  RosPkgCreator pkg_creator(tmp_path, "test_example_msgs", MSGS);
+  pkg_creator.create_package();
+  pkg_creator.build_package();
+
+  // Create a Python package with a node that imports the new msgs package
+  RosPkgCreator python_pkg_creator(tmp_path, "python_package", PYTHON);
+  python_pkg_creator.node_name_python = "custom_message_import";
+  python_pkg_creator.launch_name = "custom_message_import_launch";
+  python_pkg_creator.create_package();
+  QString node_path = QDir(python_pkg_creator.package_path).filePath("python_package/custom_message_import.py");
+  QString fixture_path = QDir(FIXTURES_PATH).filePath("test_nodes/custom_message_import.py");
+  write_file(node_path, read_file(fixture_path), true);
+  python_pkg_creator.build_package();
+
+  // In the Python node, we print the Example -message.
+  // If it is printed correctly, the message importing was successful.
+  QString expected_log = "test_example_msgs.msg.Example(example_data='example text')";
+  QString output = run_command("ros2 launch python_package custom_message_import_launch.py", {expected_log}, python_pkg_creator.workspace_path);
+  ASSERT_TRUE(output.contains(expected_log));
 }
 
 // /*

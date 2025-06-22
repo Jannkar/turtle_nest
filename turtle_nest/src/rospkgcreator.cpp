@@ -20,6 +20,7 @@
 #include "turtle_nest/generate_cmake.h"
 #include "turtle_nest/generate_launch.h"
 #include "turtle_nest/generate_node.h"
+#include "turtle_nest/generate_msgs_pkg.h"
 #include "turtle_nest/generate_params.h"
 #include "turtle_nest/generate_setup_py.h"
 #include "turtle_nest/string_tools.h"
@@ -71,8 +72,13 @@ void RosPkgCreator::create_package() const
   // Modify setup.py or CMakeLists
   if (build_type == PYTHON) {
     modify_setup_py(package_path, create_launch, create_config);
-  } else {
+  } else if (build_type == CPP || build_type == CPP_AND_PYTHON) {
     modify_cmake_file(package_path, create_launch, create_config);
+  } else if (build_type == MSGS) {
+    create_msgs_files(package_path);
+    add_msgs_to_cmakelists(package_path);
+  } else {
+    throw std::runtime_error("Unknown package type.");
   }
 
   // Add watermark
@@ -89,9 +95,22 @@ void RosPkgCreator::create_package() const
 QStringList RosPkgCreator::create_command() const
 {
   QStringList command_list;
-  QString type = "ament_cmake";
-  if (build_type == PYTHON) {
-    type = "ament_python";
+  QString type;
+  switch (build_type) {
+    case CPP:
+      type = "ament_cmake";
+      break;
+    case PYTHON:
+      type = "ament_python";
+      break;
+    case CPP_AND_PYTHON:
+      type = "ament_cmake";
+      break;
+    case MSGS:
+      type = "ament_cmake";
+      break;
+    default:
+      throw std::logic_error("Package creation not implemented for this package type.");
   }
 
   command_list
