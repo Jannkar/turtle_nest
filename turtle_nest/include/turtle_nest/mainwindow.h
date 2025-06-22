@@ -67,7 +67,7 @@ public:
 
   BuildType get_selected_package_type();
 
-  void update_page_type_ui(BuildType package_type);
+  void update_package_type_page_ui(BuildType package_type);
 
   void on_lineEditNodeNameCpp_textEdited(const QString & arg1);
 
