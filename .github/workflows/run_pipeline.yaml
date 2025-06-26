@@ -27,6 +27,13 @@ jobs:
       - name: Test Jazzy
         run: docker compose -f docker/docker-compose.yaml run --build test-jazzy
 
+  test-kilted:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test Kilted
+        run: docker compose -f docker/docker-compose.yaml run --build test-kilted
+
   test-rolling:
     runs-on: ubuntu-latest
     steps:

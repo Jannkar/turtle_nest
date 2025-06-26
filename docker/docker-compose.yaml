@@ -41,6 +41,19 @@ services:
 
     command: bash -c "cd /home/user/ros2_ws/src/turtle_nest_tests/build/ && make && ./turtle_nest_tests"
 
+  test-kilted:
+    image: turtle_nest_kilted
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+      args:
+          BASE_IMAGE: ros:kilted
+    container_name: turtle_nest_test_kilted
+    profiles: ["test-kilted"]
+    stdin_open: true
+    tty: true
+    command: /home/user/ros2_ws/src/turtle_nest_tests/build/turtle_nest_tests
+
   test-jazzy:
     image: turtle_nest_jazzy
     build:
