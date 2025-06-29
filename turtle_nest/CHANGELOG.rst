@@ -2,8 +2,8 @@
 Changelog for package turtle_nest
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.0 (2025-06-29)
+------------------
 * Fix cpp package test errors (`#20 <https://github.com/Jannkar/turtle_nest/issues/20>`_)
 * Add support for msgs packages (`#19 <https://github.com/Jannkar/turtle_nest/issues/19>`_)
 * Add python3-dev and pybind11-dev as dependencies (`#18 <https://github.com/Jannkar/turtle_nest/issues/18>`_)
