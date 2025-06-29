@@ -2,6 +2,14 @@
 Changelog for package turtle_nest
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fix cpp package test errors (`#20 <https://github.com/Jannkar/turtle_nest/issues/20>`_)
+* Add support for msgs packages (`#19 <https://github.com/Jannkar/turtle_nest/issues/19>`_)
+* Add python3-dev and pybind11-dev as dependencies (`#18 <https://github.com/Jannkar/turtle_nest/issues/18>`_)
+* Improved UI & add nodes to existing packages (`#17 <https://github.com/Jannkar/turtle_nest/issues/17>`_)
+* Contributors: Janne Karttunen
+
 1.0.3 (2025-05-29)
 ------------------
 * Replace ament_target_dependencies with target_link_libraries (`#16 <https://github.com/Jannkar/turtle_nest/issues/16>`_)
