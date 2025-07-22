@@ -20,19 +20,21 @@
 #include "turtle_nest/package_generators/base_package_generator.h"
 
 
-class PythonPackageGenerator : public BasePackageGenerator
+class PythonPackageGenerator: public BasePackageGenerator
 {
 public:
-  void add_node(QString node_name, NodeType node_type, QString package_path, QString package_name) override;
+  void add_node(
+    QString node_name, NodeType node_type, QString package_path,
+    QString package_name) override;
 };
 
 void generate_python_node(
-    QString package_path, QString package_name, QString node_name,
-    bool create_config, bool overwrite_existing = false);
+  QString package_path, QString package_name, QString node_name,
+  bool create_config, bool overwrite_existing = false);
 void create_init_file(QString package_path, QString package_name);
 void add_exec_permissions(QString node_path);
 void add_rclpy_dependency_to_package_xml(QString package_path);
 void add_node_to_setup_py(QString package_path, QString package_name, QString node_name);
-QString generate_new_setup_py(QString package_path, QString package_name,  QString node_name);
+QString generate_new_setup_py(QString package_path, QString package_name, QString node_name);
 
 #endif // PYTHON_PACKAGE_GENERATOR_H

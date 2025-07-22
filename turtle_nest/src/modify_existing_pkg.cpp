@@ -113,18 +113,18 @@ QStringList list_files(QString path)
 void add_node(QString node_name, NodeType node_type, PackageInfo pkg_info)
 {
   std::unique_ptr<BasePackageGenerator> package_generator;
-  if (pkg_info.package_type == CPP){
+  if (pkg_info.package_type == CPP) {
     package_generator = std::make_unique<CppPackageGenerator>();
-  } else if (pkg_info.package_type == PYTHON){
+  } else if (pkg_info.package_type == PYTHON) {
     package_generator = std::make_unique<PythonPackageGenerator>();
-  } else if (pkg_info.package_type == CPP_AND_PYTHON){
+  } else if (pkg_info.package_type == CPP_AND_PYTHON) {
     package_generator = std::make_unique<MixedCppPythonPackageGenerator>();
-  } else{
+  } else {
     throw std::runtime_error(
-      QString("Can not add node for package type: %1!")
-        .arg(pkg_info.package_type)
-        .toStdString()
-      );
+            QString("Can not add node for package type: %1!")
+            .arg(pkg_info.package_type)
+            .toStdString()
+    );
   }
 
   // Node generation step will throw a runtime error if the node already exists.

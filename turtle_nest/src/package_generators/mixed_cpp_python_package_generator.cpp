@@ -21,18 +21,21 @@
 #include "turtle_nest/file_utils.h"
 
 
-void MixedCppPythonPackageGenerator::add_node(QString node_name, NodeType node_type, QString package_path, QString package_name){
+void MixedCppPythonPackageGenerator::add_node(
+  QString node_name, NodeType node_type,
+  QString package_path, QString package_name)
+{
   if (node_type == PYTHON_NODE) {
     generate_python_node(package_path, package_name, node_name, false);
     add_python_node_to_cmakelists(package_path, node_name);
-  }else if (node_type == CPP_NODE) {
+  } else if (node_type == CPP_NODE) {
     generate_cpp_node(package_path, node_name, false);
     add_node_to_cmakelists(package_path, node_name);
   } else {
     throw std::runtime_error(
-      QString("Unsupported node type: %1")
-        .arg(node_type)
-        .toStdString()
+            QString("Unsupported node type: %1")
+            .arg(node_type)
+            .toStdString()
     );
   }
 }
@@ -50,7 +53,7 @@ void install_python_modules_in_cmakelists(QString package_path)
   }
 
   QString content(
-      R"(# Install Python modules
+    R"(# Install Python modules
 ament_python_install_package(${PROJECT_NAME})
 
 )");
@@ -68,7 +71,7 @@ void add_python_node_to_cmakelists(QString package_path, QString node_name)
   install_python_modules_in_cmakelists(package_path);
 
   QString content(
-      R"(# Add Python node %1
+    R"(# Add Python node %1
 install(PROGRAMS
   ${PROJECT_NAME}/%1.py
   DESTINATION lib/${PROJECT_NAME}

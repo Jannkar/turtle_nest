@@ -21,10 +21,12 @@
 #include "turtle_nest/package_generators/base_package_generator.h"
 
 
-class MixedCppPythonPackageGenerator : public BasePackageGenerator
+class MixedCppPythonPackageGenerator: public BasePackageGenerator
 {
 public:
-  void add_node(QString node_name, NodeType node_type, QString package_path, QString package_name) override;
+  void add_node(
+    QString node_name, NodeType node_type, QString package_path,
+    QString package_name) override;
 };
 
 void install_python_modules_in_cmakelists(QString cmakelists_path);

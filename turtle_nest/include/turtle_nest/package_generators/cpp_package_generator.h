@@ -21,15 +21,17 @@
 #include "turtle_nest/package_generators/base_package_generator.h"
 
 
-class CppPackageGenerator : public BasePackageGenerator
+class CppPackageGenerator: public BasePackageGenerator
 {
 public:
-  void add_node(QString node_name, NodeType node_type, QString package_path, QString package_name) override;
+  void add_node(
+    QString node_name, NodeType node_type, QString package_path,
+    QString package_name) override;
 };
 
 void generate_cpp_node(
-    QString package_path, QString node_name,
-    bool create_config, bool overwrite_existing = false);
+  QString package_path, QString node_name,
+  bool create_config, bool overwrite_existing = false);
 void add_node_to_cmakelists(QString package_path, QString node_name);
 void add_dependency_to_cmakelists(QString dependency, QString cmakelists_path);
 void add_rclcpp_dependency_to_package_xml(QString package_path);

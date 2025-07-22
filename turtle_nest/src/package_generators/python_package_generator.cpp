@@ -32,22 +32,25 @@
 
 namespace py = pybind11;
 
-void PythonPackageGenerator::add_node(QString node_name, NodeType node_type, QString package_path, QString package_name){
+void PythonPackageGenerator::add_node(
+  QString node_name, NodeType node_type, QString package_path,
+  QString package_name)
+{
   if (node_type == PYTHON_NODE) {
     generate_python_node(package_path, package_name, node_name, false);
     add_node_to_setup_py(package_path, package_name, node_name);
   } else {
     throw std::runtime_error(
-      QString("Unsupported node type: %1")
-        .arg(node_type)
-        .toStdString()
-      );
+            QString("Unsupported node type: %1")
+            .arg(node_type)
+            .toStdString()
+    );
   }
 }
 
 void generate_python_node(
-    QString package_path, QString package_name, QString node_name,
-    bool create_config, bool overwrite_existing)
+  QString package_path, QString package_name, QString node_name,
+  bool create_config, bool overwrite_existing)
 {
   create_init_file(package_path, package_name);
   QString node_dir = QDir(package_path).filePath(package_name);
@@ -55,14 +58,14 @@ void generate_python_node(
 
   // Block to be added if parameter file was created
   QString param_declare_block =
-      !create_config ? "" :
-          R"(
+    !create_config ? "" :
+    R"(
         example_param = self.declare_parameter("example_param", "default_value").value
         self.get_logger().info(f"Declared parameter 'example_param'. Value: {example_param}"))";
 
   // Main content
   QString content = QString(
-                        R"(#!/usr/bin/env python3
+    R"(#!/usr/bin/env python3
 import rclpy
 from rclpy.node import Node
 
@@ -91,7 +94,7 @@ def main(args=None):
 if __name__ == '__main__':
     main()
 )")
-                        .arg(node_name, to_camel_case(node_name), param_declare_block);
+    .arg(node_name, to_camel_case(node_name), param_declare_block);
 
   create_directory(node_dir);
   write_file(node_path, content, overwrite_existing);
@@ -118,13 +121,13 @@ void add_exec_permissions(QString node_path)
   QFileDevice::Permissions current_permissions = file.permissions();
 
   QFileDevice::Permissions new_permissions = current_permissions |
-                                             QFileDevice::ExeOwner |
-                                             QFileDevice::ExeGroup |
-                                             QFileDevice::ExeOther;
+    QFileDevice::ExeOwner |
+    QFileDevice::ExeGroup |
+    QFileDevice::ExeOther;
 
   if (!file.setPermissions(new_permissions)) {
     QString error_msg = QString("Failed to set execution permissions for Python file '%1'").arg(
-        node_path);
+      node_path);
     qCritical() << error_msg;
     throw std::runtime_error(error_msg.toStdString());
   }
@@ -195,17 +198,17 @@ QString generate_new_setup_py(QString package_path, QString package_name, QStrin
 
   try {
     py::object result = func(
-        py::str(package_path.toStdString()),
-        py::str(package_name.toStdString()),
-        py::str(node_name.toStdString())
-        );
+      py::str(package_path.toStdString()),
+      py::str(package_name.toStdString()),
+      py::str(node_name.toStdString())
+    );
 
     return QString().fromStdString(result.cast<std::string>());
   } catch (const py::error_already_set & e) {
     throw std::runtime_error(
-        QString(
-            "Failed to parse the package setup.py! Is it valid and does it have "
-            "entry_points and console_scripts?").toStdString()
-        );
+            QString(
+              "Failed to parse the package setup.py! Is it valid and does it have "
+              "entry_points and console_scripts?").toStdString()
+    );
   }
 }

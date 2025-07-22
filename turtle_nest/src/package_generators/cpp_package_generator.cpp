@@ -20,28 +20,30 @@
 #include "turtle_nest/string_tools.h"
 #include "turtle_nest/package_xml_tools.h"
 
-void CppPackageGenerator::add_node(QString node_name, NodeType node_type, QString package_path, QString /*package_name*/){
+void CppPackageGenerator::add_node(
+  QString node_name, NodeType node_type, QString package_path,
+  QString /*package_name*/)
+{
   if (node_type == CPP_NODE) {
     generate_cpp_node(package_path, node_name, false);
     add_node_to_cmakelists(package_path, node_name);
-  }
-  else {
+  } else {
     throw std::runtime_error(
-      QString("Unsupported node type: %1")
-          .arg(node_type)
-          .toStdString()
-      );
+            QString("Unsupported node type: %1")
+            .arg(node_type)
+            .toStdString()
+    );
   }
 }
 
 
 void generate_cpp_node(
-    QString package_path, QString node_name, bool create_config,
-    bool overwrite_existing)
+  QString package_path, QString node_name, bool create_config,
+  bool overwrite_existing)
 {
   QString params_block =
-      !create_config ? "" :
-          R"(
+    !create_config ? "" :
+    R"(
     this->declare_parameter<std::string>("example_param", "default_value");
     std::string example_param = this->get_parameter("example_param").as_string();
     RCLCPP_INFO(
@@ -84,7 +86,7 @@ void add_node_to_cmakelists(QString package_path, QString node_name)
   add_dependency_to_cmakelists("rclcpp", cmakelists_path);
 
   QString content(
-      R"(# Add node %1
+    R"(# Add node %1
 add_executable(%1 src/%1.cpp)
 
 target_include_directories(%1 PUBLIC

@@ -27,7 +27,9 @@ class BasePackageGenerator
 {
 public:
   virtual ~BasePackageGenerator() = default;
-  virtual void add_node(QString node_name, NodeType node_type, QString package_path, QString package_name) = 0;
+  virtual void add_node(
+    QString node_name, NodeType node_type, QString package_path,
+    QString package_name) = 0;
 };
 
 #endif // BASE_PACKAGE_GENERATOR_H
