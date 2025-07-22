@@ -22,10 +22,12 @@ set(SOURCES
   src/generate_cmake.cpp
   src/generate_launch.cpp
   src/generate_msgs_pkg.cpp
-  src/generate_node.cpp
   src/generate_params.cpp
   src/generate_setup_py.cpp
   src/modify_existing_pkg.cpp
+  src/package_generators/cpp_package_generator.cpp
+  src/package_generators/mixed_cpp_python_package_generator.cpp
+  src/package_generators/python_package_generator.cpp
   src/package_xml_tools.cpp
   src/packageinfoform.cpp
   src/packageswindow.cpp
