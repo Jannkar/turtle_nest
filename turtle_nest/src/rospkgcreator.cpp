@@ -19,10 +19,12 @@
 #include "turtle_nest/file_utils.h"
 #include "turtle_nest/generate_cmake.h"
 #include "turtle_nest/generate_launch.h"
-#include "turtle_nest/generate_node.h"
 #include "turtle_nest/generate_msgs_pkg.h"
 #include "turtle_nest/generate_params.h"
 #include "turtle_nest/generate_setup_py.h"
+#include "turtle_nest/package_generators/cpp_package_generator.h"
+#include "turtle_nest/package_generators/mixed_cpp_python_package_generator.h"
+#include "turtle_nest/package_generators/python_package_generator.h"
 #include "turtle_nest/string_tools.h"
 
 #include <QDir>

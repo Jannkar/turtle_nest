@@ -16,7 +16,6 @@
 */
 
 #include "turtle_nest/modify_existing_pkg.h"
-#include "turtle_nest/generate_node.h"
 #include "turtle_nest/node_type_enum.h"
 #include "turtle_nest/packageinfo.h"
 #include "turtle_nest/file_utils.h"
@@ -26,6 +25,10 @@
 #include <QFile>
 #include <QUrl>
 #include <QRegularExpression>
+#include "turtle_nest/package_generators/base_package_generator.h"
+#include <turtle_nest/package_generators/cpp_package_generator.h>
+#include <turtle_nest/package_generators/python_package_generator.h>
+#include <turtle_nest/package_generators/mixed_cpp_python_package_generator.h>
 
 
 std::map<QString, PackageInfo> list_packages(QString workspace_path)
@@ -109,27 +112,23 @@ QStringList list_files(QString path)
 
 void add_node(QString node_name, NodeType node_type, PackageInfo pkg_info)
 {
-  // Node generation steps will fail if the node already exists.
-  if (pkg_info.package_type == CPP && node_type == CPP_NODE) {
-    generate_cpp_node(pkg_info.package_path, node_name, false);
-    add_node_to_cmakelists(pkg_info, node_name);
-  } else if (pkg_info.package_type == PYTHON && node_type == PYTHON_NODE) {
-    generate_python_node(pkg_info.package_path, pkg_info.package_name, node_name, false);
-    add_node_to_setup_py(pkg_info, node_name);
-  } else if (pkg_info.package_type == CPP_AND_PYTHON && node_type == PYTHON_NODE) {
-    generate_python_node(pkg_info.package_path, pkg_info.package_name, node_name, false);
-    add_python_node_to_cmakelists(pkg_info.package_path, node_name);
-  } else if (pkg_info.package_type == CPP_AND_PYTHON && node_type == CPP_NODE) {
-    generate_cpp_node(pkg_info.package_path, node_name, false);
-    add_node_to_cmakelists(pkg_info, node_name);
+  std::unique_ptr<BasePackageGenerator> package_generator;
+  if (pkg_info.package_type == CPP) {
+    package_generator = std::make_unique<CppPackageGenerator>();
+  } else if (pkg_info.package_type == PYTHON) {
+    package_generator = std::make_unique<PythonPackageGenerator>();
+  } else if (pkg_info.package_type == CPP_AND_PYTHON) {
+    package_generator = std::make_unique<MixedCppPythonPackageGenerator>();
   } else {
     throw std::runtime_error(
-            QString("Adding node is not implemented for build type: %1 and node type: %2")
+            QString("Can not add node for package type: %1!")
             .arg(pkg_info.package_type)
-            .arg(node_type)
             .toStdString()
     );
   }
+
+  // Node generation step will throw a runtime error if the node already exists.
+  package_generator->add_node(node_name, node_type, pkg_info.package_path, pkg_info.package_name);
 }
 
 bool is_src_package(QDir dir)

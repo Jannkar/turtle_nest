@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------
- * Copyright 2024 Janne Karttunen
+ * Copyright 2025 Janne Karttunen
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,20 +21,32 @@
 #undef slots
 #include <pybind11/embed.h>
 #include <pybind11/pybind11.h>
+
 #pragma pop_macro("slots")
 
-#include "turtle_nest/generate_node.h"
+#include <QDir>
+#include "turtle_nest/package_generators/python_package_generator.h"
 #include "turtle_nest/file_utils.h"
 #include "turtle_nest/string_tools.h"
-
-#include <QDir>
-#include <QDebug>
-#include <QRegularExpression>
-
-#include <turtle_nest/package_xml_tools.h>
+#include "turtle_nest/package_xml_tools.h"
 
 namespace py = pybind11;
 
+void PythonPackageGenerator::add_node(
+  QString node_name, NodeType node_type, QString package_path,
+  QString package_name)
+{
+  if (node_type == PYTHON_NODE) {
+    generate_python_node(package_path, package_name, node_name, false);
+    add_node_to_setup_py(package_path, package_name, node_name);
+  } else {
+    throw std::runtime_error(
+            QString("Unsupported node type: %1")
+            .arg(node_type)
+            .toStdString()
+    );
+  }
+}
 
 void generate_python_node(
   QString package_path, QString package_name, QString node_name,
@@ -122,131 +134,6 @@ void add_exec_permissions(QString node_path)
 }
 
 
-void generate_cpp_node(
-  QString package_path, QString node_name, bool create_config,
-  bool overwrite_existing)
-{
-  QString params_block =
-    !create_config ? "" :
-    R"(
-    this->declare_parameter<std::string>("example_param", "default_value");
-    std::string example_param = this->get_parameter("example_param").as_string();
-    RCLCPP_INFO(
-      this->get_logger(), "Declared parameter 'example_param'. Value: %s", example_param.c_str());
-)";
-  // Uncrustify considers this as a single line. Skip.
-  /* *INDENT-OFF* */
-
-    QString content = QString(R"(#include "rclcpp/rclcpp.hpp"
-
-class %2 : public rclcpp::Node
-{
-public:
-  %2()
-  : Node("%1")
-  {%3
-    RCLCPP_INFO(this->get_logger(), "Hello world from the C++ node %s", "%1");
-  }
-};
-
-int main(int argc, char * argv[])
-{
-  rclcpp::init(argc, argv);
-  rclcpp::spin(std::make_shared<%2>());
-  rclcpp::shutdown();
-  return 0;
-}
-)").arg(node_name, to_camel_case(node_name), params_block);
-  /* *INDENT-ON* */
-  write_file(QDir(package_path).filePath("src/" + node_name + ".cpp"), content, overwrite_existing);
-  add_rclcpp_dependency_to_package_xml(package_path);
-}
-
-
-void add_node_to_cmakelists(PackageInfo pkg_info, QString node_name)
-{
-  QString cmakelists_path = QDir(pkg_info.package_path).filePath("CMakeLists.txt");
-  QString append_before_text = "ament_package()";
-
-  add_dependency_to_cmakelists("rclcpp", cmakelists_path);
-
-  QString content(
-    R"(# Add node %1
-add_executable(%1 src/%1.cpp)
-
-target_include_directories(%1 PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include>)
-
-ament_target_dependencies(
-  %1
-  "rclcpp"
-)
-
-install(TARGETS %1
-  DESTINATION lib/${PROJECT_NAME})
-
-)");
-  content = content.arg(node_name);
-  append_to_file_before(cmakelists_path, content, append_before_text);
-}
-
-void add_dependency_to_cmakelists(QString dependency, QString cmakelists_path)
-{
-  QString target_string = QString("find_package(%1 REQUIRED)").arg(dependency);
-  QString cmakelists_contents = read_file(cmakelists_path);
-
-  // Return if dependency already exists
-  if (cmakelists_contents.contains(target_string)) {
-    return;
-  }
-
-  QString append_before_text = "ament_package()";
-  append_to_file_before(cmakelists_path, target_string + "\n\n", append_before_text);
-}
-
-void install_python_modules_in_cmakelists(QString package_path)
-{
-  QString cmakelists_path = QDir(package_path).filePath("CMakeLists.txt");
-  QString cmakelists_contents = read_file(cmakelists_path);
-  QString target_string = QString("ament_python_install_package(${PROJECT_NAME})");
-
-  // Return if ament_python_install_package already exists
-  if (cmakelists_contents.contains(target_string)) {
-    return;
-  }
-
-  QString content(
-    R"(# Install Python modules
-ament_python_install_package(${PROJECT_NAME})
-
-)");
-
-  QString append_before_text = "ament_package()";
-  append_to_file_before(cmakelists_path, content, append_before_text);
-}
-
-void add_python_node_to_cmakelists(QString package_path, QString node_name)
-{
-  QString cmakelists_path = QDir(package_path).filePath("CMakeLists.txt");
-  QString append_before_text = "ament_package()";
-
-  add_dependency_to_cmakelists("rclpy", cmakelists_path);
-  install_python_modules_in_cmakelists(package_path);
-
-  QString content(
-    R"(# Add Python node %1
-install(PROGRAMS
-  ${PROJECT_NAME}/%1.py
-  DESTINATION lib/${PROJECT_NAME}
-  RENAME %1
-)
-
-)");
-  content = content.arg(node_name);
-  append_to_file_before(cmakelists_path, content, append_before_text);
-}
-
 void add_rclpy_dependency_to_package_xml(QString package_path)
 {
   PackageXMLEditor xml_editor = PackageXMLEditor(package_path);
@@ -262,38 +149,14 @@ void add_rclpy_dependency_to_package_xml(QString package_path)
   xml_editor.add_dependency("rclpy", DependencyType::EXEC_DEPEND);
 }
 
-void add_rclcpp_dependency_to_package_xml(QString package_path)
-{
-  PackageXMLEditor xml_editor = PackageXMLEditor(package_path);
-  bool has_depend = xml_editor.has_dependency("rclcpp", DependencyType::DEPEND);
-  if (has_depend) {
-    qDebug() << "Already has dependency rclcpp!";
-    return;
-  }
-
-  bool has_exec_depend = xml_editor.has_dependency("rclcpp", DependencyType::EXEC_DEPEND);
-  bool has_build_depend = xml_editor.has_dependency("rclcpp", DependencyType::BUILD_DEPEND);
-
-  if (has_exec_depend && has_build_depend) {
-    return;
-  } else if (has_exec_depend && !has_build_depend) {
-    xml_editor.add_dependency("rclcpp", DependencyType::BUILD_DEPEND);
-  } else if (!has_exec_depend && has_build_depend) {
-    xml_editor.add_dependency("rclcpp", DependencyType::EXEC_DEPEND);
-  } else {
-    xml_editor.add_dependency("rclcpp", DependencyType::DEPEND);
-  }
-}
-
-
 //
 /**
  * @brief Modifies setup.py file by adding a Node into it as an entrypoint
  */
-void add_node_to_setup_py(PackageInfo pkg_info, QString node_name)
+void add_node_to_setup_py(QString package_path, QString package_name, QString node_name)
 {
-  QString setup_path = QDir(pkg_info.package_path).filePath("setup.py");
-  QString new_code = generate_new_setup_py(pkg_info, node_name);
+  QString setup_path = QDir(package_path).filePath("setup.py");
+  QString new_code = generate_new_setup_py(package_path, package_name, node_name);
   write_file(setup_path, new_code, true);
 }
 
@@ -302,7 +165,7 @@ void add_node_to_setup_py(PackageInfo pkg_info, QString node_name)
  * parses the abstract syntrax tree of the file, to append to the console_scripts
  * correctly, no matter what the code structure is.
  */
-QString generate_new_setup_py(PackageInfo pkg_info, QString node_name)
+QString generate_new_setup_py(QString package_path, QString package_name, QString node_name)
 {
   QString module_name = "python_file_utils";
   QString function_name = "generate_new_setup_py";
@@ -335,8 +198,8 @@ QString generate_new_setup_py(PackageInfo pkg_info, QString node_name)
 
   try {
     py::object result = func(
-      py::str(pkg_info.package_path.toStdString()),
-      py::str(pkg_info.package_name.toStdString()),
+      py::str(package_path.toStdString()),
+      py::str(package_name.toStdString()),
       py::str(node_name.toStdString())
     );
 
