@@ -33,18 +33,14 @@
 namespace py = pybind11;
 
 void PythonPackageGenerator::add_node(
-  QString node_name, NodeType node_type, QString package_path,
+  NodeOptions node_options, QString package_path,
   QString package_name)
 {
-  if (node_type == PYTHON_NODE) {
-    generate_python_node(package_path, package_name, node_name, false);
-    add_node_to_setup_py(package_path, package_name, node_name);
+  if (node_options.node_type == PYTHON_NODE) {
+    generate_python_node(package_path, package_name, node_options.node_name, false);
+    add_node_to_setup_py(package_path, package_name, node_options.node_name);
   } else {
-    throw std::runtime_error(
-            QString("Unsupported node type: %1")
-            .arg(node_type)
-            .toStdString()
-    );
+    BasePackageGenerator::add_node(node_options, package_path, package_name);
   }
 }
 

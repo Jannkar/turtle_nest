@@ -128,7 +128,13 @@ void add_node(QString node_name, NodeType node_type, PackageInfo pkg_info)
   }
 
   // Node generation step will throw a runtime error if the node already exists.
-  package_generator->add_node(node_name, node_type, pkg_info.package_path, pkg_info.package_name);
+  NodeOptions node_options{
+    node_name,
+    node_type,
+    false, // add_params
+  };
+
+  package_generator->add_node(node_options, pkg_info.package_path, pkg_info.package_name);
 }
 
 bool is_src_package(QDir dir)

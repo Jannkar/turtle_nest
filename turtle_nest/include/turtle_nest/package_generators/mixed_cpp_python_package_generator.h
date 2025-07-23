@@ -18,14 +18,17 @@
 #ifndef MIXED_CPP_PYTHON_PACKAGE_GENERATOR_H
 #define MIXED_CPP_PYTHON_PACKAGE_GENERATOR_H
 
-#include "turtle_nest/package_generators/base_package_generator.h"
+#include "turtle_nest/package_generators/cpp_package_generator.h"
 
 
-class MixedCppPythonPackageGenerator: public BasePackageGenerator
+class MixedCppPythonPackageGenerator: public CppPackageGenerator
 {
 public:
+  std::vector<NodeType> get_supported_node_types() const override {
+    return {CPP_NODE, CPP_LIFECYCLE_NODE, PYTHON_NODE};
+  }
   void add_node(
-    QString node_name, NodeType node_type, QString package_path,
+    NodeOptions node_options, QString package_path,
     QString package_name) override;
 };
 

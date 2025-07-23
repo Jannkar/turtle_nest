@@ -18,11 +18,20 @@
 #ifndef NODE_TYPE_ENUM_H
 #define NODE_TYPE_ENUM_H
 
+#include <QString>
 
 enum NodeType
 {
   CPP_NODE,
+  CPP_LIFECYCLE_NODE,
   PYTHON_NODE,
+};
+
+struct NodeOptions
+{
+  QString node_name;
+  NodeType node_type;
+  bool add_params;
 };
 
 #endif // NODE_TYPE_ENUM_H

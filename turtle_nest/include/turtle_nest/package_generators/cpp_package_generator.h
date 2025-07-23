@@ -24,16 +24,23 @@
 class CppPackageGenerator: public BasePackageGenerator
 {
 public:
+  std::vector<NodeType> get_supported_node_types() const override {
+    return {CPP_NODE, CPP_LIFECYCLE_NODE};
+  }
   void add_node(
-    QString node_name, NodeType node_type, QString package_path,
+    NodeOptions node_options, QString package_path,
     QString package_name) override;
 };
 
 void generate_cpp_node(
   QString package_path, QString node_name,
   bool create_config, bool overwrite_existing = false);
+QString get_params_block();
 void add_node_to_cmakelists(QString package_path, QString node_name);
+void add_cpp_dependency(QString package_path, QString dependency);
 void add_dependency_to_cmakelists(QString dependency, QString cmakelists_path);
-void add_rclcpp_dependency_to_package_xml(QString package_path);
+void add_cpp_dependency_to_package_xml(QString package_path, QString dependency);
+void generate_lifecycle_cpp_node(QString package_path, NodeOptions node_options);
+void add_lifecycle_node_to_cmakelists(QString package_path, QString node_name);
 
 #endif // CPP_PACKAGE_GENERATOR_H

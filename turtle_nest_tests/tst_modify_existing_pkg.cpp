@@ -30,7 +30,14 @@
 
 void execute_node_and_assert_success(PackageInfo pkg_info, QString node_name, NodeType node_type)
 {
-  QString node_type_str = node_type == CPP_NODE ? "C++" : "Python";
+  QString node_type_str;
+  if (node_type == CPP_NODE | node_type == CPP_LIFECYCLE_NODE){
+    node_type_str = "C++";
+  }else if (node_type == PYTHON_NODE){
+    node_type_str = "Python";
+  }else{
+    throw std::runtime_error("Invalid node type");
+  }
   QString expected_output = QString("[%1]: Hello world from the %2 node %1").arg(node_name,
     node_type_str);
   QString output = run_command(
@@ -102,8 +109,10 @@ TEST(modify_existing_pkg, add_node_to_existing_package) {
 
   QList<TestCase> test_cases = {
     {CPP, CPP_NODE, "cpp_package"},
+    {CPP, CPP_LIFECYCLE_NODE, "cpp_lifecycle_package"},
     {PYTHON, PYTHON_NODE, "python_package"},
     {CPP_AND_PYTHON, CPP_NODE, "mixed_with_cpp_node"},
+    {CPP_AND_PYTHON, CPP_LIFECYCLE_NODE, "mixed_with_cpp_lifecycle_node"},
     {CPP_AND_PYTHON, PYTHON_NODE, "mixed_with_python_node"}
   };
 
@@ -135,6 +144,10 @@ TEST(modify_existing_pkg, add_node_to_existing_package) {
       case CPP_NODE:
         ASSERT_TRUE(xml_editor.has_dependency("rclcpp", DependencyType::DEPEND));
         break;
+      case CPP_LIFECYCLE_NODE:
+        ASSERT_TRUE(xml_editor.has_dependency("rclcpp", DependencyType::DEPEND));
+        ASSERT_TRUE(xml_editor.has_dependency("rclcpp_lifecycle", DependencyType::DEPEND));
+        break;
       default:
         throw std::runtime_error("Invalid mode in switch");
     }
@@ -151,8 +164,10 @@ TEST(modify_existing_pkg, try_adding_node_with_existing_name) {
 
   QList<TestCase> test_cases = {
     {CPP, CPP_NODE},
+    {CPP, CPP_LIFECYCLE_NODE},
     {PYTHON, PYTHON_NODE},
     {CPP_AND_PYTHON, CPP_NODE},
+    {CPP_AND_PYTHON, CPP_LIFECYCLE_NODE},
     {CPP_AND_PYTHON, PYTHON_NODE}
   };
 
