@@ -42,6 +42,7 @@ void RosPkgCreator::create_package() const
   bool create_launch = (launch_name != "");
   bool create_config = (params_file_name != "");
 
+  //TODO: Neither one of these fields is now populated
   // Overwrite the simple hello world nodes with more advanced ones
   if (!node_name_python.isEmpty()) {
     generate_python_node(package_path, package_name, node_name_python, create_config, true);

@@ -16,6 +16,7 @@
 */
 
 #include "turtle_nest/mainwindow.h"
+#include "turtle_nest/package_generators/package_generator_factory.h"
 #include "ui_mainwindow.h"
 #include "turtle_nest/rospkgcreator.h"
 #include "turtle_nest/string_tools.h"
@@ -29,6 +30,7 @@
 #include <QDebug>
 #include <QDialog>
 #include <QButtonGroup>
+#include <turtle_nest/package_generators/base_package_generator.h>
 
 
 MainWindow::MainWindow(QWidget * parent, const QString & package_dest)
@@ -69,7 +71,7 @@ MainWindow::MainWindow(QWidget * parent, const QString & package_dest)
   ui->launchSuffixWarnLabel->setVisible(false);
   update_package_type_page_ui(get_selected_package_type());
 
-  // Page 3
+  // Page 4
   ui->invalidEmailLabel->setVisible(false);
   QSettings settings("TurtleNest", "TurtleNest");
   ui->maintainerEdit->setText(settings.value("maintainer_name", "").toString());
@@ -82,12 +84,20 @@ MainWindow::~MainWindow()
   delete ui;
 }
 
+/* Bottom buttons bar */
 
 void MainWindow::on_nextButton_clicked()
 {
   ui->backButton->setVisible(true);
   auto last_index = ui->stackedWidget->count() - 1;
   auto new_index = ui->stackedWidget->currentIndex() + 1;
+
+  // Hardcode skipping of the node creation page for MSGS packages
+  BuildType build_type = get_selected_package_type();
+  if (build_type == BuildType::MSGS && new_index == 2){
+    new_index++;
+  }
+
   ui->stackedWidget->setCurrentIndex(new_index);
   if (new_index == last_index) {
     ui->nextButton->setVisible(false);
@@ -103,21 +113,17 @@ void MainWindow::on_backButton_clicked()
   ui->nextButton->setVisible(true);
   ui->createPackageButton->setVisible(false);
   auto new_index = ui->stackedWidget->currentIndex() - 1;
+
+  // Hardcode skipping of the node creation page for MSGS packages
+  BuildType build_type = get_selected_package_type();
+  if (build_type == BuildType::MSGS && new_index == 2){
+    new_index--;
+  }
+
   ui->stackedWidget->setCurrentIndex(new_index);
   if (new_index == 0) {
     ui->backButton->setVisible(false);
   }
-}
-
-
-void MainWindow::on_browseButton_clicked()
-{
-  auto workspace_path = QFileDialog::getExistingDirectory(this, "Select Folder", "");
-
-  if (workspace_path.isEmpty()) {
-    return;
-  }
-  ui->workspacePathEdit->setText(workspace_path);
 }
 
 
@@ -138,8 +144,9 @@ void MainWindow::on_createPackageButton_clicked()
   pkg_creator.description = ui->descriptionEdit->toPlainText();
   pkg_creator.maintainer_name = ui->maintainerEdit->text();
 
-  pkg_creator.node_name_cpp = ui->lineEditNodeNameCpp->text();
-  pkg_creator.node_name_python = ui->lineEditNodeNamePython->text();
+  // TODO
+  //pkg_creator.node_name_cpp = ui->lineEditNodeNameCpp->text();
+  //pkg_creator.node_name_python = ui->lineEditNodeNamePython->text();
 
   if (ui->checkboxCreateLaunch->isChecked()) {
     pkg_creator.launch_name = ui->lineEditLaunchName->text();
@@ -175,6 +182,19 @@ void MainWindow::on_createPackageButton_clicked()
 }
 
 
+/* PAGE 1 */
+
+void MainWindow::on_browseButton_clicked()
+{
+  auto workspace_path = QFileDialog::getExistingDirectory(this, "Select Folder", "");
+
+  if (workspace_path.isEmpty()) {
+    return;
+  }
+  ui->workspacePathEdit->setText(workspace_path);
+}
+
+
 void MainWindow::on_packageNameEdit_textEdited(const QString & arg1)
 {
   // When user is editing, short name warning should never be visible.
@@ -192,6 +212,9 @@ void MainWindow::on_packageNameEdit_editingFinished()
     ui->nextButton->setEnabled(false);
   }
 }
+
+
+/* PAGE 2 */
 
 void MainWindow::handle_package_type_changed(int /*id*/, bool checked)
 {
@@ -220,43 +243,27 @@ BuildType MainWindow::get_selected_package_type()
 
 void MainWindow::update_package_type_page_ui(BuildType package_type)
 {
-  ui->cppNodewidget->setVisible(false);
-  ui->pythonNodeWidget->setVisible(false);
   ui->paramLaunchWidget->setVisible(true);
-  ui->lineEditNodeNameCpp->clear();
-  ui->lineEditNodeNamePython->clear();
 
-  if (package_type == BuildType::CPP) {
-    ui->cppNodewidget->setVisible(true);
-  } else if (package_type == BuildType::PYTHON) {
-    ui->pythonNodeWidget->setVisible(true);
-  } else if (package_type == BuildType::CPP_AND_PYTHON) {
-    ui->cppNodewidget->setVisible(true);
-    ui->pythonNodeWidget->setVisible(true);
-  } else if (package_type == BuildType::MSGS) {
+  // Update the list of node types
+  std::unique_ptr<BasePackageGenerator> package_generator = create_package_generator(package_type);
+  std::vector<NodeType> supported_nodes = package_generator->get_supported_node_types();
+  ui->nodeTypeListWidget->clear();
+  ui->nodeTypeListWidget->addItem("No Node");
+  for (NodeType & node_type: supported_nodes){
+    ui->nodeTypeListWidget->addItem(node_type_to_string(node_type));
+  }
+  ui->nodeTypeListWidget->setCurrentRow(0);
+
+  // Set widget visibility based on the build type
+  if (package_type == BuildType::MSGS) {
     ui->lineEditLaunchName->clear();
     ui->lineEditParamsName->clear();
     ui->checkboxCreateLaunch->setChecked(false);
     ui->checkboxCreateParams->setChecked(false);
     ui->paramLaunchWidget->setVisible(false);
-  } else {
-    throw std::runtime_error("Unknown package type");
   }
 }
-
-
-void MainWindow::on_lineEditNodeNameCpp_textEdited(const QString & arg1)
-{
-  autocorrect_line_edit(arg1, ui->lineEditNodeNameCpp);
-
-}
-
-
-void MainWindow::on_lineEditNodeNamePython_textEdited(const QString & arg1)
-{
-  autocorrect_line_edit(arg1, ui->lineEditNodeNamePython);
-}
-
 
 void MainWindow::on_checkboxCreateLaunch_toggled(bool checked)
 {
@@ -290,7 +297,6 @@ void MainWindow::on_lineEditLaunchName_editingFinished()
   if (ui->lineEditLaunchName->text().length() < 1) {
     ui->lineEditLaunchName->setText(ui->packageNameEdit->text() + "_launch");
   }
-
 }
 
 
@@ -304,7 +310,6 @@ void MainWindow::on_checkboxCreateParams_toggled(bool checked)
     ui->lineEditParamsName->clear();
   }
 }
-
 
 void MainWindow::on_lineEditParamsName_textEdited(const QString & arg1)
 {
@@ -320,6 +325,57 @@ void MainWindow::on_lineEditParamsName_editingFinished()
   }
 }
 
+
+void MainWindow::on_launchNameInfoButton_clicked()
+{
+  show_tooltip(ui->launchNameInfoButton);
+}
+
+
+void MainWindow::on_paramsNameInfoButton_clicked()
+{
+  show_tooltip(ui->paramsNameInfoButton);
+}
+
+/* PAGE 3 */
+
+void MainWindow::on_nodeTypeListWidget_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous)
+{
+  if (current) {
+    int row = ui->nodeTypeListWidget->row(current);
+    if (row == 0){ // No Node
+      ui->nodeNameLineEdit->setEnabled(false);
+      ui->nodeNameLineEdit->clear();
+    } else {
+      if (!ui->nodeNameLineEdit->isEnabled()){
+        ui->nodeNameLineEdit->setEnabled(true);
+        ui->nodeNameLineEdit->setText(ui->packageNameEdit->text() + "_node");
+      }
+    }
+  }
+}
+
+
+void MainWindow::on_nodeNameLineEdit_textEdited(const QString &arg1)
+{
+  autocorrect_line_edit(arg1, ui->nodeNameLineEdit);
+}
+
+
+void MainWindow::on_nodeNameLineEdit_editingFinished()
+{
+  if (ui->nodeNameLineEdit->text().length() < 1) {
+    ui->nodeNameLineEdit->setText(ui->packageNameEdit->text() + "_node");
+  }
+}
+
+void MainWindow::on_NodeNameInfoButton_clicked()
+{
+  show_tooltip(ui->NodeNameInfoButton);
+}
+
+
+/* PAGE 4 */
 
 QString MainWindow::get_license()
 {
@@ -357,28 +413,6 @@ void MainWindow::on_pkgNameInfoButton_clicked()
   show_tooltip(ui->pkgNameInfoButton);
 }
 
-
-void MainWindow::on_cppNodeNameInfoButton_clicked()
-{
-  show_tooltip(ui->cppNodeNameInfoButton);
-}
-
-
-void MainWindow::on_pythonNodeNameInfoButton_clicked()
-{
-  show_tooltip(ui->pythonNodeNameInfoButton);
-}
-
-void MainWindow::on_launchNameInfoButton_clicked()
-{
-  show_tooltip(ui->launchNameInfoButton);
-}
-
-
-void MainWindow::on_paramsNameInfoButton_clicked()
-{
-  show_tooltip(ui->paramsNameInfoButton);
-}
 
 QString MainWindow::get_created_package_name()
 {
