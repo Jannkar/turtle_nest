@@ -28,17 +28,18 @@ void CppPackageGenerator::add_node(
     generate_cpp_node(package_path, node_options.node_name, node_options.add_params);
     add_cpp_dependency(package_path, "rclcpp");
     add_node_to_cmakelists(package_path, node_options.node_name);
-  } else if (node_options.node_type == CPP_LIFECYCLE_NODE){
+  } else if (node_options.node_type == CPP_LIFECYCLE_NODE) {
     generate_lifecycle_cpp_node(package_path, node_options);
     add_cpp_dependency(package_path, "rclcpp");
     add_cpp_dependency(package_path, "rclcpp_lifecycle");
     add_lifecycle_node_to_cmakelists(package_path, node_options.node_name);
-  }else {
+  } else {
     BasePackageGenerator::add_node(node_options, package_path, package_name);
   }
 }
 
-void add_cpp_dependency(QString package_path, QString dependency){
+void add_cpp_dependency(QString package_path, QString dependency)
+{
   QString cmakelists_path = QDir(package_path).filePath("CMakeLists.txt");
 
   add_dependency_to_cmakelists(dependency, cmakelists_path);
@@ -105,8 +106,10 @@ install(TARGETS %1
   append_to_file_before(cmakelists_path, content, append_before_text);
 }
 
-QString get_params_block(){
-  return QString(R"(
+QString get_params_block()
+{
+  return QString(
+    R"(
     this->declare_parameter<std::string>("example_param", "default_value");
     std::string example_param = this->get_parameter("example_param").as_string();
     RCLCPP_INFO(
@@ -157,7 +160,8 @@ void add_cpp_dependency_to_package_xml(QString package_path, QString dependency)
   }
 }
 
-void generate_lifecycle_cpp_node(QString package_path, NodeOptions node_options){
+void generate_lifecycle_cpp_node(QString package_path, NodeOptions node_options)
+{
   QString params_block = node_options.add_params ? get_params_block() : "";
 
   // Uncrustify considers this as a single line. Skip.
@@ -233,7 +237,7 @@ void add_lifecycle_node_to_cmakelists(QString package_path, QString node_name)
   QString append_before_text = "ament_package()";
 
   QString content(
-      R"(# Add lifecycle node %1
+    R"(# Add lifecycle node %1
 add_executable(%1 src/%1.cpp)
 
 target_include_directories(%1 PUBLIC

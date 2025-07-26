@@ -74,9 +74,9 @@ void RosPkgCreator::create_package() const
   if (!node_name.isEmpty()) {
     std::unique_ptr<BasePackageGenerator> pkg_generator = create_package_generator(build_type);
     NodeOptions node_options{
-        node_name,
-        node_type,
-        create_config, // add_params
+      node_name,
+      node_type,
+      create_config,   // add_params
     };
     pkg_generator->add_node(node_options, package_path, package_name);
   }

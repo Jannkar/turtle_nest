@@ -24,7 +24,7 @@
 class CppPackageGenerator: public BasePackageGenerator
 {
 public:
-  std::vector<NodeType> get_supported_node_types() const override {
+  std::vector < NodeType > get_supported_node_types() const override {
     return {CPP_NODE, CPP_LIFECYCLE_NODE};
   }
   void add_node(

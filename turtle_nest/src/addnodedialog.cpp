@@ -55,16 +55,17 @@ AddNodeDialog::~AddNodeDialog()
   delete ui;
 }
 
-void AddNodeDialog::populate_node_types(){
-  for (NodeType node_type : supported_node_types){
+void AddNodeDialog::populate_node_types()
+{
+  for (NodeType node_type : supported_node_types) {
     QString type = node_type_to_string(node_type);
-    QRadioButton *button = new QRadioButton(type, ui->nodeTypeBox);
+    QRadioButton * button = new QRadioButton(type, ui->nodeTypeBox);
     ui->nodeTypeBox->layout()->addWidget(button);
     node_button_group->addButton(button);
   }
 
   // Set the first one checked
-  QList<QAbstractButton*> buttons = node_button_group->buttons();
+  QList<QAbstractButton *> buttons = node_button_group->buttons();
   if (!buttons.isEmpty()) {
     buttons.first()->setChecked(true);
   }
@@ -87,7 +88,7 @@ QString AddNodeDialog::get_node_name()
 
 NodeType AddNodeDialog::get_node_type()
 {
-  QAbstractButton *selected = node_button_group->checkedButton();
+  QAbstractButton * selected = node_button_group->checkedButton();
   if (!selected) {
     throw std::logic_error("Node was not selected. This shouldn't be possible.");
   }

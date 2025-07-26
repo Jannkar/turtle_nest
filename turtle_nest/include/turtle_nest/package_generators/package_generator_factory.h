@@ -20,7 +20,7 @@
 #include "turtle_nest/build_type_enum.h"
 #include "turtle_nest/package_generators/base_package_generator.h"
 
-std::unique_ptr<BasePackageGenerator> create_package_generator(BuildType package_type);
+std::unique_ptr < BasePackageGenerator > create_package_generator(BuildType package_type);
 
 
 #endif // PACKAGE_GENERATOR_FACTORY_H

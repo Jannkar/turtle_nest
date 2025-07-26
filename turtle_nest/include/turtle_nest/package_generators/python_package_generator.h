@@ -23,7 +23,7 @@
 class PythonPackageGenerator: public BasePackageGenerator
 {
 public:
-  std::vector<NodeType> get_supported_node_types() const override {
+  std::vector < NodeType > get_supported_node_types() const override {
     return {PYTHON_NODE};
   }
   void add_node(

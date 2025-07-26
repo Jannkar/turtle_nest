@@ -27,7 +27,7 @@ class BasePackageGenerator
 {
 public:
   virtual ~BasePackageGenerator() = default;
-  virtual std::vector<NodeType> get_supported_node_types() const {
+  virtual std::vector < NodeType > get_supported_node_types() const {
     return {};
   }
   virtual void add_node(
@@ -35,10 +35,10 @@ public:
   {
     throw std::runtime_error(
       QString("Unsupported node type: %1")
-        .arg(node_options.node_type)
-        .toStdString()
-      );
-  };
+      .arg(node_options.node_type)
+      .toStdString()
+    );
+  }
 };
 
 #endif // BASE_PACKAGE_GENERATOR_H

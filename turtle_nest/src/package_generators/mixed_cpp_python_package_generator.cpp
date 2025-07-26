@@ -26,10 +26,11 @@ void MixedCppPythonPackageGenerator::add_node(
   QString package_path, QString package_name)
 {
   if (node_options.node_type == PYTHON_NODE) {
-    generate_python_node(package_path, package_name, node_options.node_name, node_options.add_params);
+    generate_python_node(
+      package_path, package_name, node_options.node_name,
+      node_options.add_params);
     add_python_node_to_cmakelists(package_path, node_options.node_name);
-  }
-  else{
+  } else {
     CppPackageGenerator::add_node(node_options, package_path, package_name);
   }
 }

@@ -20,7 +20,8 @@
 #include <turtle_nest/package_generators/mixed_cpp_python_package_generator.h>
 #include <turtle_nest/package_generators/python_package_generator.h>
 
-std::unique_ptr<BasePackageGenerator> create_package_generator(BuildType package_type){
+std::unique_ptr<BasePackageGenerator> create_package_generator(BuildType package_type)
+{
   if (package_type == CPP) {
     return std::make_unique<CppPackageGenerator>();
   } else if (package_type == PYTHON) {

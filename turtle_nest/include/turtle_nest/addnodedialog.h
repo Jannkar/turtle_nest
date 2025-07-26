@@ -49,9 +49,9 @@ public:
 private:
   Ui::AddNodeDialog * ui;
   PackageInfo pkg_info;
-  std::unique_ptr<BasePackageGenerator> pkg_generator;
-  std::vector<NodeType> supported_node_types;
-  QButtonGroup *node_button_group;
+  std::unique_ptr < BasePackageGenerator > pkg_generator;
+  std::vector < NodeType > supported_node_types;
+  QButtonGroup * node_button_group;
   void populate_node_types();
 };
 

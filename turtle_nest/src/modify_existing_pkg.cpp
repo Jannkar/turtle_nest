@@ -113,7 +113,8 @@ QStringList list_files(QString path)
 
 void add_node(QString node_name, NodeType node_type, PackageInfo pkg_info)
 {
-  std::unique_ptr<BasePackageGenerator> package_generator = create_package_generator(pkg_info.package_type);
+  std::unique_ptr<BasePackageGenerator> package_generator = create_package_generator(
+    pkg_info.package_type);
 
   NodeOptions node_options{
     node_name,

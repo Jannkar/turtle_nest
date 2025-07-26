@@ -94,9 +94,11 @@ public:
 
   void on_lineEditParamsName_editingFinished();
 
-  void on_nodeTypeListWidget_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
+  void on_nodeTypeListWidget_currentItemChanged(
+    QListWidgetItem * current,
+    QListWidgetItem * previous);
 
-  void on_nodeNameLineEdit_textEdited(const QString &arg1);
+  void on_nodeNameLineEdit_textEdited(const QString & arg1);
 
   void on_nodeNameLineEdit_editingFinished();
 

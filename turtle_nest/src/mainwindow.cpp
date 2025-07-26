@@ -94,7 +94,7 @@ void MainWindow::on_nextButton_clicked()
 
   // Hardcode skipping of the node creation page for MSGS packages
   BuildType build_type = get_selected_package_type();
-  if (build_type == BuildType::MSGS && new_index == 2){
+  if (build_type == BuildType::MSGS && new_index == 2) {
     new_index++;
   }
 
@@ -116,7 +116,7 @@ void MainWindow::on_backButton_clicked()
 
   // Hardcode skipping of the node creation page for MSGS packages
   BuildType build_type = get_selected_package_type();
-  if (build_type == BuildType::MSGS && new_index == 2){
+  if (build_type == BuildType::MSGS && new_index == 2) {
     new_index--;
   }
 
@@ -145,7 +145,7 @@ void MainWindow::on_createPackageButton_clicked()
   pkg_creator.maintainer_name = ui->maintainerEdit->text();
 
   // Row 0 is always "No Node". If that's the case, don't set node name or type
-  if (ui->nodeTypeListWidget->currentRow() != 0){
+  if (ui->nodeTypeListWidget->currentRow() != 0) {
     pkg_creator.node_name = ui->nodeNameLineEdit->text();
     pkg_creator.node_type = node_type_from_string(ui->nodeTypeListWidget->currentItem()->text());
   }
@@ -252,7 +252,7 @@ void MainWindow::update_package_type_page_ui(BuildType package_type)
   std::vector<NodeType> supported_nodes = package_generator->get_supported_node_types();
   ui->nodeTypeListWidget->clear();
   ui->nodeTypeListWidget->addItem("No Node");
-  for (NodeType & node_type: supported_nodes){
+  for (NodeType & node_type: supported_nodes) {
     ui->nodeTypeListWidget->addItem(node_type_to_string(node_type));
   }
   ui->nodeTypeListWidget->setCurrentRow(0);
@@ -341,15 +341,17 @@ void MainWindow::on_paramsNameInfoButton_clicked()
 
 /* PAGE 3 */
 
-void MainWindow::on_nodeTypeListWidget_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous)
+void MainWindow::on_nodeTypeListWidget_currentItemChanged(
+  QListWidgetItem * current,
+  QListWidgetItem * previous)
 {
   if (current) {
     int row = ui->nodeTypeListWidget->row(current);
-    if (row == 0){ // No Node
+    if (row == 0) { // No Node
       ui->nodeNameLineEdit->setEnabled(false);
       ui->nodeNameLineEdit->clear();
     } else {
-      if (!ui->nodeNameLineEdit->isEnabled()){
+      if (!ui->nodeNameLineEdit->isEnabled()) {
         ui->nodeNameLineEdit->setEnabled(true);
         ui->nodeNameLineEdit->setText(ui->packageNameEdit->text() + "_node");
       }
@@ -358,7 +360,7 @@ void MainWindow::on_nodeTypeListWidget_currentItemChanged(QListWidgetItem *curre
 }
 
 
-void MainWindow::on_nodeNameLineEdit_textEdited(const QString &arg1)
+void MainWindow::on_nodeNameLineEdit_textEdited(const QString & arg1)
 {
   autocorrect_line_edit(arg1, ui->nodeNameLineEdit);
 }
