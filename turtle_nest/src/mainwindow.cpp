@@ -343,7 +343,7 @@ void MainWindow::on_paramsNameInfoButton_clicked()
 
 void MainWindow::on_nodeTypeListWidget_currentItemChanged(
   QListWidgetItem * current,
-  QListWidgetItem * previous)
+  QListWidgetItem * /*previous*/)
 {
   if (current) {
     int row = ui->nodeTypeListWidget->row(current);
