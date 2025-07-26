@@ -314,19 +314,26 @@ TEST(modify_existing_pkg, list_executables) {
 
   // Create CPP Package
   RosPkgCreator cpp_pkg_creator(src_path, "cpp_package", CPP);
-  cpp_pkg_creator.node_name_cpp = "cpp_node";
+  cpp_pkg_creator.node_name = "cpp_node";
+  cpp_pkg_creator.node_type = NodeType::CPP_NODE;
   cpp_pkg_creator.create_package();
 
   // Python Package
   RosPkgCreator python_pkg_creator(src_path, "python_package", PYTHON);
-  python_pkg_creator.node_name_python = "python_node";
+  python_pkg_creator.node_name = "python_node";
+  python_pkg_creator.node_type = NodeType::PYTHON_NODE;
   python_pkg_creator.create_package();
 
   // Python & CPP
-  RosPkgCreator mixed_pkg_creator(src_path, "mixed_package", CPP_AND_PYTHON);
-  mixed_pkg_creator.node_name_cpp = "cpp_node";
-  mixed_pkg_creator.node_name_python = "python_node";
+  PackageInfo pkg_info;
+  pkg_info.package_name = "mixed_package";
+  pkg_info.package_path = src_path + "/" + pkg_info.package_name;
+  pkg_info.package_type = CPP_AND_PYTHON;
+  RosPkgCreator mixed_pkg_creator(src_path, pkg_info.package_name, pkg_info.package_type);
+  mixed_pkg_creator.node_name = "cpp_node";
+  mixed_pkg_creator.node_type = NodeType::CPP_NODE;
   mixed_pkg_creator.create_package();
+  add_node("python_node", NodeType::PYTHON_NODE, pkg_info);
 
   // Build all the packages at once to optimize time
   colcon_build(workspace_path);

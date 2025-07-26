@@ -144,9 +144,11 @@ void MainWindow::on_createPackageButton_clicked()
   pkg_creator.description = ui->descriptionEdit->toPlainText();
   pkg_creator.maintainer_name = ui->maintainerEdit->text();
 
-  // TODO
-  //pkg_creator.node_name_cpp = ui->lineEditNodeNameCpp->text();
-  //pkg_creator.node_name_python = ui->lineEditNodeNamePython->text();
+  // Row 0 is always "No Node". If that's the case, don't set node name or type
+  if (ui->nodeTypeListWidget->currentRow() != 0){
+    pkg_creator.node_name = ui->nodeNameLineEdit->text();
+    pkg_creator.node_type = node_type_from_string(ui->nodeTypeListWidget->currentItem()->text());
+  }
 
   if (ui->checkboxCreateLaunch->isChecked()) {
     pkg_creator.launch_name = ui->lineEditLaunchName->text();

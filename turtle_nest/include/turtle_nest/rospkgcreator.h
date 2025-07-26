@@ -20,7 +20,6 @@
 
 #include "turtle_nest/build_type_enum.h"
 #include "turtle_nest/node_type_enum.h"
-#include "turtle_nest/packageinfo.h"
 #include <QString>
 #include <QDir>
 
@@ -41,8 +40,8 @@ public:
   // If the name contains invalid characters (or spaces) for email, the package building
   // will fail. This is why we need to set this default email instead of leaving it empty.
   QString maintainer_email = "todo@todo.todo";
-  QString node_name_cpp = "";
-  QString node_name_python = "";
+  QString node_name = "";
+  NodeType node_type;
   QString launch_name = "";
   QString params_file_name = "";
   QString license = "TODO: License declaration";
@@ -61,6 +60,5 @@ public:
 };
 
 void colcon_build(QString workspace_path, QStringList packages = QStringList());
-void add_node(QString node_name, NodeType node_type, PackageInfo pkg_info);
 
 #endif // ROSPKGCREATOR_H

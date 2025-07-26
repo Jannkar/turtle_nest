@@ -49,7 +49,7 @@ inline QString node_type_to_string(NodeType node_type) {
 }
 
 // Convert QString back to NodeType enum (case-sensitive)
-inline std::optional<NodeType> node_type_from_string(const QString& s) {
+inline NodeType node_type_from_string(const QString& s) {
   if (s == QStringLiteral("C++ Node")) return NodeType::CPP_NODE;
   if (s == QStringLiteral("C++ Lifecycle Node")) return NodeType::CPP_LIFECYCLE_NODE;
   if (s == QStringLiteral("Python Node")) return NodeType::PYTHON_NODE;

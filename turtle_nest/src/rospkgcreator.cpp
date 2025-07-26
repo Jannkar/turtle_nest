@@ -22,8 +22,8 @@
 #include "turtle_nest/generate_msgs_pkg.h"
 #include "turtle_nest/generate_params.h"
 #include "turtle_nest/generate_setup_py.h"
-#include "turtle_nest/package_generators/cpp_package_generator.h"
 #include "turtle_nest/package_generators/mixed_cpp_python_package_generator.h"
+#include "turtle_nest/package_generators/package_generator_factory.h"
 #include "turtle_nest/package_generators/python_package_generator.h"
 #include "turtle_nest/string_tools.h"
 
@@ -42,34 +42,21 @@ void RosPkgCreator::create_package() const
   bool create_launch = (launch_name != "");
   bool create_config = (params_file_name != "");
 
-  //TODO: Neither one of these fields is now populated
-  // Overwrite the simple hello world nodes with more advanced ones
-  if (!node_name_python.isEmpty()) {
-    generate_python_node(package_path, package_name, node_name_python, create_config, true);
-  }
-  if (!node_name_cpp.isEmpty()) {
-    generate_cpp_node(package_path, node_name_cpp, create_config, true);
-  }
-
   // If creating CPP and Python package, add the Python node to CMakeLists.txt
   if (build_type == CPP_AND_PYTHON) {
     create_init_file(package_path, package_name);
     install_python_modules_in_cmakelists(package_path);
-    if (!node_name_python.isEmpty()) {
-      add_python_node_to_cmakelists(package_path, node_name_python);
-    }
   }
 
   // Generate launch file
   if (create_launch) {
     generate_launch_file(
-      workspace_path, package_name, launch_name + ".py", params_file_name, node_name_cpp,
-      node_name_python);
+      workspace_path, package_name, launch_name + ".py", params_file_name, node_name);
   }
 
   // Generate parameters file
   if (create_config) {
-    generate_params_file(package_path, params_file_name + ".yaml", node_name_cpp, node_name_python);
+    generate_params_file(package_path, params_file_name + ".yaml", node_name, "");
   }
 
   // Modify setup.py or CMakeLists
@@ -82,6 +69,16 @@ void RosPkgCreator::create_package() const
     add_msgs_to_cmakelists(package_path);
   } else {
     throw std::runtime_error("Unknown package type.");
+  }
+
+  if (!node_name.isEmpty()) {
+    std::unique_ptr<BasePackageGenerator> pkg_generator = create_package_generator(build_type);
+    NodeOptions node_options{
+        node_name,
+        node_type,
+        create_config, // add_params
+    };
+    pkg_generator->add_node(node_options, package_path, package_name);
   }
 
   // Add watermark
@@ -126,25 +123,6 @@ QStringList RosPkgCreator::create_command() const
   }
   if (!maintainer_name.trimmed().isEmpty()) {
     command_list << "--maintainer-name" << escape_xml(maintainer_name);
-  }
-
-  // Set dependencies. This cannot be the last thing before the package name
-  // in the command. Otherwise crashes, so seems to be a bug. Having maintainer-email
-  // as the last thing because of this.
-  if (!node_name_cpp.isEmpty() && !node_name_python.isEmpty()) {
-    command_list << "--dependencies" << "rclcpp" << "rclpy";
-  } else if (!node_name_cpp.isEmpty()) {
-    command_list << "--dependencies" << "rclcpp";
-  } else if (!node_name_python.isEmpty()) {
-    command_list << "--dependencies" << "rclpy";
-  }
-
-  // Set Node name
-  if (!node_name_cpp.isEmpty()) {
-    command_list << "--node-name" << node_name_cpp;
-  }
-  if (build_type == PYTHON && !node_name_python.isEmpty()) {
-    command_list << "--node-name" << node_name_python;
   }
 
   command_list << "--maintainer-email" << maintainer_email

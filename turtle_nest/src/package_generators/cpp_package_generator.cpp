@@ -25,7 +25,7 @@ void CppPackageGenerator::add_node(
   QString package_name)
 {
   if (node_options.node_type == CPP_NODE) {
-    generate_cpp_node(package_path, node_options.node_name, false);
+    generate_cpp_node(package_path, node_options.node_name, node_options.add_params);
     add_cpp_dependency(package_path, "rclcpp");
     add_node_to_cmakelists(package_path, node_options.node_name);
   } else if (node_options.node_type == CPP_LIFECYCLE_NODE){
