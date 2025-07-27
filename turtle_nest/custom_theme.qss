@@ -203,6 +203,10 @@ QListWidget::item:selected#licenseList {
     color: white;
 }
 
+QListWidget::item:selected#nodeTypeListWidget {
+    background: #6A8CAF;
+    color: white;
+}
 
 /* Scrollbars */
 QScrollBar:vertical {

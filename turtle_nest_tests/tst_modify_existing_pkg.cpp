@@ -31,9 +31,9 @@
 void execute_node_and_assert_success(PackageInfo pkg_info, QString node_name, NodeType node_type)
 {
   QString node_type_str;
-  if (node_type == CPP_NODE | node_type == CPP_LIFECYCLE_NODE){
+  if ((node_type == CPP_NODE) | (node_type == CPP_LIFECYCLE_NODE)){
     node_type_str = "C++";
-  }else if (node_type == PYTHON_NODE){
+  }else if ((node_type == PYTHON_NODE) | (node_type == PYTHON_LIFECYCLE_NODE)){
     node_type_str = "Python";
   }else{
     throw std::runtime_error("Invalid node type");
@@ -111,9 +111,11 @@ TEST(modify_existing_pkg, add_node_to_existing_package) {
     {CPP, CPP_NODE, "cpp_package"},
     {CPP, CPP_LIFECYCLE_NODE, "cpp_lifecycle_package"},
     {PYTHON, PYTHON_NODE, "python_package"},
+    {PYTHON, PYTHON_LIFECYCLE_NODE, "python_lifecycle_package"},
     {CPP_AND_PYTHON, CPP_NODE, "mixed_with_cpp_node"},
     {CPP_AND_PYTHON, CPP_LIFECYCLE_NODE, "mixed_with_cpp_lifecycle_node"},
-    {CPP_AND_PYTHON, PYTHON_NODE, "mixed_with_python_node"}
+    {CPP_AND_PYTHON, PYTHON_NODE, "mixed_with_python_node"},
+    {CPP_AND_PYTHON, PYTHON_LIFECYCLE_NODE, "mixed_with_python_lifecycle_node"},
   };
 
   for (TestCase & test_case : test_cases) {
@@ -141,6 +143,9 @@ TEST(modify_existing_pkg, add_node_to_existing_package) {
       case PYTHON_NODE:
         ASSERT_TRUE(xml_editor.has_dependency("rclpy", DependencyType::EXEC_DEPEND));
         break;
+      case PYTHON_LIFECYCLE_NODE:
+        ASSERT_TRUE(xml_editor.has_dependency("rclpy", DependencyType::EXEC_DEPEND));
+        break;
       case CPP_NODE:
         ASSERT_TRUE(xml_editor.has_dependency("rclcpp", DependencyType::DEPEND));
         break;
@@ -166,9 +171,11 @@ TEST(modify_existing_pkg, try_adding_node_with_existing_name) {
     {CPP, CPP_NODE},
     {CPP, CPP_LIFECYCLE_NODE},
     {PYTHON, PYTHON_NODE},
+    {PYTHON, PYTHON_LIFECYCLE_NODE},
     {CPP_AND_PYTHON, CPP_NODE},
     {CPP_AND_PYTHON, CPP_LIFECYCLE_NODE},
-    {CPP_AND_PYTHON, PYTHON_NODE}
+    {CPP_AND_PYTHON, PYTHON_NODE},
+    {CPP_AND_PYTHON, PYTHON_LIFECYCLE_NODE},
   };
 
   for (TestCase & test_case : test_cases) {

@@ -38,6 +38,7 @@ using namespace testing;
 
 
 const QString python_node_text = "Hello world from the Python node python_node";
+const QString python_lifecycle_node_text = "Hello world from the Python node python_lifecycle_node";
 const QString cpp_node_text = "Hello world from the C++ node cpp_node";
 const QString cpp_lifecycle_node_text = "Hello world from the C++ node cpp_lifecycle_node";
 const QString param_text = "Declared parameter 'example_param'. Value: abc";
@@ -272,6 +273,7 @@ TEST(ros_pkg_creator, test_node_params_creation){
     {CPP_NODE, "cpp_node", {cpp_node_text, default_param_text}},
     {CPP_LIFECYCLE_NODE, "cpp_lifecycle_node", {cpp_lifecycle_node_text, default_param_text}},
     {PYTHON_NODE, "python_node", {python_node_text, default_param_text}},
+    {PYTHON_LIFECYCLE_NODE, "python_lifecycle_node", {python_lifecycle_node_text, default_param_text}},
   };
 
   RosPkgCreator pkg_creator(get_tmp_workspace_path(), "mixed_pkg", CPP_AND_PYTHON);
