@@ -93,6 +93,5 @@ NodeType AddNodeDialog::get_node_type()
     throw std::logic_error("Node was not selected. This shouldn't be possible.");
   }
   QString text = selected->text();
-  qDebug() << "Selected radio button text:" << text;
   return node_type_from_string(text);
 }
