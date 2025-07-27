@@ -21,7 +21,7 @@ Creating new ROS 2 packages with Turtle Nest is fast, intuitive, and eliminates 
 It offers the following benefits:
 
 - **Supports multiple package types**: C++, Python, Mixed (C++ & Python), and Custom Msg Interfaces
-- **Creates Nodes** - C++, C++ Lifecycle and Python Nodes. Fully executable out of the box and ready for further development.
+- **Creates Nodes** - C++, Python, Lifecycle. Fully executable out of the box and ready for further development.
 - **Easy to use** - no need to dig through the ROS 2 documentation for the right commands or manually add things to CMakeLists.txt or setup.py.
 - **Automatically adds necessary dependencies** - rclpy, rclcpp, rosidl_default_generators, ...
 - **Option to create launch and parameter files** - to run your nodes with a single command, with parameter examples.
@@ -144,6 +144,7 @@ If you created a Node or a launch file, you can run them with one the following 
 <img src="images/screenshot_p1.png" alt="Turtle Nest Create Package Screenshot Page 1" width="800"/>
 <img src="images/screenshot_p2.png" alt="Turtle Nest Create Package Screenshot Page 2" width="800"/>
 <img src="images/screenshot_p3.png" alt="Turtle Nest Create Package Screenshot Page 3" width="800"/>
+<img src="images/screenshot_p4.png" alt="Turtle Nest Create Package Screenshot Page 4" width="800"/>
 <img src="images/screenshot_demo_pkg.png" alt="Turtle Nest Demo Package View" width="800"/>
 
 ## Star History

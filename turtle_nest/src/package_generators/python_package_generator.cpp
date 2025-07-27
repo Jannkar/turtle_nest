@@ -41,29 +41,41 @@ void PythonPackageGenerator::add_node(
       package_path, package_name, node_options.node_name,
       node_options.add_params);
     add_node_to_setup_py(package_path, package_name, node_options.node_name);
-  } else {
+  } else if (node_options.node_type == PYTHON_LIFECYCLE_NODE){
+    generate_python_node(
+        package_path, package_name, node_options.node_name,
+        node_options.add_params, false, true);
+    add_node_to_setup_py(package_path, package_name, node_options.node_name);
+  }else {
     BasePackageGenerator::add_node(node_options, package_path, package_name);
   }
 }
 
 void generate_python_node(
   QString package_path, QString package_name, QString node_name,
-  bool create_config, bool overwrite_existing)
+  bool create_config, bool overwrite_existing, bool lifecycle_node)
 {
   create_init_file(package_path, package_name);
   QString node_dir = QDir(package_path).filePath(package_name);
   QString node_path = QDir(node_dir).filePath(node_name + ".py");
 
   // Block to be added if parameter file was created
-  QString param_declare_block =
-    !create_config ? "" :
-    R"(
-        example_param = self.declare_parameter("example_param", "default_value").value
-        self.get_logger().info(f"Declared parameter 'example_param'. Value: {example_param}"))";
+  QString param_declare_block = !create_config ? "" : get_param_declare_block();
 
-  // Main content
-  QString content = QString(
-    R"(#!/usr/bin/env python3
+  QString content;
+  if (lifecycle_node){
+    content = get_python_lifecycle_node_content(node_name, param_declare_block);
+  }else{
+    content = get_python_node_content(node_name, param_declare_block);
+  }
+  create_directory(node_dir);
+  write_file(node_path, content, overwrite_existing);
+  add_exec_permissions(node_path);
+  add_python_pkg_dependency_to_package_xml(package_path, "rclpy");
+}
+
+QString get_python_node_content(QString node_name, QString param_declare_block){
+  return QString(R"(#!/usr/bin/env python3
 import rclpy
 from rclpy.node import Node
 
@@ -91,14 +103,70 @@ def main(args=None):
 
 if __name__ == '__main__':
     main()
-)")
-    .arg(node_name, to_camel_case(node_name), param_declare_block);
+)").arg(node_name, to_camel_case(node_name), param_declare_block);
+}
 
-  create_directory(node_dir);
-  write_file(node_path, content, overwrite_existing);
-  qDebug() << "Generated new Python node " + node_name;
-  add_exec_permissions(node_path);
-  add_rclpy_dependency_to_package_xml(package_path);
+QString get_python_lifecycle_node_content(QString node_name, QString param_declare_block){
+  return QString(R"(#!/usr/bin/env python3
+import rclpy
+from rclpy.lifecycle import Node
+from rclpy.lifecycle import State
+from rclpy.lifecycle import TransitionCallbackReturn
+from rclpy.executors import SingleThreadedExecutor
+
+
+class %2(Node):
+
+    def __init__(self):
+        super().__init__("%1")%3
+        self.get_logger().info("Hello world from the Python node %1")
+
+    def on_configure(self, state: State) -> TransitionCallbackReturn:
+        self.get_logger().info("on_configure() called.")
+        return TransitionCallbackReturn.SUCCESS
+
+    def on_activate(self, state: State) -> TransitionCallbackReturn:
+        self.get_logger().info("on_activate() called.")
+        return super().on_activate(state)
+
+    def on_deactivate(self, state: State) -> TransitionCallbackReturn:
+        self.get_logger().info("on_deactivate() called.")
+        return super().on_deactivate(state)
+
+    def on_cleanup(self, state: State) -> TransitionCallbackReturn:
+        self.get_logger().info("on_cleanup() called.")
+        return TransitionCallbackReturn.SUCCESS
+
+    def on_shutdown(self, state: State) -> TransitionCallbackReturn:
+        self.get_logger().info("on_shutdown() called.")
+        return TransitionCallbackReturn.SUCCESS
+
+
+def main(args=None):
+    rclpy.init(args=args)
+
+    %1 = %2()
+    executor = SingleThreadedExecutor()
+    executor.add_node(%1)
+
+    try:
+        executor.spin()
+    except KeyboardInterrupt:
+        pass
+
+    %1.destroy_node()
+    rclpy.try_shutdown()
+
+
+if __name__ == '__main__':
+    main()
+)").arg(node_name, to_camel_case(node_name), param_declare_block);
+}
+
+QString get_param_declare_block(){
+  return QString(R"(
+        example_param = self.declare_parameter("example_param", "default_value").value
+        self.get_logger().info(f"Declared parameter 'example_param'. Value: {example_param}"))");
 }
 
 void create_init_file(QString package_path, QString package_name)
@@ -132,19 +200,19 @@ void add_exec_permissions(QString node_path)
 }
 
 
-void add_rclpy_dependency_to_package_xml(QString package_path)
+void add_python_pkg_dependency_to_package_xml(QString package_path, QString dependency)
 {
   PackageXMLEditor xml_editor = PackageXMLEditor(package_path);
 
   // If rclpy is already exec_depend or depend, don't add.
-  if (xml_editor.has_dependency("rclpy", DependencyType::DEPEND)) {
+  if (xml_editor.has_dependency(dependency, DependencyType::DEPEND)) {
     return;
   }
-  if (xml_editor.has_dependency("rclpy", DependencyType::EXEC_DEPEND)) {
+  if (xml_editor.has_dependency(dependency, DependencyType::EXEC_DEPEND)) {
     return;
   }
 
-  xml_editor.add_dependency("rclpy", DependencyType::EXEC_DEPEND);
+  xml_editor.add_dependency(dependency, DependencyType::EXEC_DEPEND);
 }
 
 //

@@ -24,7 +24,7 @@ class PythonPackageGenerator: public BasePackageGenerator
 {
 public:
   std::vector < NodeType > get_supported_node_types() const override {
-    return {PYTHON_NODE};
+    return {PYTHON_NODE, PYTHON_LIFECYCLE_NODE};
   }
   void add_node(
     NodeOptions node_options, QString package_path,
@@ -33,10 +33,13 @@ public:
 
 void generate_python_node(
   QString package_path, QString package_name, QString node_name,
-  bool create_config, bool overwrite_existing = false);
+  bool create_config, bool overwrite_existing = false, bool lifecycle_node = false);
+QString get_python_node_content(QString node_name, QString param_declare_block);
+QString get_python_lifecycle_node_content(QString node_name, QString param_declare_block);
+QString get_param_declare_block();
 void create_init_file(QString package_path, QString package_name);
 void add_exec_permissions(QString node_path);
-void add_rclpy_dependency_to_package_xml(QString package_path);
+void add_python_pkg_dependency_to_package_xml(QString package_path, QString dependency);
 void add_node_to_setup_py(QString package_path, QString package_name, QString node_name);
 QString generate_new_setup_py(QString package_path, QString package_name, QString node_name);
 

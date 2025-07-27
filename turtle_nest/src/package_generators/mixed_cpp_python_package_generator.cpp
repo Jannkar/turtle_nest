@@ -30,7 +30,12 @@ void MixedCppPythonPackageGenerator::add_node(
       package_path, package_name, node_options.node_name,
       node_options.add_params);
     add_python_node_to_cmakelists(package_path, node_options.node_name);
-  } else {
+  } else if (node_options.node_type == PYTHON_LIFECYCLE_NODE){
+    generate_python_node(
+      package_path, package_name, node_options.node_name,
+      node_options.add_params, false, true);
+    add_python_node_to_cmakelists(package_path, node_options.node_name);
+  }else {
     CppPackageGenerator::add_node(node_options, package_path, package_name);
   }
 }
