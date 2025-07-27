@@ -41,12 +41,12 @@ void PythonPackageGenerator::add_node(
       package_path, package_name, node_options.node_name,
       node_options.add_params);
     add_node_to_setup_py(package_path, package_name, node_options.node_name);
-  } else if (node_options.node_type == PYTHON_LIFECYCLE_NODE){
+  } else if (node_options.node_type == PYTHON_LIFECYCLE_NODE) {
     generate_python_node(
-        package_path, package_name, node_options.node_name,
-        node_options.add_params, false, true);
+      package_path, package_name, node_options.node_name,
+      node_options.add_params, false, true);
     add_node_to_setup_py(package_path, package_name, node_options.node_name);
-  }else {
+  } else {
     BasePackageGenerator::add_node(node_options, package_path, package_name);
   }
 }
@@ -63,9 +63,9 @@ void generate_python_node(
   QString param_declare_block = !create_config ? "" : get_param_declare_block();
 
   QString content;
-  if (lifecycle_node){
+  if (lifecycle_node) {
     content = get_python_lifecycle_node_content(node_name, param_declare_block);
-  }else{
+  } else {
     content = get_python_node_content(node_name, param_declare_block);
   }
   create_directory(node_dir);
@@ -74,8 +74,10 @@ void generate_python_node(
   add_python_pkg_dependency_to_package_xml(package_path, "rclpy");
 }
 
-QString get_python_node_content(QString node_name, QString param_declare_block){
-  return QString(R"(#!/usr/bin/env python3
+QString get_python_node_content(QString node_name, QString param_declare_block)
+{
+  return QString(
+    R"(#!/usr/bin/env python3
 import rclpy
 from rclpy.node import Node
 
@@ -106,8 +108,10 @@ if __name__ == '__main__':
 )").arg(node_name, to_camel_case(node_name), param_declare_block);
 }
 
-QString get_python_lifecycle_node_content(QString node_name, QString param_declare_block){
-  return QString(R"(#!/usr/bin/env python3
+QString get_python_lifecycle_node_content(QString node_name, QString param_declare_block)
+{
+  return QString(
+    R"(#!/usr/bin/env python3
 import rclpy
 from rclpy.lifecycle import Node
 from rclpy.lifecycle import State
@@ -163,8 +167,10 @@ if __name__ == '__main__':
 )").arg(node_name, to_camel_case(node_name), param_declare_block);
 }
 
-QString get_param_declare_block(){
-  return QString(R"(
+QString get_param_declare_block()
+{
+  return QString(
+    R"(
         example_param = self.declare_parameter("example_param", "default_value").value
         self.get_logger().info(f"Declared parameter 'example_param'. Value: {example_param}"))");
 }
