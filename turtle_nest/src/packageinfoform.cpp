@@ -18,7 +18,7 @@
 #include "turtle_nest/packageinfoform.h"
 #include "turtle_nest/modify_existing_pkg.h"
 #include "turtle_nest/node_type_enum.h"
-#include "turtle_nest/rospkgcreator.h"
+#include "turtle_nest/modify_existing_pkg.h"
 #include "turtle_nest/addnodedialog.h"
 #include "ui_packageinfoform.h"
 

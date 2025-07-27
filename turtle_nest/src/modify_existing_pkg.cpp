@@ -17,6 +17,7 @@
 
 #include "turtle_nest/modify_existing_pkg.h"
 #include "turtle_nest/node_type_enum.h"
+#include "turtle_nest/package_generators/package_generator_factory.h"
 #include "turtle_nest/packageinfo.h"
 #include "turtle_nest/file_utils.h"
 #include <QDebug>
@@ -112,23 +113,17 @@ QStringList list_files(QString path)
 
 void add_node(QString node_name, NodeType node_type, PackageInfo pkg_info)
 {
-  std::unique_ptr<BasePackageGenerator> package_generator;
-  if (pkg_info.package_type == CPP) {
-    package_generator = std::make_unique<CppPackageGenerator>();
-  } else if (pkg_info.package_type == PYTHON) {
-    package_generator = std::make_unique<PythonPackageGenerator>();
-  } else if (pkg_info.package_type == CPP_AND_PYTHON) {
-    package_generator = std::make_unique<MixedCppPythonPackageGenerator>();
-  } else {
-    throw std::runtime_error(
-            QString("Can not add node for package type: %1!")
-            .arg(pkg_info.package_type)
-            .toStdString()
-    );
-  }
+  std::unique_ptr<BasePackageGenerator> package_generator = create_package_generator(
+    pkg_info.package_type);
+
+  NodeOptions node_options{
+    node_name,
+    node_type,
+    false, // add_params
+  };
 
   // Node generation step will throw a runtime error if the node already exists.
-  package_generator->add_node(node_name, node_type, pkg_info.package_path, pkg_info.package_name);
+  package_generator->add_node(node_options, pkg_info.package_path, pkg_info.package_name);
 }
 
 bool is_src_package(QDir dir)

@@ -22,21 +22,16 @@
 
 
 void MixedCppPythonPackageGenerator::add_node(
-  QString node_name, NodeType node_type,
+  NodeOptions node_options,
   QString package_path, QString package_name)
 {
-  if (node_type == PYTHON_NODE) {
-    generate_python_node(package_path, package_name, node_name, false);
-    add_python_node_to_cmakelists(package_path, node_name);
-  } else if (node_type == CPP_NODE) {
-    generate_cpp_node(package_path, node_name, false);
-    add_node_to_cmakelists(package_path, node_name);
+  if (node_options.node_type == PYTHON_NODE) {
+    generate_python_node(
+      package_path, package_name, node_options.node_name,
+      node_options.add_params);
+    add_python_node_to_cmakelists(package_path, node_options.node_name);
   } else {
-    throw std::runtime_error(
-            QString("Unsupported node type: %1")
-            .arg(node_type)
-            .toStdString()
-    );
+    CppPackageGenerator::add_node(node_options, package_path, package_name);
   }
 }
 

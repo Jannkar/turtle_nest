@@ -18,6 +18,7 @@
 #ifndef MODIFY_EXISTING_PKG_H
 #define MODIFY_EXISTING_PKG_H
 
+#include "turtle_nest/node_type_enum.h"
 #include "turtle_nest/packageinfo.h"
 #include <QString>
 #include <QDir>
@@ -32,5 +33,6 @@ bool is_cpp_package(QString package_path);
 bool is_msgs_package(QString package_name);
 BuildType get_package_build_type(QString package_path, QString package_name);
 QString clean_description(const QString & input);
+void add_node(QString node_name, NodeType node_type, PackageInfo pkg_info);
 
 #endif // MODIFY_EXISTING_PKG_H

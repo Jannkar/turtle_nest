@@ -27,6 +27,7 @@ set(SOURCES
   src/modify_existing_pkg.cpp
   src/package_generators/cpp_package_generator.cpp
   src/package_generators/mixed_cpp_python_package_generator.cpp
+  src/package_generators/package_generator_factory.cpp
   src/package_generators/python_package_generator.cpp
   src/package_xml_tools.cpp
   src/packageinfoform.cpp

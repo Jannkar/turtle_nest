@@ -17,11 +17,14 @@
 
 #include "turtle_nest/addnodedialog.h"
 #include "turtle_nest/node_type_enum.h"
+#include <turtle_nest/package_generators/base_package_generator.h>
+#include "turtle_nest/package_generators/package_generator_factory.h"
 #include "turtle_nest/string_tools.h"
 #include "ui_addnodedialog.h"
 #include <QPushButton>
 #include <QDebug>
 #include <QDir>
+#include <QRadioButton>
 #include <turtle_nest/packageinfo.h>
 
 
@@ -34,9 +37,12 @@ AddNodeDialog::AddNodeDialog(QWidget * parent, const PackageInfo & package_info)
   setWindowTitle("Add New Node");
   ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
 
-  if (pkg_info.package_type != CPP_AND_PYTHON) {
-    ui->nodeTypeBox->hide();
-  }
+  // Setup the group box for different node types
+  node_button_group = new QButtonGroup(this);
+  node_button_group->setExclusive(true);
+  pkg_generator = create_package_generator(pkg_info.package_type);
+  supported_node_types = pkg_generator->get_supported_node_types();
+  populate_node_types();
 
   // Make the dialog window to have a smallest size possible, after hiding elements.
   this->layout()->activate();
@@ -47,6 +53,22 @@ AddNodeDialog::AddNodeDialog(QWidget * parent, const PackageInfo & package_info)
 AddNodeDialog::~AddNodeDialog()
 {
   delete ui;
+}
+
+void AddNodeDialog::populate_node_types()
+{
+  for (NodeType node_type : supported_node_types) {
+    QString type = node_type_to_string(node_type);
+    QRadioButton * button = new QRadioButton(type, ui->nodeTypeBox);
+    ui->nodeTypeBox->layout()->addWidget(button);
+    node_button_group->addButton(button);
+  }
+
+  // Set the first one checked
+  QList<QAbstractButton *> buttons = node_button_group->buttons();
+  if (!buttons.isEmpty()) {
+    buttons.first()->setChecked(true);
+  }
 }
 
 void AddNodeDialog::on_nodeNameEdit_textEdited(const QString & arg1)
@@ -66,19 +88,10 @@ QString AddNodeDialog::get_node_name()
 
 NodeType AddNodeDialog::get_node_type()
 {
-  switch (pkg_info.package_type) {
-    case BuildType::CPP:
-      return CPP_NODE;
-    case BuildType::PYTHON:
-      return PYTHON_NODE;
-    case BuildType::CPP_AND_PYTHON:
-      if (ui->cppButton->isChecked()) {
-        return CPP_NODE;
-      } else if (ui->pythonButton->isChecked()) {
-        return PYTHON_NODE;
-      }
-      throw std::logic_error("Node was not selected. This shouldn't be possible.");
-    default:
-      throw std::logic_error("Node adding not implemented for this package type.");
+  QAbstractButton * selected = node_button_group->checkedButton();
+  if (!selected) {
+    throw std::logic_error("Node was not selected. This shouldn't be possible.");
   }
+  QString text = selected->text();
+  return node_type_from_string(text);
 }

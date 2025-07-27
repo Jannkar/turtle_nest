@@ -15,30 +15,20 @@
  * ------------------------------------------------------------------
 */
 
-#ifndef BASE_PACKAGE_GENERATOR_H
-#define BASE_PACKAGE_GENERATOR_H
+#include "turtle_nest/package_generators/package_generator_factory.h"
+#include <turtle_nest/package_generators/cpp_package_generator.h>
+#include <turtle_nest/package_generators/mixed_cpp_python_package_generator.h>
+#include <turtle_nest/package_generators/python_package_generator.h>
 
-#include <QDir>
-#include <QString>
-#include <QDebug>
-#include "turtle_nest/node_type_enum.h"
-
-class BasePackageGenerator
+std::unique_ptr<BasePackageGenerator> create_package_generator(BuildType package_type)
 {
-public:
-  virtual ~BasePackageGenerator() = default;
-  virtual std::vector < NodeType > get_supported_node_types() const {
-    return {};
+  if (package_type == CPP) {
+    return std::make_unique<CppPackageGenerator>();
+  } else if (package_type == PYTHON) {
+    return std::make_unique<PythonPackageGenerator>();
+  } else if (package_type == CPP_AND_PYTHON) {
+    return std::make_unique<MixedCppPythonPackageGenerator>();
+  } else {
+    return std::make_unique<BasePackageGenerator>();
   }
-  virtual void add_node(
-    NodeOptions node_options, QString /*package_path*/, QString /*package_name*/)
-  {
-    throw std::runtime_error(
-      QString("Unsupported node type: %1")
-      .arg(node_options.node_type)
-      .toStdString()
-    );
-  }
-};
-
-#endif // BASE_PACKAGE_GENERATOR_H
+}

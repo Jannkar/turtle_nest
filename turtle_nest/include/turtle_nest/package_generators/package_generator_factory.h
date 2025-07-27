@@ -14,31 +14,13 @@
  * limitations under the License.
  * ------------------------------------------------------------------
 */
+#ifndef PACKAGE_GENERATOR_FACTORY_H
+#define PACKAGE_GENERATOR_FACTORY_H
 
-#ifndef BASE_PACKAGE_GENERATOR_H
-#define BASE_PACKAGE_GENERATOR_H
+#include "turtle_nest/build_type_enum.h"
+#include "turtle_nest/package_generators/base_package_generator.h"
 
-#include <QDir>
-#include <QString>
-#include <QDebug>
-#include "turtle_nest/node_type_enum.h"
+std::unique_ptr < BasePackageGenerator > create_package_generator(BuildType package_type);
 
-class BasePackageGenerator
-{
-public:
-  virtual ~BasePackageGenerator() = default;
-  virtual std::vector < NodeType > get_supported_node_types() const {
-    return {};
-  }
-  virtual void add_node(
-    NodeOptions node_options, QString /*package_path*/, QString /*package_name*/)
-  {
-    throw std::runtime_error(
-      QString("Unsupported node type: %1")
-      .arg(node_options.node_type)
-      .toStdString()
-    );
-  }
-};
 
-#endif // BASE_PACKAGE_GENERATOR_H
+#endif // PACKAGE_GENERATOR_FACTORY_H

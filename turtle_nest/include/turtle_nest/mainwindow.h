@@ -24,6 +24,7 @@
 #include <QToolButton>
 #include <QDialog>
 #include <QButtonGroup>
+#include <QListWidget>
 
 
 QT_BEGIN_NAMESPACE
@@ -69,10 +70,6 @@ public:
 
   void update_package_type_page_ui(BuildType package_type);
 
-  void on_lineEditNodeNameCpp_textEdited(const QString & arg1);
-
-  void on_lineEditNodeNamePython_textEdited(const QString & arg1);
-
   void on_lineEditLaunchName_textEdited(const QString & arg1);
 
   void on_lineEditLaunchName_editingFinished();
@@ -85,9 +82,7 @@ public:
 
   void on_pkgNameInfoButton_clicked();
 
-  void on_cppNodeNameInfoButton_clicked();
-
-  void on_pythonNodeNameInfoButton_clicked();
+  void on_NodeNameInfoButton_clicked();
 
   void on_launchNameInfoButton_clicked();
 
@@ -98,6 +93,14 @@ public:
   void on_paramsNameInfoButton_clicked();
 
   void on_lineEditParamsName_editingFinished();
+
+  void on_nodeTypeListWidget_currentItemChanged(
+    QListWidgetItem * current,
+    QListWidgetItem * previous);
+
+  void on_nodeNameLineEdit_textEdited(const QString & arg1);
+
+  void on_nodeNameLineEdit_editingFinished();
 
 private:
   Ui::MainWindow * ui;

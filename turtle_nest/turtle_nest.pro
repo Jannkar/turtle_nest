@@ -21,6 +21,7 @@ SOURCES += \
     src/modify_existing_pkg.cpp \
     src/package_generators/cpp_package_generator.cpp \
     src/package_generators/mixed_cpp_python_package_generator.cpp \
+    src/package_generators/package_generator_factory.cpp \
     src/package_generators/python_package_generator.cpp \
     src/package_xml_tools.cpp \
     src/packageinfoform.cpp \
@@ -41,6 +42,7 @@ HEADERS += \
     include/turtle_nest/package_generators/cpp_package_generator.h \
     include/turtle_nest/package_generators/base_package_generator.h \
     include/turtle_nest/package_generators/mixed_cpp_python_package_generator.h \
+    include/turtle_nest/package_generators/package_generator_factory.h \
     include/turtle_nest/package_generators/python_package_generator.h \
     include/turtle_nest/package_xml_tools.h \
     include/turtle_nest/packageinfo.h \
