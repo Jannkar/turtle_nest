@@ -105,7 +105,8 @@ def main(args=None):
 
 if __name__ == '__main__':
     main()
-)").arg(node_name, to_camel_case(node_name), param_declare_block);
+)")
+         .arg(node_name, to_camel_case(node_name), param_declare_block);
 }
 
 QString get_python_lifecycle_node_content(QString node_name, QString param_declare_block)
@@ -164,7 +165,8 @@ def main(args=None):
 
 if __name__ == '__main__':
     main()
-)").arg(node_name, to_camel_case(node_name), param_declare_block);
+)")
+         .arg(node_name, to_camel_case(node_name), param_declare_block);
 }
 
 QString get_param_declare_block()
