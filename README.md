@@ -6,8 +6,8 @@
 
 Just as the natural turtle nests are the birthplace for young turtles, ROS 2 Turtle Nest is where new ROS packages are born and brought to life.
 
-Turtle Nest provides an easy graphical user interface for creating new ROS 2 packages, and adding nodes to existing ones.  
-Forget digging through the documentation, and the countless build errors, and create your packages and nodes easily with Turtle Nest!
+Turtle Nest offers a user-friendly graphical interface for creating new ROS 2 packages and adding nodes to existing ones.
+Forget digging through the documentation and the countless build errors, and create your packages and nodes easily with Turtle Nest!
 
 <img src="images/screenshot_main.png" alt="Turtle Nest Main Screenshot" width="800"/>
 
