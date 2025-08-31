@@ -13,13 +13,6 @@ jobs:
       - name: Run Colcon Test
         run: docker compose -f docker/docker-compose.yaml run --build colcon-test-humble
 
-  test-iron:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Test Iron
-        run: docker compose -f docker/docker-compose.yaml run --build test-iron
-
   test-jazzy:
     runs-on: ubuntu-latest
     steps:
