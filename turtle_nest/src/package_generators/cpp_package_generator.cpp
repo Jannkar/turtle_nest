@@ -33,12 +33,12 @@ void CppPackageGenerator::add_node(
     add_cpp_dependency(package_path, "rclcpp");
     add_cpp_dependency(package_path, "rclcpp_lifecycle");
     add_lifecycle_node_to_cmakelists(package_path, node_options.node_name);
-  } else if (node_options.node_type == CPP_COMPOSABLE_NODE){
+  } else if (node_options.node_type == CPP_COMPOSABLE_NODE) {
     generate_composable_node(package_path, package_name, node_options);
     add_cpp_dependency(package_path, "rclcpp");
     add_cpp_dependency(package_path, "rclcpp_components");
     add_composable_node_to_cmakelists(package_path, package_name, node_options.node_name);
-  }else {
+  } else {
     BasePackageGenerator::add_node(node_options, package_path, package_name);
   }
 }
@@ -263,7 +263,8 @@ install(TARGETS %1
   append_to_file_before(cmakelists_path, content, append_before_text);
 }
 
-void generate_composable_node(QString package_path, QString package_name, NodeOptions node_options){
+void generate_composable_node(QString package_path, QString package_name, NodeOptions node_options)
+{
   QString params_block = node_options.add_params ? get_params_block() : "";
 
   // Uncrustify considers this as a single line. Skip.
@@ -293,13 +294,15 @@ RCLCPP_COMPONENTS_REGISTER_NODE(%4::%2)
   write_file(QDir(package_path).filePath("src/" + node_options.node_name + ".cpp"), content, false);
 }
 
-void add_composable_node_to_cmakelists(QString package_path, QString package_name, QString node_name)
+void add_composable_node_to_cmakelists(
+  QString package_path, QString package_name,
+  QString node_name)
 {
   QString cmakelists_path = QDir(package_path).filePath("CMakeLists.txt");
   QString append_before_text = "ament_package()";
 
   QString content(
-      R"(# Add composable node %1
+    R"(# Add composable node %1
 add_library(%1 SHARED src/%1.cpp)
 
 ament_target_dependencies(

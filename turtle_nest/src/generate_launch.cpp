@@ -60,15 +60,16 @@ from ament_index_python.packages import get_package_share_directory
     .arg(package_name, params_file_name);
 
   QString composable_import_block = "";
-  if (!node_name.isEmpty() && node_type == NodeType::CPP_COMPOSABLE_NODE){
-    composable_import_block = R"(from launch_ros.actions import ComposableNodeContainer
+  if (!node_name.isEmpty() && node_type == NodeType::CPP_COMPOSABLE_NODE) {
+    composable_import_block =
+      R"(from launch_ros.actions import ComposableNodeContainer
 from launch_ros.descriptions import ComposableNode
 )";
   }
 
   QString node_block = "";
-  if (!node_name.isEmpty()){
-    if (node_type == NodeType::CPP_COMPOSABLE_NODE){
+  if (!node_name.isEmpty()) {
+    if (node_type == NodeType::CPP_COMPOSABLE_NODE) {
       node_block = QString(
         R"(
         ComposableNodeContainer(
@@ -86,9 +87,10 @@ from launch_ros.descriptions import ComposableNode
             ],
             output='screen',
         ),)")
-        .arg(package_name, node_name, config_block.isEmpty() ? "" : "config", to_camel_case(node_name));
-    }
-    else {
+        .arg(
+        package_name, node_name, config_block.isEmpty() ? "" : "config",
+        to_camel_case(node_name));
+    } else {
       node_block = QString(
         R"(
         Node(
