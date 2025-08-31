@@ -114,6 +114,27 @@ TEST(ros_pkg_creator, cpp_with_node) {
   ASSERT_TRUE(output.contains(cpp_node_text));
 }
 
+// Create a C++ package with a Composable node, including params.
+// Cannot be tested with other node types with ros2 run, as we need launch file
+// to load the node in container.
+TEST(ros_pkg_creator, cpp_composable_node) {
+  RosPkgCreator pkg_creator(get_tmp_workspace_path(), "package_name", CPP);
+  pkg_creator.node_name = "cpp_node";
+  pkg_creator.node_type = NodeType::CPP_COMPOSABLE_NODE;
+  pkg_creator.launch_name = "test_launch";
+  pkg_creator.params_file_name = "test_params";
+  pkg_creator.create_package();
+  pkg_creator.build_package();
+  ASSERT_TRUE(file_exists(pkg_creator.package_path + "/src/cpp_node.cpp"));
+
+  QString container_text = "Loaded node '/cpp_node' in container '/cpp_node_container'";
+  QString output = run_command("ros2 launch package_name test_launch.py", {cpp_node_text, param_text, container_text},
+                               pkg_creator.workspace_path);
+  ASSERT_TRUE(output.contains(cpp_node_text));
+  ASSERT_TRUE(output.contains(param_text));
+  ASSERT_TRUE(output.contains(container_text));
+}
+
 // Create a Python package without a Node
 TEST(ros_pkg_creator, python_no_node) {
   RosPkgCreator pkg_creator(get_tmp_workspace_path(), "package_name", PYTHON);
