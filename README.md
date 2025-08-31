@@ -25,7 +25,7 @@ Forget digging through the documentation, and the countless build errors, and cr
 - 🔍 **List the existing packages in the workspace** - See the package information such as package type, executables, 
 launch & parameter files, package description, and so on.
 
-The packages and nodes you create are ready to run right away and set up for further development.
+The created packages and nodes are ready to build and run right away, so you can jump straight into development.
 Turtle Nest takes care of updating the `CMakeLists.txt`, `setup.py` and `package.xml` files with all the needed configuration and dependencies.
 
 Turtle Nest enforces the naming conventions and best practices, so you don’t have to worry about the details.
