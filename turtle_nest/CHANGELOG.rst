@@ -2,6 +2,14 @@
 Changelog for package turtle_nest
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add support for composable nodes (`#26 <https://github.com/Jannkar/turtle_nest/issues/26>`_)
+* Add support for Python Lifecycle Nodes (`#25 <https://github.com/Jannkar/turtle_nest/issues/25>`_)
+* Support for adding C++ lifecycle nodes (`#24 <https://github.com/Jannkar/turtle_nest/issues/24>`_)
+* Refactor node generation (`#23 <https://github.com/Jannkar/turtle_nest/issues/23>`_)
+* Contributors: Janne Karttunen
+
 1.1.0 (2025-06-29)
 ------------------
 * Fix cpp package test errors (`#20 <https://github.com/Jannkar/turtle_nest/issues/20>`_)
