@@ -67,19 +67,6 @@ services:
     tty: true
     command: /home/user/ros2_ws/src/turtle_nest_tests/build/turtle_nest_tests
 
-  test-iron:
-    image: turtle_nest_iron
-    build:
-      context: ../
-      dockerfile: docker/Dockerfile
-      args:
-          BASE_IMAGE: ros:iron
-    container_name: turtle_nest_test_iron
-    profiles: ["test-iron"]
-    stdin_open: true
-    tty: true
-    command: /home/user/ros2_ws/src/turtle_nest_tests/build/turtle_nest_tests
-
   test-rolling:
     image: turtle_nest_rolling
     build:
