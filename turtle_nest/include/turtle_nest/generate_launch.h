@@ -19,14 +19,14 @@
 #define GENERATE_LAUNCH_H
 
 #include <QString>
+#include <turtle_nest/node_type_enum.h>
 
 
 void generate_launch_file(
   QString workspace_path, QString package_name, QString launch_file_name, QString params_file_name,
-  QString node_name_cpp = "", QString node_name_python = "");
+  NodeType node_type, QString node_name = "");
 QString generate_launch_text(
-  QString package_name, QString node_name_cpp, QString node_name_python,
-  QString params_file_name);
+  QString package_name, QString node_name_cpp, NodeType node_type, QString params_file_name);
 void append_launch_to_cmake(QString c_make_path);
 void save_launch_file(QString file_name, QString launch_text);
 void append_launch_to_setup_py(QString setup_py_path, QString package_name);

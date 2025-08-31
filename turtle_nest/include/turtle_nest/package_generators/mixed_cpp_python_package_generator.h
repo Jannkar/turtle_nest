@@ -25,7 +25,7 @@ class MixedCppPythonPackageGenerator: public CppPackageGenerator
 {
 public:
   std::vector < NodeType > get_supported_node_types() const override {
-    return {CPP_NODE, CPP_LIFECYCLE_NODE, PYTHON_NODE, PYTHON_LIFECYCLE_NODE};
+    return {CPP_NODE, CPP_LIFECYCLE_NODE, CPP_COMPOSABLE_NODE, PYTHON_NODE, PYTHON_LIFECYCLE_NODE};
   }
   void add_node(
     NodeOptions node_options, QString package_path,

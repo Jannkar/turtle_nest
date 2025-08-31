@@ -24,6 +24,7 @@ enum NodeType
 {
   CPP_NODE,
   CPP_LIFECYCLE_NODE,
+  CPP_COMPOSABLE_NODE,
   PYTHON_NODE,
   PYTHON_LIFECYCLE_NODE,
 };
@@ -41,6 +42,7 @@ inline QString node_type_to_string(NodeType node_type)
   switch (node_type) {
     case NodeType::CPP_NODE: return QStringLiteral("C++ Node");
     case NodeType::CPP_LIFECYCLE_NODE: return QStringLiteral("C++ Lifecycle Node");
+    case NodeType::CPP_COMPOSABLE_NODE: return QStringLiteral("C++ Composable Node");
     case NodeType::PYTHON_NODE: return QStringLiteral("Python Node");
     case NodeType::PYTHON_LIFECYCLE_NODE: return QStringLiteral("Python Lifecycle Node");
     default:
@@ -56,6 +58,7 @@ inline NodeType node_type_from_string(const QString & s)
 {
   if (s == QStringLiteral("C++ Node")) {return NodeType::CPP_NODE;}
   if (s == QStringLiteral("C++ Lifecycle Node")) {return NodeType::CPP_LIFECYCLE_NODE;}
+  if (s == QStringLiteral("C++ Composable Node")) {return NodeType::CPP_COMPOSABLE_NODE;}
   if (s == QStringLiteral("Python Node")) {return NodeType::PYTHON_NODE;}
   if (s == QStringLiteral("Python Lifecycle Node")) {return NodeType::PYTHON_LIFECYCLE_NODE;}
   throw std::runtime_error(

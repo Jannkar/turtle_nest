@@ -51,7 +51,7 @@ void RosPkgCreator::create_package() const
   // Generate launch file
   if (create_launch) {
     generate_launch_file(
-      workspace_path, package_name, launch_name + ".py", params_file_name, node_name);
+      workspace_path, package_name, launch_name + ".py", params_file_name, node_type, node_name);
   }
 
   // Generate parameters file
