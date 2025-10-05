@@ -301,26 +301,33 @@ void add_composable_node_to_cmakelists(
   QString cmakelists_path = QDir(package_path).filePath("CMakeLists.txt");
   QString append_before_text = "ament_package()";
 
+  QString component_name = node_name + "_c";
+
   QString content(
     R"(# Add composable node %1
-add_library(%1 SHARED src/%1.cpp)
+add_library(%2 SHARED src/%1.cpp)
 
 ament_target_dependencies(
-  %1
+  %2
   "rclcpp"
   "rclcpp_components"
 )
 
-rclcpp_components_register_nodes(%1 "%2::%3")
+rclcpp_components_register_node(
+  %2
+  PLUGIN "%3::%4"
+  EXECUTABLE %1
+)
 
-install(TARGETS
-  %1
+ament_export_targets(export_%2)
+install(TARGETS %2
+  EXPORT export_%2
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin
 )
 
 )");
-  content = content.arg(node_name, package_name, to_camel_case(node_name));
+  content = content.arg(node_name, component_name, package_name, to_camel_case(node_name));
   append_to_file_before(cmakelists_path, content, append_before_text);
 }

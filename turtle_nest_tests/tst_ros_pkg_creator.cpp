@@ -36,6 +36,9 @@
 
 using namespace testing;
 
+QString get_expected_node_text(QString node_name, QString package_string){
+  return "Hello world from the " + package_string + " node " + node_name;
+}
 
 const QString python_node_text = "Hello world from the Python node python_node";
 const QString python_lifecycle_node_text = "Hello world from the Python node python_lifecycle_node";
@@ -115,8 +118,8 @@ TEST(ros_pkg_creator, cpp_with_node) {
 }
 
 // Create a C++ package with a Composable node, including params.
-// Cannot be tested with other node types with ros2 run, as we need launch file
-// to load the node in container.
+// Makes sure the launching as a component via launch file works
+// correctly. ros2 run behavior is tested in later tests.
 TEST(ros_pkg_creator, cpp_composable_node) {
   RosPkgCreator pkg_creator(get_tmp_workspace_path(), "package_name", CPP);
   pkg_creator.node_name = "cpp_node";
@@ -292,6 +295,9 @@ TEST(ros_pkg_creator, test_node_params_creation){
 
   QList<TestCase> test_cases = {
     {CPP_NODE, "cpp_node", {cpp_node_text, default_param_text}},
+    {CPP_COMPOSABLE_NODE, "cpp_node_composable",
+      {get_expected_node_text("cpp_node_composable", "C++"), default_param_text}
+    },
     {CPP_LIFECYCLE_NODE, "cpp_lifecycle_node", {cpp_lifecycle_node_text, default_param_text}},
     {PYTHON_NODE, "python_node", {python_node_text, default_param_text}},
     {PYTHON_LIFECYCLE_NODE, "python_lifecycle_node", {python_lifecycle_node_text, default_param_text}},
