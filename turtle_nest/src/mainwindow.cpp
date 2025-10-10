@@ -16,7 +16,7 @@
 */
 
 #include "turtle_nest/mainwindow.h"
-#include "turtle_nest/package_generators/package_generator_factory.h"
+#include "turtle_nest/node_generators/node_generator_factory.h"
 #include "ui_mainwindow.h"
 #include "turtle_nest/rospkgcreator.h"
 #include "turtle_nest/string_tools.h"
@@ -30,7 +30,7 @@
 #include <QDebug>
 #include <QDialog>
 #include <QButtonGroup>
-#include <turtle_nest/package_generators/base_package_generator.h>
+#include <turtle_nest/node_generators/base_node_generator.h>
 
 
 MainWindow::MainWindow(QWidget * parent, const QString & package_dest)
@@ -248,8 +248,8 @@ void MainWindow::update_package_type_page_ui(BuildType package_type)
   ui->paramLaunchWidget->setVisible(true);
 
   // Update the list of node types
-  std::unique_ptr<BasePackageGenerator> package_generator = create_package_generator(package_type);
-  std::vector<NodeType> supported_nodes = package_generator->get_supported_node_types();
+  std::unique_ptr<BaseNodeGenerator> node_generator = create_node_generator(package_type);
+  std::vector<NodeType> supported_nodes = node_generator->get_supported_node_types();
   ui->nodeTypeListWidget->clear();
   ui->nodeTypeListWidget->addItem("No Node");
   for (NodeType & node_type: supported_nodes) {

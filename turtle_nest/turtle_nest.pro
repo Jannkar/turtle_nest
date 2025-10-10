@@ -19,10 +19,11 @@ SOURCES += \
     src/main.cpp \
     src/mainwindow.cpp \
     src/modify_existing_pkg.cpp \
-    src/package_generators/cpp_package_generator.cpp \
-    src/package_generators/mixed_cpp_python_package_generator.cpp \
-    src/package_generators/package_generator_factory.cpp \
-    src/package_generators/python_package_generator.cpp \
+    src/node_generators/cpp_node_generator.cpp \
+    src/node_generators/mixed_cpp_python_node_generator.cpp \
+    src/node_generators/node_generator_factory.cpp \
+    src/node_generators/python_node_generator.cpp \
+    src/package_generators/base_package_generator.cpp \
     src/package_xml_tools.cpp \
     src/packageinfoform.cpp \
     src/packageswindow.cpp \
@@ -39,11 +40,12 @@ HEADERS += \
     include/turtle_nest/mainwindow.h \
     include/turtle_nest/modify_existing_pkg.h \
     include/turtle_nest/node_type_enum.h \
-    include/turtle_nest/package_generators/cpp_package_generator.h \
+    include/turtle_nest/node_generators/cpp_node_generator.h \
+    include/turtle_nest/node_generators/base_node_generator.h \
+    include/turtle_nest/node_generators/mixed_cpp_python_node_generator.h \
+    include/turtle_nest/node_generators/node_generator_factory.h \
+    include/turtle_nest/node_generators/python_node_generator.h \
     include/turtle_nest/package_generators/base_package_generator.h \
-    include/turtle_nest/package_generators/mixed_cpp_python_package_generator.h \
-    include/turtle_nest/package_generators/package_generator_factory.h \
-    include/turtle_nest/package_generators/python_package_generator.h \
     include/turtle_nest/package_xml_tools.h \
     include/turtle_nest/packageinfo.h \
     include/turtle_nest/rospkgcreator.h \

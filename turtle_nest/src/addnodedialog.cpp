@@ -17,8 +17,8 @@
 
 #include "turtle_nest/addnodedialog.h"
 #include "turtle_nest/node_type_enum.h"
-#include <turtle_nest/package_generators/base_package_generator.h>
-#include "turtle_nest/package_generators/package_generator_factory.h"
+#include <turtle_nest/node_generators/base_node_generator.h>
+#include "turtle_nest/node_generators/node_generator_factory.h"
 #include "turtle_nest/string_tools.h"
 #include "ui_addnodedialog.h"
 #include <QPushButton>
@@ -40,8 +40,8 @@ AddNodeDialog::AddNodeDialog(QWidget * parent, const PackageInfo & package_info)
   // Setup the group box for different node types
   node_button_group = new QButtonGroup(this);
   node_button_group->setExclusive(true);
-  pkg_generator = create_package_generator(pkg_info.package_type);
-  supported_node_types = pkg_generator->get_supported_node_types();
+  node_generator = create_node_generator(pkg_info.package_type);
+  supported_node_types = node_generator->get_supported_node_types();
   populate_node_types();
 
   // Make the dialog window to have a smallest size possible, after hiding elements.

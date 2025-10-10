@@ -22,9 +22,9 @@
 #include "turtle_nest/generate_msgs_pkg.h"
 #include "turtle_nest/generate_params.h"
 #include "turtle_nest/generate_setup_py.h"
-#include "turtle_nest/package_generators/mixed_cpp_python_package_generator.h"
-#include "turtle_nest/package_generators/package_generator_factory.h"
-#include "turtle_nest/package_generators/python_package_generator.h"
+#include "turtle_nest/node_generators/mixed_cpp_python_node_generator.h"
+#include "turtle_nest/node_generators/node_generator_factory.h"
+#include "turtle_nest/node_generators/python_node_generator.h"
 #include "turtle_nest/string_tools.h"
 
 #include <QDir>
@@ -72,13 +72,13 @@ void RosPkgCreator::create_package() const
   }
 
   if (!node_name.isEmpty()) {
-    std::unique_ptr<BasePackageGenerator> pkg_generator = create_package_generator(build_type);
+    std::unique_ptr<BaseNodeGenerator> node_generator = create_node_generator(build_type);
     NodeOptions node_options{
       node_name,
       node_type,
       create_config,   // add_params
     };
-    pkg_generator->add_node(node_options, package_path, package_name);
+    node_generator->add_node(node_options, package_path, package_name);
   }
 
   // Add watermark

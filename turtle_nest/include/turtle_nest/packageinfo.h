@@ -32,6 +32,7 @@ public:
   QString package_path = "";
   QString workspace_path = "";
   QString maintainer = "";
+  QString maintainer_email = "";
   QString description = "";
   QString version = "";
   QString license = "";

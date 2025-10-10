@@ -17,8 +17,8 @@
 
 #include <gmock/gmock-matchers.h>
 #include <gtest/gtest.h>
-#include <turtle_nest/package_generators/base_package_generator.h>
-#include "turtle_nest/package_generators/package_generator_factory.h"
+#include <turtle_nest/node_generators/base_node_generator.h>
+#include "turtle_nest/node_generators/node_generator_factory.h"
 #include "turtle_nest/rospkgcreator.h"
 #include "turtle_nest/file_utils.h"
 #include "test_utils.h"
@@ -305,10 +305,10 @@ TEST(ros_pkg_creator, test_node_params_creation){
   pkg_info.package_path = pkg_creator.package_path;
   pkg_info.package_type = pkg_creator.build_type;
 
-  std::unique_ptr<BasePackageGenerator> package_generator = create_package_generator(pkg_info.package_type);
+  std::unique_ptr<BaseNodeGenerator> node_generator = create_node_generator(pkg_info.package_type);
 
   for (const auto & test_case : test_cases) {
-    package_generator->add_node(
+    node_generator->add_node(
       {test_case.node_name, test_case.node_type, true},
       pkg_info.package_path,
       pkg_info.package_name);
