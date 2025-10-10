@@ -2,8 +2,8 @@
 Changelog for package turtle_nest
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.2.1 (2025-10-10)
+------------------
 * Fix black dependency (`#32 <https://github.com/Jannkar/turtle_nest/issues/32>`_)
 * Make composable nodes executable as standalone nodes (`#31 <https://github.com/Jannkar/turtle_nest/issues/31>`_)
 * Contributors: Janne Karttunen
