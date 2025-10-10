@@ -15,29 +15,25 @@
  * ------------------------------------------------------------------
 */
 
-#ifndef PACKAGEINFO_H
-#define PACKAGEINFO_H
+#ifndef MIXED_CPP_PYTHON_NODE_GENERATOR_H
+#define MIXED_CPP_PYTHON_NODE_GENERATOR_H
 
-#include "turtle_nest/build_type_enum.h"
-#include <QDir>
-#include <QString>
+#include "turtle_nest/node_generators/cpp_node_generator.h"
 
 
-class PackageInfo
+class MixedCppPythonNodeGenerator: public CppNodeGenerator
 {
 public:
-  PackageInfo() {
-  };
-  QString package_name = "";
-  QString package_path = "";  // TODO: Make sure this is populated correctly
-  QString workspace_path = "";
-  QString maintainer = "";
-  QString maintainer_email = "";
-  QString description = "";
-  QString version = "";
-  QString license = "";
-  BuildType package_type;
-
+  std::vector < NodeType > get_supported_node_types() const override {
+    return {CPP_NODE, CPP_LIFECYCLE_NODE, CPP_COMPOSABLE_NODE, PYTHON_NODE, PYTHON_LIFECYCLE_NODE};
+  }
+  void add_node(
+    NodeOptions node_options, QString package_path,
+    QString package_name) override;
 };
 
-#endif // PACKAGEINFO_H
+void install_python_modules_in_cmakelists(QString cmakelists_path);
+void add_python_node_to_cmakelists(QString package_path, QString node_name);
+
+
+#endif // MIXED_CPP_PYTHON_NODE_GENERATOR_H

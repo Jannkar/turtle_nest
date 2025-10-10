@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------
- * Copyright 2024 Janne Karttunen
+ * Copyright 2025 Janne Karttunen
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,13 @@
  * limitations under the License.
  * ------------------------------------------------------------------
 */
+#ifndef NODE_GENERATOR_FACTORY_H
+#define NODE_GENERATOR_FACTORY_H
 
-#ifndef GENERATE_SETUP_PY_H
-#define GENERATE_SETUP_PY_H
+#include "turtle_nest/build_type_enum.h"
+#include "turtle_nest/node_generators/base_node_generator.h"
 
-#include <QString>
+std::unique_ptr < BaseNodeGenerator > create_node_generator(BuildType package_type);
 
-void modify_setup_py(QString package_path, bool create_launch, bool create_config);
 
-#endif // GENERATE_SETUP_PY_H
+#endif // NODE_GENERATOR_FACTORY_H

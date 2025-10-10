@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------
- * Copyright 2024 Janne Karttunen
+ * Copyright 2025 Janne Karttunen
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,8 @@
  * limitations under the License.
  * ------------------------------------------------------------------
 */
+#pragma once
 
-#ifndef GENERATE_CMAKE_H
-#define GENERATE_CMAKE_H
+#include "turtle_nest/package_generators/base_package_generator.h"
 
-#include <QString>
-
-void modify_cmake_file(
-  QString package_path, bool create_launch, bool create_config);
-
-#endif // GENERATE_CMAKE_H
+std::unique_ptr < BasePackageGenerator > get_package_generator(PackageInfo pkg_info);

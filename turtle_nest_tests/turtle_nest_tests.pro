@@ -15,12 +15,9 @@ SOURCES += \
         tst_package_xml_tools.cpp \
         tst_ros_pkg_creator.cpp \
         ../turtle_nest/src/file_utils.cpp \
-        ../turtle_nest/src/generate_msgs_pkg.cpp \
         ../turtle_nest/src/rospkgcreator.cpp \
-        ../turtle_nest/src/generate_cmake.cpp \
         ../turtle_nest/src/generate_launch.cpp \
         ../turtle_nest/src/generate_params.cpp \
-        ../turtle_nest/src/generate_setup_py.cpp \
         ../turtle_nest/src/modify_existing_pkg.cpp \
         ../turtle_nest/src/node_generators/cpp_node_generator.cpp \
         ../turtle_nest/src/node_generators/mixed_cpp_python_node_generator.cpp \

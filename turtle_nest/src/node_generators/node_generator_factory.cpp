@@ -15,14 +15,20 @@
  * ------------------------------------------------------------------
 */
 
-#ifndef GENERATE_MSGS_PKG_H
-#define GENERATE_MSGS_PKG_H
+#include "turtle_nest/node_generators/node_generator_factory.h"
+#include <turtle_nest/node_generators/cpp_node_generator.h>
+#include <turtle_nest/node_generators/mixed_cpp_python_node_generator.h>
+#include <turtle_nest/node_generators/python_node_generator.h>
 
-#include <QString>
-
-void add_msgs_to_cmakelists(QString package_path);
-void create_msgs_files(QString package_path);
-QString get_msgs_cmake_addition();
-QString get_example_msg_contents();
-
-#endif // GENERATE_MSGS_PKG_H
+std::unique_ptr<BaseNodeGenerator> create_node_generator(BuildType package_type)
+{
+  if (package_type == CPP) {
+    return std::make_unique<CppNodeGenerator>();
+  } else if (package_type == PYTHON) {
+    return std::make_unique<PythonNodeGenerator>();
+  } else if (package_type == CPP_AND_PYTHON) {
+    return std::make_unique<MixedCppPythonNodeGenerator>();
+  } else {
+    return std::make_unique<BaseNodeGenerator>();
+  }
+}

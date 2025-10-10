@@ -17,11 +17,11 @@
 
 #include "turtle_nest/rospkgcreator.h"
 #include "turtle_nest/file_utils.h"
-#include "turtle_nest/generate_cmake.h"
+// #include "turtle_nest/generate_cmake.h"
 #include "turtle_nest/generate_launch.h"
-#include "turtle_nest/generate_msgs_pkg.h"
+// #include "turtle_nest/generate_msgs_pkg.h"
 #include "turtle_nest/generate_params.h"
-#include "turtle_nest/generate_setup_py.h"
+// #include "turtle_nest/generate_setup_py.h"
 #include "turtle_nest/node_generators/mixed_cpp_python_node_generator.h"
 #include "turtle_nest/node_generators/node_generator_factory.h"
 #include "turtle_nest/node_generators/python_node_generator.h"
@@ -42,7 +42,7 @@ void RosPkgCreator::create_package() const
   bool create_launch = (launch_name != "");
   bool create_config = (params_file_name != "");
 
-  // If creating CPP and Python package, add the Python node to CMakeLists.txt
+  // If creating CPP and Python package, add the Python modules to CMakeLists.txt
   if (build_type == CPP_AND_PYTHON) {
     create_init_file(package_path, package_name);
     install_python_modules_in_cmakelists(package_path);
@@ -60,16 +60,16 @@ void RosPkgCreator::create_package() const
   }
 
   // Modify setup.py or CMakeLists
-  if (build_type == PYTHON) {
-    modify_setup_py(package_path, create_launch, create_config);
-  } else if (build_type == CPP || build_type == CPP_AND_PYTHON) {
-    modify_cmake_file(package_path, create_launch, create_config);
-  } else if (build_type == MSGS) {
-    create_msgs_files(package_path);
-    add_msgs_to_cmakelists(package_path);
-  } else {
-    throw std::runtime_error("Unknown package type.");
-  }
+  // if (build_type == PYTHON) {
+  //   modify_setup_py(package_path, create_launch, create_config);
+  // } else if (build_type == CPP || build_type == CPP_AND_PYTHON) {
+  //   modify_cmake_file(package_path, create_launch, create_config);
+  // } else if (build_type == MSGS) {
+  //   //create_msgs_files(package_path);
+  //   //add_msgs_to_cmakelists(package_path);
+  // } else {
+  //   throw std::runtime_error("Unknown package type.");
+  // }
 
   if (!node_name.isEmpty()) {
     std::unique_ptr<BaseNodeGenerator> node_generator = create_node_generator(build_type);

@@ -1,25 +1,20 @@
-/* ------------------------------------------------------------------
- * Copyright 2025 Janne Karttunen
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * ------------------------------------------------------------------
-*/
-
-#include "turtle_nest/generate_msgs_pkg.h"
+#include "turtle_nest/package_generators/msgs_package_generator.h"
 #include "turtle_nest/file_utils.h"
 #include "turtle_nest/package_xml_tools.h"
 #include <QDebug>
 #include <QDir>
+
+
+void MsgsPackageGenerator::create_package_impl(){
+  QStringList command = create_command("ament_cmake");
+  run_command(command);
+  create_msgs_files(pkg_info.package_path);
+  add_msgs_to_cmakelists(pkg_info.package_path);
+}
+
+void add_launch_and_params_to_config_(QString /*package_path*/, bool /*create_launch*/, bool /*create_config*/){
+  qWarning() << "Launch and config file creation not allowed for msgs packages";
+}
 
 void add_msgs_to_cmakelists(QString package_path)
 {
@@ -42,7 +37,7 @@ void create_msgs_files(QString package_path)
 QString get_msgs_cmake_addition()
 {
   return QString(
-    R"(# Custom ROS 2 messages
+      R"(# Custom ROS 2 messages
 find_package(rosidl_default_generators REQUIRED)
 
 # Add here your custom message (.msg), service (.srv), and action (.action) files
@@ -56,7 +51,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
 QString get_example_msg_contents()
 {
   return QString(
-    R"(# This is a custom ROS 2 message definition.
+      R"(# This is a custom ROS 2 message definition.
 # Each line defines one field, consisting of a type and a name.
 
 string example_data
