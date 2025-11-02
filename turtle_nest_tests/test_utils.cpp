@@ -37,30 +37,22 @@ bool file_exists(QString path)
 }
 
 
-bool string_exists_in_file(const QString & filePath, const QString & searchString)
-{
-  QFile file(filePath);
+bool string_exists_in_file(const QString& file_path, const QString& searchString) {
+  QFile file(file_path);
   if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-    qDebug() << "Error opening file:" << file.errorString();
-    return false;
-  }
-
-  QTextStream in(&file);
-
-  while (!in.atEnd()) {
-    QString line = in.readLine();
-    if (line.contains(searchString, Qt::CaseSensitive)) {
+      qWarning() << "Could not open file:" << file_path;
       file.close();
-      return true;
-    }
+      return false;
   }
 
+  // Read the entire file content at once
+  QString content = file.readAll();
   file.close();
-  return false;
+  return content.contains(searchString);
 }
 
 
-QString get_tmp_workspace_path()
+QString get_tmp_package_dest()
 {
   QTemporaryDir temp_dir;
   return temp_dir.path() + "/ros2_ws/src";
@@ -75,7 +67,6 @@ bool dir_is_empty(const QString & dirPath)
   }
   // Filter out "." and ".." which are always present in directories
   QStringList files = dir.entryList(QDir::NoDotAndDotDot | QDir::AllEntries);
-  qInfo() << files;
   return files.isEmpty();
 }
 

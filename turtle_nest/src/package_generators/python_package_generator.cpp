@@ -3,12 +3,12 @@
 #include <QDir>
 
 
-void PythonPackageGenerator::create_package_impl(){
-  QStringList command = create_command("ament_python");
-  run_command(command);
+void PythonPackageGenerator::create_package_impl(PackageInfo pkg_info){
+  QStringList command = create_command("ament_python", pkg_info);
+  run_command(command, pkg_info);
 }
 
-void add_launch_and_params_to_config_(QString package_path, bool create_launch, bool create_config){
+void PythonPackageGenerator::add_launch_and_params_to_config_(QString package_path, bool create_launch, bool create_config){
   modify_setup_py(package_path, create_launch, create_config);
 }
 

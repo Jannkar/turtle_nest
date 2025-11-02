@@ -111,16 +111,10 @@ QStringList list_files(QString path)
 }
 
 
-void add_node(QString node_name, NodeType node_type, PackageInfo pkg_info)
+void add_node(NodeOptions node_options, PackageInfo pkg_info)
 {
   std::unique_ptr<BaseNodeGenerator> node_generator = create_node_generator(
     pkg_info.package_type);
-
-  NodeOptions node_options{
-    node_name,
-    node_type,
-    false, // add_params
-  };
 
   // Node generation step will throw a runtime error if the node already exists.
   node_generator->add_node(node_options, pkg_info.package_path, pkg_info.package_name);

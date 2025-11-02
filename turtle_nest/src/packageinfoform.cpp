@@ -229,7 +229,7 @@ void PackageInfoForm::on_addNodeButton_clicked()
     QString node_name = dialog.get_node_name();
     NodeType node_type = dialog.get_node_type();
     try {
-      add_node(node_name, node_type, current_package_info);
+      add_node({node_name, node_type}, current_package_info);
     } catch (const std::runtime_error & error) {
       qCritical().noquote() << "Node Creation Failed: " << error.what();
       QMessageBox::critical(this, "Node Creation Failed", error.what());

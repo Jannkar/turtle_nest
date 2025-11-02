@@ -3,16 +3,15 @@
 #include <QDir>
 
 
-void CppPackageGenerator::create_package_impl(){
-  QStringList command = create_command("ament_cmake");
-  run_command(command);
+void CppPackageGenerator::create_package_impl(PackageInfo pkg_info){
+  QStringList command = create_command("ament_cmake", pkg_info);
+  run_command(command, pkg_info);
 }
 
 
-void add_launch_and_params_to_config_(QString package_path, bool create_launch, bool create_config){
+void CppPackageGenerator::add_launch_and_params_to_config_(QString package_path, bool create_launch, bool create_config){
   modify_cmake_file(package_path, create_launch, create_config);
 }
-
 
 void modify_cmake_file(
     QString package_path, bool create_launch, bool create_config)
@@ -32,14 +31,17 @@ install(DIRECTORY
   }
 
   if (create_config) {
-    QString config_append =
-        R"(# Install config files
+    append_to_file_before(c_make_path, cpp_config_installation_text(), append_before_text);
+  }
+}
+
+
+QString cpp_config_installation_text(){
+  return R"(# Install config files
 install(DIRECTORY
   config
   DESTINATION share/${PROJECT_NAME}/
 )
 
 )";
-    append_to_file_before(c_make_path, config_append, append_before_text);
-  }
 }

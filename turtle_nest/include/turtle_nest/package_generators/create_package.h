@@ -17,5 +17,8 @@
 #pragma once
 
 #include "turtle_nest/package_generators/base_package_generator.h"
+#include <memory>
 
-std::unique_ptr < BasePackageGenerator > get_package_generator(PackageInfo pkg_info);
+void create_package(PackageInfo pkg_info);
+void create_launch_and_params(PackageInfo pkg_info, QString launch_name, QString params_file_name, QString node_name, bool composable_launch);
+std::unique_ptr < BasePackageGenerator > get_package_generator(BuildType package_type);

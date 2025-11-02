@@ -5,14 +5,14 @@
 #include <QDir>
 
 
-void MsgsPackageGenerator::create_package_impl(){
-  QStringList command = create_command("ament_cmake");
-  run_command(command);
+void MsgsPackageGenerator::create_package_impl(PackageInfo pkg_info){
+  QStringList command = create_command("ament_cmake", pkg_info);
+  run_command(command, pkg_info);
   create_msgs_files(pkg_info.package_path);
   add_msgs_to_cmakelists(pkg_info.package_path);
 }
 
-void add_launch_and_params_to_config_(QString /*package_path*/, bool /*create_launch*/, bool /*create_config*/){
+void MsgsPackageGenerator::add_launch_and_params_to_config_(QString /*package_path*/, bool /*create_launch*/, bool /*create_config*/){
   qWarning() << "Launch and config file creation not allowed for msgs packages";
 }
 

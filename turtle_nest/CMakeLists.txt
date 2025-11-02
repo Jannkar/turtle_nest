@@ -19,20 +19,22 @@ set(SOURCES
   src/main.cpp
   src/mainwindow.cpp
   src/file_utils.cpp
-  src/generate_cmake.cpp
   src/generate_launch.cpp
-  src/generate_msgs_pkg.cpp
   src/generate_params.cpp
-  src/generate_setup_py.cpp
   src/modify_existing_pkg.cpp
+  src/node_generators/cpp_node_generator.cpp
+  src/node_generators/mixed_cpp_python_node_generator.cpp
+  src/node_generators/node_generator_factory.cpp
+  src/node_generators/python_node_generator.cpp
+  src/package_generators/base_package_generator.cpp
   src/package_generators/cpp_package_generator.cpp
-  src/package_generators/mixed_cpp_python_package_generator.cpp
-  src/package_generators/package_generator_factory.cpp
+  src/package_generators/create_package.cpp
+  src/package_generators/mixed_package_generator.cpp
+  src/package_generators/msgs_package_generator.cpp
   src/package_generators/python_package_generator.cpp
   src/package_xml_tools.cpp
   src/packageinfoform.cpp
   src/packageswindow.cpp
-  src/rospkgcreator.cpp
   src/string_tools.cpp
 )
 

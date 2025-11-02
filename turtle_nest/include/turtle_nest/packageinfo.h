@@ -28,9 +28,13 @@ class PackageInfo
 public:
   PackageInfo() {
   };
-  QString package_name = "";
-  QString package_path = "";  // TODO: Make sure this is populated correctly
-  QString workspace_path = "";
+  QString package_name;
+  // TODO: Make sure this is populated correctly
+  QString package_path;  // Package path, for example ~/ros2_ws/src/repo/my_package
+  QString package_destination;  // One layer above the package path, not necessarily a workspace. For example ~/ros2_ws/src/repo
+
+  //TODO: Make sure that we don't use this workspace_path during the package creation! Only during the package retrieval we might wanna use it. Should we set the package destination correctly when getting the package info for existing packages?
+  QString workspace_path = "";  // Package workspace, for example ~/ros2_ws/src. In principle, packages might not have workspace associated, if it doesn't exist inside an actual workspace
   QString maintainer = "";
   QString maintainer_email = "";
   QString description = "";
@@ -38,6 +42,18 @@ public:
   QString license = "";
   BuildType package_type;
 
+  // Constructor: user provides package_name, destination, and type
+  PackageInfo(const QString& name,
+              const QString& destination,
+              BuildType type)
+      : package_name(name),
+      package_destination(destination),
+      package_type(type)
+  {
+    // Compute package_path automatically
+    QDir dest_dir(destination);
+    package_path = dest_dir.filePath(package_name);
+  }
 };
 
 #endif // PACKAGEINFO_H

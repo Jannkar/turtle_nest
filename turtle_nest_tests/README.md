@@ -13,6 +13,7 @@
 1. run:
    ```
    cd /home/user/ros2_ws/src/turtle_nest_tests/build/
+   qmake ..
    make
    ./turtle_nest_tests
    ```

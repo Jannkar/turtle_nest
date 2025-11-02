@@ -22,14 +22,13 @@ SOURCES += \
     src/node_generators/python_node_generator.cpp \
     src/package_generators/base_package_generator.cpp \
     src/package_generators/cpp_package_generator.cpp \
-    src/package_generators/get_package_generator.cpp \
+    src/package_generators/create_package.cpp \
     src/package_generators/mixed_package_generator.cpp \
     src/package_generators/msgs_package_generator.cpp \
     src/package_generators/python_package_generator.cpp \
     src/package_xml_tools.cpp \
     src/packageinfoform.cpp \
     src/packageswindow.cpp \
-    src/rospkgcreator.cpp \
     src/string_tools.cpp
 
 HEADERS += \
@@ -46,13 +45,12 @@ HEADERS += \
     include/turtle_nest/node_generators/python_node_generator.h \
     include/turtle_nest/package_generators/base_package_generator.h \
     include/turtle_nest/package_generators/cpp_package_generator.h \
-    include/turtle_nest/package_generators/get_package_generator.h \
+    include/turtle_nest/package_generators/create_package.h \
     include/turtle_nest/package_generators/mixed_package_generator.h \
     include/turtle_nest/package_generators/msgs_package_generator.h \
     include/turtle_nest/package_generators/python_package_generator.h \
     include/turtle_nest/package_xml_tools.h \
     include/turtle_nest/packageinfo.h \
-    include/turtle_nest/rospkgcreator.h \
     include/turtle_nest/string_tools.h \
     include/turtle_nest/generate_params.h \
     include/turtle_nest/packageswindow.h \

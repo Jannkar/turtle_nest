@@ -10,9 +10,7 @@
 #include <QProcess>
 
 
-BasePackageGenerator::BasePackageGenerator(PackageInfo pkg_info)
-  : pkg_info(pkg_info)
-{
+void BasePackageGenerator::create_package(PackageInfo pkg_info){
   // ROS automatically populates the email from maintainer name, if email is not provided.
   // If the name contains invalid characters (or spaces) for email, the package building
   // will fail. This is why we need to set this default email instead of leaving it empty.
@@ -23,12 +21,9 @@ BasePackageGenerator::BasePackageGenerator(PackageInfo pkg_info)
   if (pkg_info.license.isEmpty()){
     pkg_info.license = "TODO: License declaration";
   }
-}
 
-
-void BasePackageGenerator::create_package(){
-  create_directory(pkg_info.workspace_path);
-  create_package_impl();
+  create_directory(pkg_info.package_destination);
+  create_package_impl(pkg_info);
 
   // Add watermark
   QFile file(QDir(pkg_info.package_path).filePath("package.xml"));
@@ -41,7 +36,7 @@ void BasePackageGenerator::create_package(){
   }
 }
 
-void BasePackageGenerator::create_launch_and_params(QString launch_name, QString params_file_name, QString node_name, bool composable_launch){
+void BasePackageGenerator::create_launch_and_params(QString package_path, QString package_name, QString launch_name, QString params_file_name, QString node_name, bool composable_launch){
   // For now, we share the launch and params creation, as the CMakeLists or
   // setup.py are populated at once.
   bool create_launch = (launch_name != "");
@@ -50,33 +45,20 @@ void BasePackageGenerator::create_launch_and_params(QString launch_name, QString
   // Generate launch file
   if (create_launch) {
     generate_launch_file(
-        pkg_info.package_path, pkg_info.package_name, launch_name + ".py", params_file_name, node_type, node_name);
+        package_path, package_name, launch_name + ".py", params_file_name, composable_launch, node_name);
   }
 
   // Generate parameters file
   if (create_config) {
-    generate_params_file(pkg_info.package_path, params_file_name + ".yaml", node_name, "");
+    generate_params_file(package_path, params_file_name + ".yaml", node_name, "");
   }
 
-  add_launch_and_params_to_config_(pkg_info.package_path, create_launch, create_config);
+  add_launch_and_params_to_config_(package_path, create_launch, create_config);
 
 }
 
 
-void BasePackageGenerator::create_node(QString node_name, NodeType node_type, bool create_config){
-  if (!node_name.isEmpty()) {
-    std::unique_ptr<BaseNodeGenerator> node_generator = create_node_generator(pkg_info.package_type);
-    NodeOptions node_options{
-        node_name,
-        node_type,
-        create_config,   // add_params
-    };
-    node_generator->add_node(node_options, pkg_info.package_path, pkg_info.package_name);
-  }
-}
-
-
-QStringList BasePackageGenerator::create_command(QString type) const
+QStringList BasePackageGenerator::create_command(QString type, PackageInfo pkg_info) const
 {
   QStringList command_list;
 
@@ -97,11 +79,11 @@ QStringList BasePackageGenerator::create_command(QString type) const
   return command_list;
 }
 
-void BasePackageGenerator::run_command(QStringList command) const
+void BasePackageGenerator::run_command(QStringList command, PackageInfo pkg_info) const
 {
   QProcess builder;
   builder.setProcessChannelMode(QProcess::MergedChannels);
-  builder.setWorkingDirectory(pkg_info.workspace_path);
+  builder.setWorkingDirectory(pkg_info.package_destination);
   builder.start("ros2", command);
   qInfo().noquote() << "Running command: ros2" << builder.arguments().join(" ");
 
@@ -111,6 +93,37 @@ void BasePackageGenerator::run_command(QStringList command) const
   if (builder.exitCode() != 0) {
     auto error_message = builder.readAll();
     throw std::runtime_error("Running the command failed: " + error_message);
+  }
+
+  qInfo().noquote() << builder.readAll();
+}
+
+
+void colcon_build(QString workspace_path, QStringList packages)
+{
+  workspace_path = get_workspace_path_without_src(workspace_path);
+  QDir dir(workspace_path);
+  QProcess builder;
+  builder.setProcessChannelMode(QProcess::MergedChannels);
+  builder.setWorkingDirectory(dir.path());
+
+  QStringList command_list;
+  if (packages.isEmpty()) {
+    command_list << "build";
+  } else {
+    command_list << "build" << "--packages-select";
+    command_list.append(packages);
+  }
+
+  builder.start("colcon", command_list);
+  qInfo().noquote() << "Running command: colcon" << builder.arguments().join(" ");
+
+  if (!builder.waitForFinished(120000)) {
+    throw std::runtime_error("Failed to build the package");
+  }
+  if (builder.exitCode() != 0) {
+    auto error_message = builder.readAll();
+    throw std::runtime_error("Failed building the package: " + error_message);
   }
 
   qInfo().noquote() << builder.readAll();
