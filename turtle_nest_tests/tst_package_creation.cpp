@@ -51,6 +51,9 @@ const QString cpp_lifecycle_node_text = "Hello world from the C++ node cpp_lifec
 const QString param_text = "Declared parameter 'example_param'. Value: abc";
 const QString default_param_text = "Declared parameter 'example_param'. Value: default_value";
 
+QString get_expected_node_text(QString node_name, QString package_string){
+  return "Hello world from the " + package_string + " node " + node_name;
+}
 
 std::vector<BuildType> get_build_types() {
   return {BuildType::CPP, BuildType::PYTHON, BuildType::CPP_AND_PYTHON, BuildType::MSGS};
@@ -134,8 +137,8 @@ TEST(package_creation, cpp_package) {
 
 
 // Create a C++ package with a Composable node, including params.
-// Cannot be tested with other node types with ros2 run, as we need launch file
-// to load the node in container.
+// Makes sure the launching as a component via launch file works
+// correctly. ros2 run behavior is tested in later tests.
 TEST(package_creation, cpp_composable_node) {
   PackageInfo pkg_info("cpp_package", get_tmp_package_dest(), BuildType::CPP);
   create_package(pkg_info);
@@ -281,6 +284,9 @@ TEST(package_creation, test_node_params_creation){
 
   QList<TestCase> test_cases = {
     {CPP_NODE, "cpp_node", {cpp_node_text, default_param_text}},
+    {CPP_COMPOSABLE_NODE, "cpp_node_composable",
+      {get_expected_node_text("cpp_node_composable", "C++"), default_param_text}
+    },
     {CPP_LIFECYCLE_NODE, "cpp_lifecycle_node", {cpp_lifecycle_node_text, default_param_text}},
     {PYTHON_NODE, "python_node", {python_node_text, default_param_text}},
     {PYTHON_LIFECYCLE_NODE, "python_lifecycle_node", {python_lifecycle_node_text, default_param_text}},
