@@ -23,7 +23,8 @@
 
 
 void generate_launch_file(
-  QString generate_launch_file, QString package_name, QString launch_file_name, QString params_file_name,
+  QString generate_launch_file, QString package_name, QString launch_file_name,
+  QString params_file_name,
   bool composable_launch, QString node_name = "");
 QString generate_launch_text(
   QString package_name, QString node_name_cpp, bool composable_launch, QString params_file_name);

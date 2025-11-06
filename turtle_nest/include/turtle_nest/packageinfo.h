@@ -39,15 +39,16 @@ public:
   BuildType package_type;
 
   // Constructor: user provides package_name, destination, and type
-  PackageInfo(const QString& name,
-              const QString& destination,
-              BuildType type)
-      : package_name(name),
-      package_destination(destination),
-      package_type(type)
+  PackageInfo(
+    const QString & name,
+    const QString & destination,
+    BuildType type)
+    : package_name(name),
+    package_destination(destination),
+    package_type(type)
   {
     // Compute package_path automatically. This can be done automatically when package_name is the same as the
-    // package path last segment, but might not be true in all the cases. 
+    // package path last segment, but might not be true in all the cases.
     // In this case, we can use the default constructor and set package_path manually later.
     QDir dest_dir(destination);
     package_path = dest_dir.filePath(package_name);
