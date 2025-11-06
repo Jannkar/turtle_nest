@@ -18,6 +18,7 @@
 #include "turtle_nest/mainwindow.h"
 #include "turtle_nest/node_generators/node_generator_factory.h"
 #include "turtle_nest/package_generators/base_package_generator.h"
+#include "turtle_nest/modify_existing_pkg.h"
 #include "turtle_nest/package_generators/create_package.h"
 #include "ui_mainwindow.h"
 #include "turtle_nest/string_tools.h"
@@ -132,14 +133,11 @@ void MainWindow::on_createPackageButton_clicked()
 {
   BuildType build_type = get_selected_package_type();
 
-  PackageInfo pkg_info;
-  pkg_info.workspace_path = ui->workspacePathEdit->text();
-  pkg_info.package_name = ui->packageNameEdit->text();
-  pkg_info.package_type = build_type;
+  PackageInfo pkg_info(ui->packageNameEdit->text(), ui->workspacePathEdit->text(), build_type);
   pkg_info.description = ui->descriptionEdit->toPlainText();
   pkg_info.maintainer = ui->maintainerEdit->text();
 
-  // Row 0 is "No Licence", so it is not directly usable as the license.
+  // Row 0 is "No License", so it is not directly usable as the license.
   if (ui->licenseList->currentRow() != 0) {
     pkg_info.license = get_license();
   }
@@ -165,30 +163,27 @@ void MainWindow::on_createPackageButton_clicked()
   bool create_config = (params_file_name != "");
   bool create_node = ui->nodeTypeListWidget->currentRow() != 0;
 
-  NodeType node_type;
-  QString node_name;
+  NodeOptions node_options;
   if (create_node){
-    node_name = ui->nodeNameLineEdit->text();
-    node_type = node_type_from_string(ui->nodeTypeListWidget->currentItem()->text());
+    node_options.node_name = ui->nodeNameLineEdit->text();
+    node_options.node_type = node_type_from_string(ui->nodeTypeListWidget->currentItem()->text());
+    node_options.add_params = create_config;
   }
 
   try {
     create_package(pkg_info);
 
     if (create_node){
-      bool composable_launch = node_type == NodeType::CPP_COMPOSABLE_NODE;
+      bool composable_launch = node_options.node_type == NodeType::CPP_COMPOSABLE_NODE;
       create_launch_and_params(
         pkg_info,
         launch_name,
         params_file_name,
-        node_name,
+        node_options.node_name,
         composable_launch
       );
-      //pkg_generator->create_node(node_name, node_type, create_config);
-      // TODO: Handle the node generation
+      add_node(node_options, pkg_info);
 
-      // TODO: Catch the errors separately for each step.
-      // TODO: Add instructions to post an issue if the generation fails.
     }
     else{
       create_launch_and_params(pkg_info, launch_name, params_file_name, "", false);

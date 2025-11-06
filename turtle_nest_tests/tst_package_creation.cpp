@@ -89,9 +89,6 @@ TEST(package_creation, create_pkg_defaults) {
   }
 }
 
-// TODO: Test that adding a launch file for all the package types allows us to launch a
-// node that was created. Both Cpp and python for mixed. Maybe even all the node types?
-
 // Test the package creation with all the parameters
 TEST(package_creation, create_pkg_all_values) {
   for (BuildType build_type: get_build_types()) {
@@ -119,7 +116,7 @@ TEST(package_creation, create_pkg_all_values) {
   }
 }
 
-// // Try to create a package to destination the user doesn't have access rights
+// Try to create a package to destination the user doesn't have access rights
 TEST(package_creation, package_dir_creation_fails) {
   EXPECT_THROW({
     create_package({"package_name", "/root/no_permission", BuildType::CPP});

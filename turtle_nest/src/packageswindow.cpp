@@ -156,7 +156,7 @@ void PackagesWindow::on_packagesListWidget_currentItemChanged(QListWidgetItem *,
   // Make sure the package info-form is shown.
   ui->stackedPackageInfoWidget->setCurrentIndex(0);
 
-  package_info_form->updatePackageInfo(get_selected_package_info());
+  package_info_form->updatePackageInfo(get_selected_package_info(), workspace_path);
   ui->scrollArea->verticalScrollBar()->setValue(0);
 }
 

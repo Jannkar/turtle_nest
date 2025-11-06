@@ -52,9 +52,10 @@ std::map<QString, PackageInfo> list_packages(QString workspace_path)
     }
 
     PackageInfo pkg_info;
-    pkg_info.workspace_path = workspace_path;
     pkg_info.package_name = read_xml_tag(package_xml_path, "name");
     pkg_info.package_path = package_dir.path();
+    QDir parent_dir(package_dir.filePath(".."));
+    pkg_info.package_destination = parent_dir.absolutePath();
 
     pkg_info.package_type = get_package_build_type(pkg_info.package_path, pkg_info.package_name);
 

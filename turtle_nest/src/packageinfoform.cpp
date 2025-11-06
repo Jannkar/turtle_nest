@@ -93,9 +93,10 @@ PackageInfoForm::~PackageInfoForm()
   delete ui;
 }
 
-void PackageInfoForm::updatePackageInfo(PackageInfo pkg_info)
+void PackageInfoForm::updatePackageInfo(PackageInfo pkg_info, QString workspace_path)
 {
   current_package_info = pkg_info;
+  workspace_path = workspace_path;
   ui->packageTitleLabel->setText(pkg_info.package_name);
   ui->packageDescLabel->setText(pkg_info.description);
   ui->versionLabel->setText(pkg_info.version);
@@ -158,7 +159,7 @@ void PackageInfoForm::updateNodesLaunchParams(PackageInfo pkg_info)
   ui->paramsLabel->show();
 
   try {
-    QStringList executables = list_executables(pkg_info.workspace_path, pkg_info.package_name);
+    QStringList executables = list_executables(workspace_path, pkg_info.package_name);
     if (executables.empty()) {
       ui->noNodesLabel->show();
     } else {
@@ -240,6 +241,6 @@ void PackageInfoForm::on_addNodeButton_clicked()
       " added successfully! \nRebuild the package to see the newly created node in the nodes list.";
     QMessageBox::information(this, "Node Creation Successful", success_msg);
 
-    updatePackageInfo(current_package_info);
+    updatePackageInfo(current_package_info, workspace_path);
   }
 }
