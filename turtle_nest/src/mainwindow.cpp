@@ -188,7 +188,6 @@ void MainWindow::on_createPackageButton_clicked()
     else{
       create_launch_and_params(pkg_info, launch_name, params_file_name, "", false);
     }
-    //pkg_creator.create_package();
   } catch (const std::runtime_error & error) {
     qCritical().noquote() << "Package Creation Failed: " << error.what();
     QMessageBox::critical(this, "Package Creation Failed", error.what());
