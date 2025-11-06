@@ -15,36 +15,22 @@
  * ------------------------------------------------------------------
 */
 
-#ifndef CPP_PACKAGE_GENERATOR_H
-#define CPP_PACKAGE_GENERATOR_H
+#pragma once
 
-#include "turtle_nest/package_generators/base_package_generator.h"
-
+#include <turtle_nest/package_generators/base_package_generator.h>
 
 class CppPackageGenerator: public BasePackageGenerator
 {
 public:
-  std::vector < NodeType > get_supported_node_types() const override {
-    return {CPP_NODE, CPP_LIFECYCLE_NODE, CPP_COMPOSABLE_NODE};
-  }
-  void add_node(
-    NodeOptions node_options, QString package_path,
-    QString package_name) override;
+  CppPackageGenerator() = default;
+
+private:
+  void create_package_impl(PackageInfo pkg_info) override;
+  void add_launch_and_params_to_config_(
+    QString package_path, bool create_launch,
+    bool create_config) override;
 };
 
-void generate_cpp_node(
-  QString package_path, QString node_name,
-  bool create_config, bool overwrite_existing = false);
-QString get_params_block();
-void add_node_to_cmakelists(QString package_path, QString node_name);
-void add_cpp_dependency(QString package_path, QString dependency);
-void add_dependency_to_cmakelists(QString dependency, QString cmakelists_path);
-void add_cpp_dependency_to_package_xml(QString package_path, QString dependency);
-void generate_lifecycle_cpp_node(QString package_path, NodeOptions node_options);
-void add_lifecycle_node_to_cmakelists(QString package_path, QString node_name);
-void generate_composable_node(QString package_path, QString package_name, NodeOptions node_options);
-void add_composable_node_to_cmakelists(
-  QString package_path, QString package_name,
-  QString node_name);
+void modify_cmake_file(QString package_path, bool create_launch, bool create_config);
 
-#endif // CPP_PACKAGE_GENERATOR_H
+QString cpp_config_installation_text();

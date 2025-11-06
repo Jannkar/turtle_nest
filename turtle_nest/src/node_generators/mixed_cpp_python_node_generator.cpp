@@ -15,13 +15,13 @@
  * ------------------------------------------------------------------
 */
 
-#include "turtle_nest/package_generators/mixed_cpp_python_package_generator.h"
-#include "turtle_nest/package_generators/cpp_package_generator.h"
-#include "turtle_nest/package_generators/python_package_generator.h"
+#include "turtle_nest/node_generators/mixed_cpp_python_node_generator.h"
+#include "turtle_nest/node_generators/cpp_node_generator.h"
+#include "turtle_nest/node_generators/python_node_generator.h"
 #include "turtle_nest/file_utils.h"
 
 
-void MixedCppPythonPackageGenerator::add_node(
+void MixedCppPythonNodeGenerator::add_node(
   NodeOptions node_options,
   QString package_path, QString package_name)
 {
@@ -36,7 +36,7 @@ void MixedCppPythonPackageGenerator::add_node(
       node_options.add_params, false, true);
     add_python_node_to_cmakelists(package_path, node_options.node_name);
   } else {
-    CppPackageGenerator::add_node(node_options, package_path, package_name);
+    CppNodeGenerator::add_node(node_options, package_path, package_name);
   }
 }
 

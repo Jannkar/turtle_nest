@@ -33,7 +33,7 @@ struct NodeOptions
 {
   QString node_name;
   NodeType node_type;
-  bool add_params;
+  bool add_params = false;
 };
 
 // Convert NodeType enum to user-readable QString

@@ -28,15 +28,31 @@ class PackageInfo
 public:
   PackageInfo() {
   };
-  QString package_name = "";
-  QString package_path = "";
-  QString workspace_path = "";
+  QString package_name;
+  QString package_path;  // Package path, for example ~/ros2_ws/src/repo/my_package
+  QString package_destination;  // One layer above the package path, not necessarily a workspace. For example ~/ros2_ws/src/repo
   QString maintainer = "";
+  QString maintainer_email = "";
   QString description = "";
   QString version = "";
   QString license = "";
   BuildType package_type;
 
+  // Constructor: user provides package_name, destination, and type
+  PackageInfo(
+    const QString & name,
+    const QString & destination,
+    BuildType type)
+    : package_name(name),
+    package_destination(destination),
+    package_type(type)
+  {
+    // Compute package_path automatically. This can be done automatically when package_name is the same as the
+    // package path last segment, but might not be true in all the cases.
+    // In this case, we can use the default constructor and set package_path manually later.
+    QDir dest_dir(destination);
+    package_path = dest_dir.filePath(package_name);
+  }
 };
 
 #endif // PACKAGEINFO_H

@@ -15,11 +15,28 @@
  * ------------------------------------------------------------------
 */
 
-#include "turtle_nest/generate_msgs_pkg.h"
+#include "turtle_nest/package_generators/msgs_package_generator.h"
 #include "turtle_nest/file_utils.h"
 #include "turtle_nest/package_xml_tools.h"
 #include <QDebug>
 #include <QDir>
+
+
+void MsgsPackageGenerator::create_package_impl(PackageInfo pkg_info)
+{
+  QStringList command = create_command("ament_cmake", pkg_info);
+  run_command(command, pkg_info);
+  create_msgs_files(pkg_info.package_path);
+  add_msgs_to_cmakelists(pkg_info.package_path);
+}
+
+void MsgsPackageGenerator::add_launch_and_params_to_config_(
+  QString /*package_path*/,
+  bool /*create_launch*/,
+  bool /*create_config*/)
+{
+  qWarning() << "Launch and config file creation not allowed for msgs packages";
+}
 
 void add_msgs_to_cmakelists(QString package_path)
 {

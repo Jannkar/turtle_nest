@@ -16,9 +16,11 @@
 */
 
 #include "turtle_nest/mainwindow.h"
-#include "turtle_nest/package_generators/package_generator_factory.h"
+#include "turtle_nest/node_generators/node_generator_factory.h"
+#include "turtle_nest/package_generators/base_package_generator.h"
+#include "turtle_nest/modify_existing_pkg.h"
+#include "turtle_nest/package_generators/create_package.h"
 #include "ui_mainwindow.h"
-#include "turtle_nest/rospkgcreator.h"
 #include "turtle_nest/string_tools.h"
 #include <QFile>
 #include <QFileDialog>
@@ -30,7 +32,7 @@
 #include <QDebug>
 #include <QDialog>
 #include <QButtonGroup>
-#include <turtle_nest/package_generators/base_package_generator.h>
+#include <turtle_nest/node_generators/base_node_generator.h>
 
 
 MainWindow::MainWindow(QWidget * parent, const QString & package_dest)
@@ -131,44 +133,60 @@ void MainWindow::on_createPackageButton_clicked()
 {
   BuildType build_type = get_selected_package_type();
 
-  RosPkgCreator pkg_creator(
-    ui->workspacePathEdit->text(),
-    ui->packageNameEdit->text(),
-    build_type
-  );
+  PackageInfo pkg_info(ui->packageNameEdit->text(), ui->workspacePathEdit->text(), build_type);
+  pkg_info.description = ui->descriptionEdit->toPlainText();
+  pkg_info.maintainer = ui->maintainerEdit->text();
+
+  // Row 0 is "No License", so it is not directly usable as the license.
+  if (ui->licenseList->currentRow() != 0) {
+    pkg_info.license = get_license();
+  }
+
+  if (!ui->emailEdit->text().trimmed().isEmpty()) {
+    pkg_info.maintainer_email = ui->emailEdit->text();
+  }
 
   QSettings settings("TurtleNest", "TurtleNest");
   settings.setValue("maintainer_name", ui->maintainerEdit->text());
   settings.setValue("maintainer_email", ui->emailEdit->text());
 
-  pkg_creator.description = ui->descriptionEdit->toPlainText();
-  pkg_creator.maintainer_name = ui->maintainerEdit->text();
-
-  // Row 0 is always "No Node". If that's the case, don't set node name or type
-  if (ui->nodeTypeListWidget->currentRow() != 0) {
-    pkg_creator.node_name = ui->nodeNameLineEdit->text();
-    pkg_creator.node_type = node_type_from_string(ui->nodeTypeListWidget->currentItem()->text());
-  }
-
+  QString launch_name = "";
   if (ui->checkboxCreateLaunch->isChecked()) {
-    pkg_creator.launch_name = ui->lineEditLaunchName->text();
+    launch_name = ui->lineEditLaunchName->text();
   }
 
+  QString params_file_name = "";
   if (ui->checkboxCreateParams->isChecked()) {
-    pkg_creator.params_file_name = ui->lineEditParamsName->text();
+    params_file_name = ui->lineEditParamsName->text();
   }
 
-  // Row 0 is "No Licence", so it is not directly usable as the license.
-  if (ui->licenseList->currentRow() != 0) {
-    pkg_creator.license = get_license();
-  }
+  bool create_config = (params_file_name != "");
+  bool create_node = ui->nodeTypeListWidget->currentRow() != 0;
 
-  if (!ui->emailEdit->text().trimmed().isEmpty()) {
-    pkg_creator.maintainer_email = ui->emailEdit->text();
+  NodeOptions node_options;
+  if (create_node) {
+    node_options.node_name = ui->nodeNameLineEdit->text();
+    node_options.node_type = node_type_from_string(ui->nodeTypeListWidget->currentItem()->text());
+    node_options.add_params = create_config;
   }
 
   try {
-    pkg_creator.create_package();
+    create_package(pkg_info);
+
+    if (create_node) {
+      bool composable_launch = node_options.node_type == NodeType::CPP_COMPOSABLE_NODE;
+      create_launch_and_params(
+        pkg_info,
+        launch_name,
+        params_file_name,
+        node_options.node_name,
+        composable_launch
+      );
+      add_node(node_options, pkg_info);
+
+    } else {
+      create_launch_and_params(pkg_info, launch_name, params_file_name, "", false);
+    }
   } catch (const std::runtime_error & error) {
     qCritical().noquote() << "Package Creation Failed: " << error.what();
     QMessageBox::critical(this, "Package Creation Failed", error.what());
@@ -176,7 +194,7 @@ void MainWindow::on_createPackageButton_clicked()
   }
 
   qInfo() << "Package created successfully!";
-  QString success_msg = "ROS 2 package '" + pkg_creator.package_name +
+  QString success_msg = "ROS 2 package '" + pkg_info.package_name +
     "' has been successfully created. You can now build the package.";
 
   QMessageBox::information(this, "Package Creation Successful", success_msg);
@@ -248,8 +266,8 @@ void MainWindow::update_package_type_page_ui(BuildType package_type)
   ui->paramLaunchWidget->setVisible(true);
 
   // Update the list of node types
-  std::unique_ptr<BasePackageGenerator> package_generator = create_package_generator(package_type);
-  std::vector<NodeType> supported_nodes = package_generator->get_supported_node_types();
+  std::unique_ptr<BaseNodeGenerator> node_generator = create_node_generator(package_type);
+  std::vector<NodeType> supported_nodes = node_generator->get_supported_node_types();
   ui->nodeTypeListWidget->clear();
   ui->nodeTypeListWidget->addItem("No Node");
   for (NodeType & node_type: supported_nodes) {

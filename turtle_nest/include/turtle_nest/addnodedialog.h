@@ -19,7 +19,7 @@
 #define ADDNODEDIALOG_H
 
 #include "turtle_nest/node_type_enum.h"
-#include "turtle_nest/package_generators/base_package_generator.h"
+#include "turtle_nest/node_generators/base_node_generator.h"
 #include "turtle_nest/packageinfo.h"
 #include <QButtonGroup>
 #include <QDialog>
@@ -49,7 +49,7 @@ public:
 private:
   Ui::AddNodeDialog * ui;
   PackageInfo pkg_info;
-  std::unique_ptr < BasePackageGenerator > pkg_generator;
+  std::unique_ptr < BaseNodeGenerator > node_generator;
   std::vector < NodeType > supported_node_types;
   QButtonGroup * node_button_group;
   void populate_node_types();

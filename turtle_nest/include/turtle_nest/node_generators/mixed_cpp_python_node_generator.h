@@ -15,14 +15,25 @@
  * ------------------------------------------------------------------
 */
 
-#ifndef GENERATE_MSGS_PKG_H
-#define GENERATE_MSGS_PKG_H
+#ifndef MIXED_CPP_PYTHON_NODE_GENERATOR_H
+#define MIXED_CPP_PYTHON_NODE_GENERATOR_H
 
-#include <QString>
+#include "turtle_nest/node_generators/cpp_node_generator.h"
 
-void add_msgs_to_cmakelists(QString package_path);
-void create_msgs_files(QString package_path);
-QString get_msgs_cmake_addition();
-QString get_example_msg_contents();
 
-#endif // GENERATE_MSGS_PKG_H
+class MixedCppPythonNodeGenerator: public CppNodeGenerator
+{
+public:
+  std::vector < NodeType > get_supported_node_types() const override {
+    return {CPP_NODE, CPP_LIFECYCLE_NODE, CPP_COMPOSABLE_NODE, PYTHON_NODE, PYTHON_LIFECYCLE_NODE};
+  }
+  void add_node(
+    NodeOptions node_options, QString package_path,
+    QString package_name) override;
+};
+
+void install_python_modules_in_cmakelists(QString cmakelists_path);
+void add_python_node_to_cmakelists(QString package_path, QString node_name);
+
+
+#endif // MIXED_CPP_PYTHON_NODE_GENERATOR_H

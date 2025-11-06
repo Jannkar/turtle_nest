@@ -15,20 +15,30 @@
  * ------------------------------------------------------------------
 */
 
-#pragma once
+#ifndef BASE_NODE_GENERATOR_H
+#define BASE_NODE_GENERATOR_H
 
-#include <turtle_nest/package_generators/base_package_generator.h>
+#include <QDir>
+#include <QString>
+#include <QDebug>
+#include "turtle_nest/node_type_enum.h"
 
-class PythonPackageGenerator: public BasePackageGenerator
+class BaseNodeGenerator
 {
 public:
-  PythonPackageGenerator() = default;
-
-private:
-  void create_package_impl(PackageInfo pkg_info) override;
-  void add_launch_and_params_to_config_(
-    QString package_path, bool create_launch,
-    bool create_config) override;
+  virtual ~BaseNodeGenerator() = default;
+  virtual std::vector < NodeType > get_supported_node_types() const {
+    return {};
+  }
+  virtual void add_node(
+    NodeOptions node_options, QString /*package_path*/, QString /*package_name*/)
+  {
+    throw std::runtime_error(
+      QString("Unsupported node type: %1")
+      .arg(node_options.node_type)
+      .toStdString()
+    );
+  }
 };
 
-void modify_setup_py(QString package_path, bool create_launch, bool create_config);
+#endif // BASE_NODE_GENERATOR_H

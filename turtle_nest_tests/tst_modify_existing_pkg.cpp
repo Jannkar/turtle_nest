@@ -17,7 +17,7 @@
 
 #include "turtle_nest/file_utils.h"
 #include "turtle_nest/modify_existing_pkg.h"
-#include "turtle_nest/rospkgcreator.h"
+#include "turtle_nest/package_generators/create_package.h"
 #include "test_utils.h"
 #include <gmock/gmock-matchers.h>
 #include <gtest/gtest.h>
@@ -43,7 +43,7 @@ void execute_node_and_assert_success(PackageInfo pkg_info, QString node_name, No
   QString output = run_command(
     QString("ros2 run %1 %2").arg(pkg_info.package_name, node_name),
     {expected_output},
-    pkg_info.workspace_path
+    pkg_info.package_destination
   );
 
   ASSERT_TRUE(output.contains(expected_output));
@@ -58,9 +58,9 @@ TEST(modify_existing_pkg, list_packages) {
 
   // In alphabetical order by package name
   QList<TestCase> test_cases = {
-    {CPP, "cpp_package"},
-    {CPP_AND_PYTHON, "mixed"},
-    {PYTHON, "python_package"},
+    {BuildType::CPP, "cpp_package"},
+    {BuildType::CPP_AND_PYTHON, "mixed"},
+    {BuildType::PYTHON, "python_package"},
   };
 
   QString maintainer_name = "test_maintainer";
@@ -69,22 +69,18 @@ TEST(modify_existing_pkg, list_packages) {
   QString version = "0.0.0";
 
   QTemporaryDir temp_dir;
-  QString workspace_path = temp_dir.path() + "/ros2_ws";
-  QString src_path = workspace_path + "/src";
+  QString src_path = get_tmp_package_dest();
+  QString workspace_path = get_workspace_path_without_src(src_path);
 
   for (TestCase & test_case : test_cases) {
-    RosPkgCreator pkg_creator(src_path, test_case.pkg_name, test_case.package_type);
-    pkg_creator.maintainer_name = maintainer_name;
-    pkg_creator.description = description;
-    pkg_creator.license = license;
-    pkg_creator.create_package();
+    PackageInfo pkg_info(test_case.pkg_name, workspace_path, test_case.package_type);
+    pkg_info.maintainer = maintainer_name;
+    pkg_info.description = description;
+    pkg_info.license = license;
+    create_package(pkg_info);
   }
 
   std::map<QString, PackageInfo> packages = list_packages(workspace_path);
-  for (auto & package : packages) {
-    qInfo() << package.second.package_name;
-  }
-
   int i = 0;
   for (const auto & [package_name, pkg_info] : packages) {
     ASSERT_EQ(pkg_info.package_name, test_cases[i].pkg_name);
@@ -119,20 +115,11 @@ TEST(modify_existing_pkg, add_node_to_existing_package) {
   };
 
   for (TestCase & test_case : test_cases) {
-    QString workspace_path = get_tmp_workspace_path();
-    PackageInfo pkg_info;
-    pkg_info.package_name = test_case.pkg_name;
-    pkg_info.workspace_path = workspace_path;
-    pkg_info.package_path = workspace_path + "/" + pkg_info.package_name;
-    pkg_info.package_type = test_case.package_type;
-
-    RosPkgCreator pkg_creator(pkg_info.workspace_path, pkg_info.package_name,
-      pkg_info.package_type);
-
-    pkg_creator.create_package();
-    add_node("node_1", test_case.node_type, pkg_info);
-    add_node("node_2", test_case.node_type, pkg_info);
-    pkg_creator.build_package();
+    PackageInfo pkg_info(test_case.pkg_name, get_tmp_package_dest(), test_case.package_type);
+    create_package(pkg_info);
+    add_node({"node_1", test_case.node_type}, pkg_info);
+    add_node({"node_2", test_case.node_type}, pkg_info);
+    colcon_build(pkg_info.package_destination, {pkg_info.package_name});
 
     execute_node_and_assert_success(pkg_info, "node_1", test_case.node_type);
     execute_node_and_assert_success(pkg_info, "node_2", test_case.node_type);
@@ -179,17 +166,10 @@ TEST(modify_existing_pkg, try_adding_node_with_existing_name) {
   };
 
   for (TestCase & test_case : test_cases) {
-    QString workspace_path = get_tmp_workspace_path();
-    PackageInfo pkg_info;
-    pkg_info.package_name = "test_package";
-    pkg_info.package_path = workspace_path + "/" + pkg_info.package_name;
-    pkg_info.package_type = test_case.package_type;
-
-    RosPkgCreator pkg_creator(workspace_path, pkg_info.package_name, pkg_info.package_type);
-    pkg_creator.create_package();
-
-    add_node("node_1", test_case.node_type, pkg_info);
-    EXPECT_THROW(add_node("node_1", test_case.node_type, pkg_info), std::runtime_error);
+    PackageInfo pkg_info("test_package", get_tmp_package_dest(), test_case.package_type);
+    create_package(pkg_info);
+    add_node({"node_1", test_case.node_type}, pkg_info);
+    EXPECT_THROW(add_node({"node_1", test_case.node_type}, pkg_info), std::runtime_error);
   }
 }
 
@@ -197,24 +177,18 @@ TEST(modify_existing_pkg, try_adding_node_with_existing_name) {
 // the package is .../src/project. Make sure that we add the node to
 // the right place in these situations.
 TEST(modify_existing_pkg, add_node_to_package_with_different_project_name) {
-  QString workspace_path = get_tmp_workspace_path();
-  PackageInfo pkg_info;
-  pkg_info.package_name = "test_package";
-  pkg_info.package_path = workspace_path + "/" + pkg_info.package_name;
-  pkg_info.package_type = CPP;
-  pkg_info.workspace_path = workspace_path;
-
-  RosPkgCreator pkg_creator(workspace_path, pkg_info.package_name, pkg_info.package_type);
-  pkg_creator.create_package();
+  PackageInfo pkg_info("test_package", get_tmp_package_dest(), CPP);
+  create_package(pkg_info);
 
   QDir dir;
-  dir.rename(pkg_info.package_path, workspace_path + "/" + "package");
+  dir.rename(pkg_info.package_path, pkg_info.package_destination + "/" + "package");
 
+  QString workspace_path = get_workspace_path_without_src(pkg_info.package_destination);
   auto packages = list_packages(workspace_path);
   auto first_package_iter = packages.begin();
   auto first_package_info = first_package_iter->second;
-  add_node("node_1", CPP_NODE, first_package_info);
-  pkg_creator.build_package();
+  add_node({"node_1", CPP_NODE}, first_package_info);
+  colcon_build(workspace_path, {pkg_info.package_name});
 
   execute_node_and_assert_success(pkg_info, "node_1", CPP_NODE);
 }
@@ -229,21 +203,16 @@ TEST(modify_existing_pkg, add_python_node_invalid_setup_py) {
   };
 
   for (const auto & setup_py_file_name : fixture_files) {
-    QString workspace_path = get_tmp_workspace_path();
-    PackageInfo pkg_info;
-    pkg_info.package_name = "test_package";
-    pkg_info.package_path = workspace_path + "/" + pkg_info.package_name;
-    pkg_info.package_type = PYTHON;
-
-    RosPkgCreator pkg_creator(workspace_path, pkg_info.package_name, pkg_info.package_type);
-    pkg_creator.create_package();
+    QString workspace_path = get_tmp_package_dest();
+    PackageInfo pkg_info("test_package", get_tmp_package_dest(), PYTHON);
+    create_package(pkg_info);
 
     QString setup_py_path = QDir(pkg_info.package_path).filePath("setup.py");
     QString faulty_setup_py_file = QString(QDir(FIXTURES_PATH).filePath(setup_py_file_name));
     QString faulty_content = read_file(faulty_setup_py_file);
 
     write_file(setup_py_path, faulty_content, true);
-    EXPECT_THROW(add_node("node_1", PYTHON_NODE, pkg_info), std::runtime_error);
+    EXPECT_THROW(add_node({"node_1", PYTHON_NODE}, pkg_info), std::runtime_error);
 
     // Double-check that there were no changes to the file
     QString current_content = read_file(setup_py_path);
@@ -284,15 +253,8 @@ TEST(modify_existing_pkg, add_node_xml_tests) {
   };
 
   for (const auto & test_case : test_cases) {
-    QString workspace_path = get_tmp_workspace_path();
-    PackageInfo pkg_info;
-    pkg_info.package_name = "test_package";
-    pkg_info.package_path = workspace_path + "/" + pkg_info.package_name;
-    pkg_info.package_type = test_case.build_type;
-    pkg_info.workspace_path = workspace_path;
-
-    RosPkgCreator pkg_creator(workspace_path, pkg_info.package_name, pkg_info.package_type);
-    pkg_creator.create_package();
+    PackageInfo pkg_info("test_package", get_tmp_package_dest(), test_case.build_type);
+    create_package(pkg_info);
 
     QString xml_path = QDir(pkg_info.package_path).filePath("package.xml");
     QString fixtures_folder = QString(QDir(FIXTURES_PATH).filePath("package_xml_files"));
@@ -300,8 +262,8 @@ TEST(modify_existing_pkg, add_node_xml_tests) {
     QString new_content = read_file(new_xml_file);
 
     write_file(xml_path, new_content, true);
-    add_node("node_1", test_case.node_type, pkg_info);
-    pkg_creator.build_package();
+    add_node({"node_1", test_case.node_type}, pkg_info);
+    colcon_build(pkg_info.package_destination, {pkg_info.package_name});
 
     QString current_content = read_file(xml_path);
     QString expected_xml_path =
@@ -315,32 +277,24 @@ TEST(modify_existing_pkg, add_node_xml_tests) {
 
 // Test listing executables for different package types
 TEST(modify_existing_pkg, list_executables) {
-  QTemporaryDir temp_dir;
-  QString workspace_path = temp_dir.path() + "/ros2_ws";
-  QString src_path = workspace_path + "/src";
+  QString src_path = get_tmp_package_dest();
+  QString workspace_path = get_workspace_path_without_src(src_path);
 
   // Create CPP Package
-  RosPkgCreator cpp_pkg_creator(src_path, "cpp_package", CPP);
-  cpp_pkg_creator.node_name = "cpp_node";
-  cpp_pkg_creator.node_type = NodeType::CPP_NODE;
-  cpp_pkg_creator.create_package();
+  PackageInfo cpp_package_info("cpp_package", src_path, CPP);
+  create_package(cpp_package_info);
+  add_node({"cpp_node", NodeType::CPP_NODE}, cpp_package_info);
 
   // Python Package
-  RosPkgCreator python_pkg_creator(src_path, "python_package", PYTHON);
-  python_pkg_creator.node_name = "python_node";
-  python_pkg_creator.node_type = NodeType::PYTHON_NODE;
-  python_pkg_creator.create_package();
+  PackageInfo python_package_info("python_package", src_path, PYTHON);
+  create_package(python_package_info);
+  add_node({"python_node", NodeType::PYTHON_NODE}, python_package_info);
 
   // Python & CPP
-  PackageInfo pkg_info;
-  pkg_info.package_name = "mixed_package";
-  pkg_info.package_path = src_path + "/" + pkg_info.package_name;
-  pkg_info.package_type = CPP_AND_PYTHON;
-  RosPkgCreator mixed_pkg_creator(src_path, pkg_info.package_name, pkg_info.package_type);
-  mixed_pkg_creator.node_name = "cpp_node";
-  mixed_pkg_creator.node_type = NodeType::CPP_NODE;
-  mixed_pkg_creator.create_package();
-  add_node("python_node", NodeType::PYTHON_NODE, pkg_info);
+  PackageInfo pkg_info("mixed_package", src_path, CPP_AND_PYTHON);
+  create_package(pkg_info);
+  add_node({"cpp_node", NodeType::CPP_NODE}, pkg_info);
+  add_node({"python_node", NodeType::PYTHON_NODE}, pkg_info);
 
   // Build all the packages at once to optimize time
   colcon_build(workspace_path);
@@ -356,16 +310,17 @@ TEST(modify_existing_pkg, list_executables) {
 
 // Test regular file (launch/param) listing
 TEST(modify_existing_pkg, list_files) {
-  QTemporaryDir temp_dir;
-  QString workspace_path = temp_dir.path() + "/ros2_ws";
-  QString src_path = workspace_path + "/src";
+  PackageInfo pkg_info("cpp_package", get_tmp_package_dest(), CPP);
+  create_package(pkg_info);
+  create_launch_and_params(
+    pkg_info,
+    "launch_file_launch",
+    "",
+    "",
+    false
+  );
 
-  // Create CPP Package
-  RosPkgCreator cpp_pkg_creator(src_path, "cpp_package", CPP);
-  cpp_pkg_creator.launch_name = "launch_file_launch";
-  cpp_pkg_creator.create_package();
-
-  QStringList launch_files = list_files(QDir(cpp_pkg_creator.package_path).filePath("launch"));
+  QStringList launch_files = list_files(QDir(pkg_info.package_path).filePath("launch"));
   ASSERT_TRUE(launch_files == QStringList("launch_file_launch.py"));
 }
 
@@ -394,14 +349,14 @@ TEST(modify_existing_pkg, DISABLED_manual_integration_test_add_new_node) {
 
     switch(pkg_info.package_type) {
       case CPP:
-        add_node("cpp_node", CPP_NODE, pkg_info);
+        add_node({"cpp_node", CPP_NODE}, pkg_info);
         break;
       case PYTHON:
-        add_node("python_node", PYTHON_NODE, pkg_info);
+        add_node({"python_node", PYTHON_NODE}, pkg_info);
         break;
       case CPP_AND_PYTHON:
-        add_node("node_1", CPP_NODE, pkg_info);
-        add_node("node_2", PYTHON_NODE, pkg_info);
+        add_node({"node_1", CPP_NODE}, pkg_info);
+        add_node({"node_2", PYTHON_NODE}, pkg_info);
         break;
       default:
         break;

@@ -37,7 +37,7 @@ class PackageInfoForm: public QWidget
 public:
   explicit PackageInfoForm(QWidget * parent = nullptr);
   ~PackageInfoForm();
-  void updatePackageInfo(PackageInfo pkg_info);
+  void updatePackageInfo(PackageInfo pkg_info, QString workspace_path);
   QSvgWidget * createScaledSvg(QString path, int targetHeight);
   void updateNodesLaunchParams(PackageInfo pkg_info);
 
@@ -54,6 +54,7 @@ private:
   QSvgWidget * python_svg;
   QSvgWidget * msgs_svg;
   PackageInfo current_package_info;
+  QString workspace_path;
 };
 
 void adjustListWidgetHeight(QListWidget * listWidget);

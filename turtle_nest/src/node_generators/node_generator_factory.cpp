@@ -15,20 +15,20 @@
  * ------------------------------------------------------------------
 */
 
-#include "turtle_nest/package_generators/package_generator_factory.h"
-#include <turtle_nest/package_generators/cpp_package_generator.h>
-#include <turtle_nest/package_generators/mixed_cpp_python_package_generator.h>
-#include <turtle_nest/package_generators/python_package_generator.h>
+#include "turtle_nest/node_generators/node_generator_factory.h"
+#include <turtle_nest/node_generators/cpp_node_generator.h>
+#include <turtle_nest/node_generators/mixed_cpp_python_node_generator.h>
+#include <turtle_nest/node_generators/python_node_generator.h>
 
-std::unique_ptr<BasePackageGenerator> create_package_generator(BuildType package_type)
+std::unique_ptr<BaseNodeGenerator> create_node_generator(BuildType package_type)
 {
   if (package_type == CPP) {
-    return std::make_unique<CppPackageGenerator>();
+    return std::make_unique<CppNodeGenerator>();
   } else if (package_type == PYTHON) {
-    return std::make_unique<PythonPackageGenerator>();
+    return std::make_unique<PythonNodeGenerator>();
   } else if (package_type == CPP_AND_PYTHON) {
-    return std::make_unique<MixedCppPythonPackageGenerator>();
+    return std::make_unique<MixedCppPythonNodeGenerator>();
   } else {
-    return std::make_unique<BasePackageGenerator>();
+    return std::make_unique<BaseNodeGenerator>();
   }
 }

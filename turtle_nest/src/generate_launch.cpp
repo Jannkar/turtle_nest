@@ -27,12 +27,12 @@
 
 
 void generate_launch_file(
-  QString workspace_path, QString package_name, QString launch_file_name, QString params_file_name,
-  NodeType node_type, QString node_name)
+  QString package_path, QString package_name, QString launch_file_name, QString params_file_name,
+  bool composable_launch, QString node_name)
 {
   QString launch_text = generate_launch_text(
-    package_name, node_name, node_type, params_file_name);
-  QString launch_file_dir = QDir(workspace_path).filePath(package_name + "/launch/");
+    package_name, node_name, composable_launch, params_file_name);
+  QString launch_file_dir = QDir(package_path).filePath("launch");
   QString launch_file_path = QDir(launch_file_dir).filePath(launch_file_name);
 
   create_directory(launch_file_dir);
@@ -41,7 +41,7 @@ void generate_launch_file(
 }
 
 QString generate_launch_text(
-  QString package_name, QString node_name, NodeType node_type, QString params_file_name)
+  QString package_name, QString node_name, bool composable_launch, QString params_file_name)
 {
   QString config_import_block =
     params_file_name.isEmpty() ? "" :
@@ -60,7 +60,7 @@ from ament_index_python.packages import get_package_share_directory
     .arg(package_name, params_file_name);
 
   QString composable_import_block = "";
-  if (!node_name.isEmpty() && node_type == NodeType::CPP_COMPOSABLE_NODE) {
+  if (!node_name.isEmpty() && composable_launch) {
     composable_import_block =
       R"(from launch_ros.actions import ComposableNodeContainer
 from launch_ros.descriptions import ComposableNode
@@ -69,7 +69,7 @@ from launch_ros.descriptions import ComposableNode
 
   QString node_block = "";
   if (!node_name.isEmpty()) {
-    if (node_type == NodeType::CPP_COMPOSABLE_NODE) {
+    if (composable_launch) {
       node_block = QString(
         R"(
         ComposableNodeContainer(

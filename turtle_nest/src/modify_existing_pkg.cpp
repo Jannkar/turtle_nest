@@ -17,7 +17,7 @@
 
 #include "turtle_nest/modify_existing_pkg.h"
 #include "turtle_nest/node_type_enum.h"
-#include "turtle_nest/package_generators/package_generator_factory.h"
+#include "turtle_nest/node_generators/node_generator_factory.h"
 #include "turtle_nest/packageinfo.h"
 #include "turtle_nest/file_utils.h"
 #include <QDebug>
@@ -26,10 +26,10 @@
 #include <QFile>
 #include <QUrl>
 #include <QRegularExpression>
-#include "turtle_nest/package_generators/base_package_generator.h"
-#include <turtle_nest/package_generators/cpp_package_generator.h>
-#include <turtle_nest/package_generators/python_package_generator.h>
-#include <turtle_nest/package_generators/mixed_cpp_python_package_generator.h>
+#include "turtle_nest/node_generators/base_node_generator.h"
+#include <turtle_nest/node_generators/cpp_node_generator.h>
+#include <turtle_nest/node_generators/python_node_generator.h>
+#include <turtle_nest/node_generators/mixed_cpp_python_node_generator.h>
 
 
 std::map<QString, PackageInfo> list_packages(QString workspace_path)
@@ -52,9 +52,10 @@ std::map<QString, PackageInfo> list_packages(QString workspace_path)
     }
 
     PackageInfo pkg_info;
-    pkg_info.workspace_path = workspace_path;
     pkg_info.package_name = read_xml_tag(package_xml_path, "name");
     pkg_info.package_path = package_dir.path();
+    QDir parent_dir(package_dir.filePath(".."));
+    pkg_info.package_destination = parent_dir.absolutePath();
 
     pkg_info.package_type = get_package_build_type(pkg_info.package_path, pkg_info.package_name);
 
@@ -111,19 +112,13 @@ QStringList list_files(QString path)
 }
 
 
-void add_node(QString node_name, NodeType node_type, PackageInfo pkg_info)
+void add_node(NodeOptions node_options, PackageInfo pkg_info)
 {
-  std::unique_ptr<BasePackageGenerator> package_generator = create_package_generator(
+  std::unique_ptr<BaseNodeGenerator> node_generator = create_node_generator(
     pkg_info.package_type);
 
-  NodeOptions node_options{
-    node_name,
-    node_type,
-    false, // add_params
-  };
-
   // Node generation step will throw a runtime error if the node already exists.
-  package_generator->add_node(node_options, pkg_info.package_path, pkg_info.package_name);
+  node_generator->add_node(node_options, pkg_info.package_path, pkg_info.package_name);
 }
 
 bool is_src_package(QDir dir)
