@@ -78,12 +78,13 @@ QString build_type_to_string(BuildType build_type){
 TEST(package_creation, create_pkg_defaults) {
   for (BuildType build_type: get_build_types()) {
     PackageInfo pkg_info(build_type_to_string(build_type), get_tmp_package_dest(), build_type);
+    pkg_info.maintainer = "test_user";  // We have to set maintainer, as it can vary based on the system user.
     create_package(pkg_info);
     colcon_build(pkg_info.package_destination, {pkg_info.package_name});
 
     // Check that the package was created properly
     QString xml_path = pkg_info.package_path + "/package.xml";
-    ASSERT_EQ("user", read_xml_tag(xml_path, "maintainer"));
+    ASSERT_EQ("test_user", read_xml_tag(xml_path, "maintainer"));
     ASSERT_EQ("todo@todo.todo", read_xml_tag(xml_path, "maintainer", "email"));
     ASSERT_EQ("TODO: License declaration", read_xml_tag(xml_path, "license"));
     ASSERT_EQ(pkg_info.package_name, read_xml_tag(xml_path, "name"));

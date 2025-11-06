@@ -1,0 +1,19 @@
+{
+  "name": "Turtle Nest Dev",
+  "dockerComposeFile": "../docker/docker-compose.yaml",
+  "service": "turtle_nest",
+  "workspaceFolder": "/home/user/ros2_ws/src/turtle_nest",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+          "cschlosser.doxdocgen",
+          "njpwerner.autodocstring",
+          "ms-vscode.cmake-tools",
+          "ms-vscode.cpptools-extension-pack",
+          "ms-vscode.cpptools",
+          "ms-python.python",
+          "waderyan.gitblame"
+        ]
+    }
+  }
+}
