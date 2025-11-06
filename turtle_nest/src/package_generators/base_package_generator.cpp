@@ -27,15 +27,16 @@
 #include <QProcess>
 
 
-void BasePackageGenerator::create_package(PackageInfo pkg_info){
+void BasePackageGenerator::create_package(PackageInfo pkg_info)
+{
   // ROS automatically populates the email from maintainer name, if email is not provided.
   // If the name contains invalid characters (or spaces) for email, the package building
   // will fail. This is why we need to set this default email instead of leaving it empty.
-  if (pkg_info.maintainer_email.isEmpty()){
+  if (pkg_info.maintainer_email.isEmpty()) {
     pkg_info.maintainer_email = "todo@todo.todo";
   }
 
-  if (pkg_info.license.isEmpty()){
+  if (pkg_info.license.isEmpty()) {
     pkg_info.license = "TODO: License declaration";
   }
 
@@ -53,7 +54,11 @@ void BasePackageGenerator::create_package(PackageInfo pkg_info){
   }
 }
 
-void BasePackageGenerator::create_launch_and_params(QString package_path, QString package_name, QString launch_name, QString params_file_name, QString node_name, bool composable_launch){
+void BasePackageGenerator::create_launch_and_params(
+  QString package_path, QString package_name,
+  QString launch_name, QString params_file_name,
+  QString node_name, bool composable_launch)
+{
   // For now, we share the launch and params creation, as the CMakeLists or
   // setup.py are populated at once.
   bool create_launch = (launch_name != "");
@@ -62,7 +67,8 @@ void BasePackageGenerator::create_launch_and_params(QString package_path, QStrin
   // Generate launch file
   if (create_launch) {
     generate_launch_file(
-        package_path, package_name, launch_name + ".py", params_file_name, composable_launch, node_name);
+      package_path, package_name, launch_name + ".py", params_file_name, composable_launch,
+      node_name);
   }
 
   // Generate parameters file
@@ -80,9 +86,9 @@ QStringList BasePackageGenerator::create_command(QString type, PackageInfo pkg_i
   QStringList command_list;
 
   command_list
-      << "pkg" << "create"
-      << "--build-type" << type
-      << "--license" << pkg_info.license;
+    << "pkg" << "create"
+    << "--build-type" << type
+    << "--license" << pkg_info.license;
 
   if (!pkg_info.description.trimmed().isEmpty()) {
     command_list << "--description" << escape_xml(pkg_info.description);

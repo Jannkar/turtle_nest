@@ -21,7 +21,8 @@
 #include "turtle_nest/package_generators/cpp_package_generator.h"
 
 
-void MixedPackageGenerator::create_package_impl(PackageInfo pkg_info){
+void MixedPackageGenerator::create_package_impl(PackageInfo pkg_info)
+{
   QStringList command = create_command("ament_cmake", pkg_info);
   run_command(command, pkg_info);
 
@@ -29,8 +30,9 @@ void MixedPackageGenerator::create_package_impl(PackageInfo pkg_info){
   install_python_modules_in_cmakelists(pkg_info.package_path);
 }
 
-void MixedPackageGenerator::add_launch_and_params_to_config_(QString package_path, bool create_launch, bool create_config){
+void MixedPackageGenerator::add_launch_and_params_to_config_(
+  QString package_path,
+  bool create_launch, bool create_config)
+{
   modify_cmake_file(package_path, create_launch, create_config);
 }
-
-

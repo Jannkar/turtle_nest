@@ -20,12 +20,17 @@
 #include <QDir>
 
 
-void PythonPackageGenerator::create_package_impl(PackageInfo pkg_info){
+void PythonPackageGenerator::create_package_impl(PackageInfo pkg_info)
+{
   QStringList command = create_command("ament_python", pkg_info);
   run_command(command, pkg_info);
 }
 
-void PythonPackageGenerator::add_launch_and_params_to_config_(QString package_path, bool create_launch, bool create_config){
+void PythonPackageGenerator::add_launch_and_params_to_config_(
+  QString package_path,
+  bool create_launch,
+  bool create_config)
+{
   modify_setup_py(package_path, create_launch, create_config);
 }
 
@@ -36,20 +41,20 @@ void modify_setup_py(QString package_path, bool create_launch, bool create_confi
 
   if (create_launch) {
     QString lines_to_append =
-        "\n        (os.path.join('share', package_name, 'launch'), glob(os.path.join('launch', '*launch.[pxy][yma]*'))),";
+      "\n        (os.path.join('share', package_name, 'launch'), glob(os.path.join('launch', '*launch.[pxy][yma]*'))),";
     append_to_file(setup_py_path, lines_to_append, append_after);
   }
 
   if (create_config) {
     QString config_content =
-        "\n        (os.path.join('share', package_name, 'config'), glob('config/*.yaml')),";
+      "\n        (os.path.join('share', package_name, 'config'), glob('config/*.yaml')),";
     append_to_file(setup_py_path, config_content, append_after);
   }
 
   // Add imports if either launch or config was appended
   if (create_launch || create_config) {
     QString imports("import os\n"
-                    "from glob import glob\n");
+      "from glob import glob\n");
     append_to_file_before(setup_py_path, imports, "from setuptools import");
   }
 }

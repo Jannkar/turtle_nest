@@ -22,14 +22,19 @@
 #include <QDir>
 
 
-void MsgsPackageGenerator::create_package_impl(PackageInfo pkg_info){
+void MsgsPackageGenerator::create_package_impl(PackageInfo pkg_info)
+{
   QStringList command = create_command("ament_cmake", pkg_info);
   run_command(command, pkg_info);
   create_msgs_files(pkg_info.package_path);
   add_msgs_to_cmakelists(pkg_info.package_path);
 }
 
-void MsgsPackageGenerator::add_launch_and_params_to_config_(QString /*package_path*/, bool /*create_launch*/, bool /*create_config*/){
+void MsgsPackageGenerator::add_launch_and_params_to_config_(
+  QString /*package_path*/,
+  bool /*create_launch*/,
+  bool /*create_config*/)
+{
   qWarning() << "Launch and config file creation not allowed for msgs packages";
 }
 
@@ -54,7 +59,7 @@ void create_msgs_files(QString package_path)
 QString get_msgs_cmake_addition()
 {
   return QString(
-      R"(# Custom ROS 2 messages
+    R"(# Custom ROS 2 messages
 find_package(rosidl_default_generators REQUIRED)
 
 # Add here your custom message (.msg), service (.srv), and action (.action) files
@@ -68,7 +73,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
 QString get_example_msg_contents()
 {
   return QString(
-      R"(# This is a custom ROS 2 message definition.
+    R"(# This is a custom ROS 2 message definition.
 # Each line defines one field, consisting of a type and a name.
 
 string example_data

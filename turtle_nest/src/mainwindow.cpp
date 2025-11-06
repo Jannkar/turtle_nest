@@ -164,7 +164,7 @@ void MainWindow::on_createPackageButton_clicked()
   bool create_node = ui->nodeTypeListWidget->currentRow() != 0;
 
   NodeOptions node_options;
-  if (create_node){
+  if (create_node) {
     node_options.node_name = ui->nodeNameLineEdit->text();
     node_options.node_type = node_type_from_string(ui->nodeTypeListWidget->currentItem()->text());
     node_options.add_params = create_config;
@@ -173,7 +173,7 @@ void MainWindow::on_createPackageButton_clicked()
   try {
     create_package(pkg_info);
 
-    if (create_node){
+    if (create_node) {
       bool composable_launch = node_options.node_type == NodeType::CPP_COMPOSABLE_NODE;
       create_launch_and_params(
         pkg_info,
@@ -184,8 +184,7 @@ void MainWindow::on_createPackageButton_clicked()
       );
       add_node(node_options, pkg_info);
 
-    }
-    else{
+    } else {
       create_launch_and_params(pkg_info, launch_name, params_file_name, "", false);
     }
   } catch (const std::runtime_error & error) {

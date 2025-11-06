@@ -30,9 +30,14 @@ void create_package(PackageInfo pkg_info)
 }
 
 // Create launch and params files using the appropriate package generator
-void create_launch_and_params(PackageInfo pkg_info, QString launch_name, QString params_file_name, QString node_name, bool composable_launch){
+void create_launch_and_params(
+  PackageInfo pkg_info, QString launch_name, QString params_file_name,
+  QString node_name, bool composable_launch)
+{
   auto generator = get_package_generator(pkg_info.package_type);
-  generator->create_launch_and_params(pkg_info.package_path, pkg_info.package_name, launch_name, params_file_name, node_name, composable_launch);
+  generator->create_launch_and_params(
+    pkg_info.package_path, pkg_info.package_name, launch_name,
+    params_file_name, node_name, composable_launch);
 }
 
 std::unique_ptr<BasePackageGenerator> get_package_generator(BuildType package_type)
@@ -43,9 +48,9 @@ std::unique_ptr<BasePackageGenerator> get_package_generator(BuildType package_ty
     return std::make_unique<PythonPackageGenerator>();
   } else if (package_type == BuildType::CPP_AND_PYTHON) {
     return std::make_unique<MixedPackageGenerator>();
-  } else if (package_type == BuildType::MSGS){
+  } else if (package_type == BuildType::MSGS) {
     return std::make_unique<MsgsPackageGenerator>();
-  }else {
+  } else {
     throw std::runtime_error("Unknown package type");
   }
 }
