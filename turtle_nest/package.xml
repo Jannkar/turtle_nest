@@ -2,7 +2,7 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>turtle_nest</name>
-  <version>1.2.0</version>
+  <version>1.2.1</version>
   <description>ROS 2 Package Creator</description>
   <maintainer email="janne.a.karttunen@gmail.com">Janne Karttunen</maintainer>
   <license>Apache-2.0</license>
@@ -18,7 +18,7 @@
   <build_depend>qtbase5-dev</build_depend>
   <build_depend>libqt5-svg-dev</build_depend>
 
-  <build_depend>black</build_depend>
+  <exec_depend>black</exec_depend>
   <exec_depend>libqt5-core</exec_depend>
   <exec_depend>libqt5-gui</exec_depend>
   <exec_depend>libqt5-opengl</exec_depend>
