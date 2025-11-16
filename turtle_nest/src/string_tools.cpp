@@ -27,6 +27,8 @@ QString escape_xml(const QString input)
   output.replace(">", "&gt;");
   output.replace("\"", "");    // Quotation marks are just removed
   output.replace("'", "&apos;");
+  output.replace("\n", "&#10;");   // Replace newline. Needed for Python setup.py files, as they'll otherwise break.
+  output.replace("\r", "&#13;");   // Replace carriage return. Newlines not supported in Python setup.py files, carriage return might be used on Windows or Mac for newlines
   return output;
 }
 
