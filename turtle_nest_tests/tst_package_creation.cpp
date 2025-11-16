@@ -98,11 +98,7 @@ TEST(package_creation, create_pkg_all_values) {
   for (BuildType build_type: get_build_types()) {
     QString package_name = build_type_to_string(build_type);
     PackageInfo pkg_info(package_name, get_tmp_package_dest(), build_type);
-    pkg_info.description = "multi-line test \n description";
-    if (build_type == BuildType::PYTHON){
-      //TODO: https://github.com/Jannkar/turtle_nest/issues/33
-      pkg_info.description = "single-line description";
-    }
+    pkg_info.description = "multi-line test \n description"; // Test also multi-line description validity.
     pkg_info.maintainer = "Test Maintainer";
     pkg_info.maintainer_email = "maintainer@admin.com";
     pkg_info.license = "Apache-2.0";
